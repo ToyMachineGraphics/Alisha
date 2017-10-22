@@ -69,24 +69,12 @@ EditorBuildSettings:
     path: Assets/Photon Unity Networking/Demos/PunBasics-Tutorial/Scenes/PunBasics-Room
       for 4.unity
     guid: e7a7f9734636d415ca84ef3aaf7680f6
-  - enabled: 1
-    path: Assets/Twins/Scenes/0_Splash/Splash.unity
+  - enabled: 0
+    path: Assets/Alisha/Scenes/0_Splash/Splash.unity
     guid: 07852f8a78fb49e428d58e5f0463ed18
-  - enabled: 1
-    path: Assets/Twins/Scenes/1_Intro/Intro.unity
+  - enabled: 0
+    path: Assets/Alisha/Scenes/1_Intro/Intro.unity
     guid: 5de79c8ef2ea5aa4b942c48c5e458a01
-  - enabled: 1
-    path: Assets/Twins/Scenes/2_MainMenu/MainMenu.unity
+  - enabled: 0
+    path: Assets/Alisha/Scenes/2_MainMenu/MainMenu.unity
     guid: d945893dc3bec7a4aa5d4ec1f21570c7
-  - enabled: 1
-    path: Assets/Twins/Scenes/3_0_VRGame/VRGame.unity
-    guid: ca43952276349a240b08122829d3f781
-  - enabled: 1
-    path: Assets/Twins/Scenes/3_1_NormalGame/NormalGame.unity
-    guid: c3c1e449f30a9944ab161955d26f6dd7
-  - enabled: 1
-    path: Assets/Twins/Scenes/4_0_VREnding/VREnding.unity
-    guid: f3fd59efb8383bf4fbdc4042d7ad0744
-  - enabled: 1
-    path: Assets/Twins/Scenes/4_1_NormalEnding/NormalEnding.unity
-    guid: 19a5be54749b2df42bc7769cf684fbbf

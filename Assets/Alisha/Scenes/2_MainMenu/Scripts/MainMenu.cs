@@ -23,7 +23,8 @@ public class MainMenu : MonoBehaviour
     public void SelectVRMode()
     {
         GameConfig.isVRMode = true;
-        VRGameNetworking.Instance.Connect();
+        GameNetworking.Instance.onConnectedToMaster.AddListener(VRModeOnConnectedToMaster);
+        GameNetworking.Instance.Connect();
         LoadingPage loading = Instantiate(loadingPageBase);
         StartCoroutine(SceneLoader.LoadSceneAsync(vrScene, loading.OnProgressUpdate));
     }
@@ -33,6 +34,13 @@ public class MainMenu : MonoBehaviour
         GameConfig.isVRMode = false;
         LoadingPage loading = Instantiate(loadingPageBase);
         StartCoroutine(SceneLoader.LoadSceneAsync(normalScene, loading.OnProgressUpdate));
+    }
+    #endregion
+
+    #region Network Callback
+    private void VRModeOnConnectedToMaster()
+    {
+        GameNetworking.Instance.onConnectedToMaster.RemoveListener(VRModeOnConnectedToMaster);
     }
     #endregion
 }
