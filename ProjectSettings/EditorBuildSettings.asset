@@ -78,3 +78,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Alisha/Scenes/2_MainMenu/MainMenu.unity
     guid: d945893dc3bec7a4aa5d4ec1f21570c7
+  - enabled: 1
+    path: Assets/Dev/DaydreamSwitch/DaydreamSwitch.unity
+    guid: 2cac334616db3e149b33dbdf27adf11d
