@@ -1,46 +1,21 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public LoadingPage loadingPageBase;
+    public LoadingPage LoadingPageBase;
 
-    public Button vrMode;
-    public Button normalMode;
-    public string vrScene, normalScene;
+    public string NextScene;
 
     private void Start()
     {
-
+        Info.Source = MonoSingleton<Info>.InstanceSource.Prefab;
+        Info.PrefabName = "LogCanvas";
+        Info.Persistent = true;
+        Info.Instance.InfoText.text = "Debug Info!";
     }
 
     private void Update()
     {
 
     }
-
-    #region Button Callback
-    public void SelectVRMode()
-    {
-        GameConfig.isVRMode = true;
-        GameNetworking.Instance.onConnectedToMaster.AddListener(VRModeOnConnectedToMaster);
-        GameNetworking.Instance.Connect();
-        LoadingPage loading = Instantiate(loadingPageBase);
-        StartCoroutine(SceneLoader.LoadSceneAsync(vrScene, loading.OnProgressUpdate));
-    }
-
-    public void SelectNormalMode()
-    {
-        GameConfig.isVRMode = false;
-        LoadingPage loading = Instantiate(loadingPageBase);
-        StartCoroutine(SceneLoader.LoadSceneAsync(normalScene, loading.OnProgressUpdate));
-    }
-    #endregion
-
-    #region Network Callback
-    private void VRModeOnConnectedToMaster()
-    {
-        GameNetworking.Instance.onConnectedToMaster.RemoveListener(VRModeOnConnectedToMaster);
-    }
-    #endregion
 }

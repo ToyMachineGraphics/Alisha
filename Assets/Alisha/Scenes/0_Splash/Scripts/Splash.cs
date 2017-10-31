@@ -12,11 +12,6 @@ public class Splash : MonoBehaviour
         yield return ShowLogo();
 	}
 
-    private void Update ()
-    {
-		
-	}
-
     private IEnumerator ShowLogo()
     {
         yield return new WaitForSeconds(2);
