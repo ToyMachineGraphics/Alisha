@@ -8,14 +8,9 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        Info.Source = MonoSingleton<Info>.InstanceSource.Prefab;
-        Info.PrefabName = "LogCanvas";
-        Info.Persistent = true;
-        Info.Instance.InfoText.text = "Debug Info!";
     }
 
     private void Update()
     {
-
     }
 }

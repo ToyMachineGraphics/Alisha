@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Alisha/Scenes/2_MainMenu/MainMenu.unity
     guid: d945893dc3bec7a4aa5d4ec1f21570c7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Dev/Sample/MinimalDaydream/MinimalDaydream.unity
     guid: 428291b2371f73f4e932b649948db594
+  - enabled: 0
+    path: Assets/GoogleVR/Demos/Scenes/GVRDemo.unity
+    guid: bb36d2905dc634f1c9eecb35beecaca8

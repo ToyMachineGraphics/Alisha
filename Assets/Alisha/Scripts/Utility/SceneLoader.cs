@@ -21,19 +21,23 @@ public static class SceneLoader
                 {
                     onProgressUpdate(displayProgress);
                 }
-                yield return new WaitForEndOfFrame();
+                yield return WaitPool.Instance.waitForEndOfFrame;
             }
         }
 
         toProgress = 100;
         while (displayProgress < toProgress)
         {
-            ++displayProgress;
+            displayProgress += UnityEngine.Random.Range(1, 16);
+            if (displayProgress > toProgress)
+            {
+                displayProgress = toProgress;
+            }
             if (onProgressUpdate != null)
             {
                 onProgressUpdate(displayProgress);
             }
-            yield return new WaitForEndOfFrame();
+            yield return WaitPool.Instance.waitForEndOfFrame;
         }
         op.allowSceneActivation = true;
     }
