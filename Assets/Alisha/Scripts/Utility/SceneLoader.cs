@@ -21,7 +21,7 @@ public static class SceneLoader
                 {
                     onProgressUpdate(displayProgress);
                 }
-                yield return WaitPool.Instance.waitForEndOfFrame;
+                yield return WaitPool.Instance.WaitForEndOfFrame;
             }
         }
 
@@ -37,7 +37,7 @@ public static class SceneLoader
             {
                 onProgressUpdate(displayProgress);
             }
-            yield return WaitPool.Instance.waitForEndOfFrame;
+            yield return WaitPool.Instance.WaitForEndOfFrame;
         }
         op.allowSceneActivation = true;
     }
