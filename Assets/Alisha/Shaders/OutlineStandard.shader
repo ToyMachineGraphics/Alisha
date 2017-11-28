@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
+﻿// Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
 Shader "Custom/OutlineStandard"
 {
@@ -48,9 +46,9 @@ Shader "Custom/OutlineStandard"
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
         [HideInInspector] _ZWrite ("__zw", Float) = 1.0
 		
-		_OutlineColor("Outline Color", Color) = (1,1,1,1)
-		_OutlineWidth("Outline Width", Range(0.0078125, 0.125)) = 0
-		_ApicesCompensation("Outline compensation for apices of model", Range(0, 1)) = 0.5
+        _OutlineColor("Outline Color", Color) = (1,1,1,1)
+        _OutlineWidth("Outline Width", Range(0.0078125, 0.125)) = 0
+        _ApicesCompensation("Outline compensation for apices of model", Range(0, 1)) = 0.5
     }
 
     CGINCLUDE
@@ -59,55 +57,55 @@ Shader "Custom/OutlineStandard"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" "Queue"="Transparent+1" }
+        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" "Queue"="Geometry" }
         LOD 300
 
 		// ------------------------------------------------------------------
-		//  Outline pass
-		Pass {
-			Tags { "LightMode" = "Always" }
-
-			ZWrite Off
-			Cull Off
-
-			CGPROGRAM
-			#include "UnityCG.cginc"
-
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 3.0
-
-			struct v2f
-			{
-				float4 pos : SV_POSITION;
-			};
-
-			fixed _OutlineWidth;
-			fixed4 _OutlineColor;
-			fixed _ApicesCompensation;
-
-			v2f vert(appdata_full v)
-			{
-				v.vertex *= (1 + _OutlineWidth * _ApicesCompensation);
-
-				v2f o;
-				o.pos = UnityObjectToClipPos(v.vertex);
-
-				fixed3 worldNormal = normalize(UnityObjectToWorldNormal(v.color));
-				fixed3 offset = normalize(TransformViewToProjection(worldNormal).xyz);
-
-				o.pos.xyz += offset.xyz * 1.5 * _OutlineWidth * (1 - _ApicesCompensation);
-				
-				return o;
-			}
-
-			fixed4 frag(v2f IN) : SV_Target
-			{
-				return _OutlineColor;
-			}
-
-			ENDCG
-		}
+        //  Outline pass
+        Pass {
+        	Tags { "LightMode" = "Always" }
+        
+        	ZWrite Off
+        	Cull Off
+        
+        	CGPROGRAM
+        	#include "UnityCG.cginc"
+        
+        	#pragma vertex vert
+        	#pragma fragment frag
+        	#pragma target 3.0
+        
+        	struct v2f
+        	{
+        		float4 pos : SV_POSITION;
+        	};
+        
+        	fixed _OutlineWidth;
+        	fixed4 _OutlineColor;
+        	fixed _ApicesCompensation;
+        
+        	v2f vert(appdata_full v)
+        	{
+        		v.vertex *= (1 + _OutlineWidth * _ApicesCompensation);
+        
+        		v2f o;
+        		o.pos = UnityObjectToClipPos(v.vertex);
+        
+        		fixed3 worldNormal = normalize(UnityObjectToWorldNormal(v.color));
+        		fixed3 offset = normalize(TransformViewToProjection(worldNormal).xyz);
+        
+        		o.pos.xyz += offset.xyz * 1.5 * _OutlineWidth * (1 - _ApicesCompensation);
+        		
+        		return o;
+        	}
+        
+        	fixed4 frag(v2f IN) : SV_Target
+        	{
+        		return _OutlineColor;
+        	}
+        
+        	ENDCG
+        }
 
         // ------------------------------------------------------------------
         //  Base forward pass (directional light, emission, lightmaps, ...)
@@ -118,8 +116,7 @@ Shader "Custom/OutlineStandard"
 
             Blend [_SrcBlend] [_DstBlend]
             ZWrite [_ZWrite]
-			Cull Back
-			//Offset 1, 1
+            Cull Back
 
             CGPROGRAM
             #pragma target 3.0
@@ -276,55 +273,55 @@ Shader "Custom/OutlineStandard"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" "Queue" = "Transparent+1" }
+        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" "Queue" = "Geometry" }
         LOD 150
 
-		// ------------------------------------------------------------------
-		//  Outline pass
-		Pass {
-			Tags { "LightMode" = "Always" }
-
-			ZWrite Off
-			Cull Off
-
-			CGPROGRAM
-			#include "UnityCG.cginc"
-
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 3.0
-
-			struct v2f
-			{
-				float4 pos : SV_POSITION;
-			};
-
-			fixed _OutlineWidth;
-			fixed4 _OutlineColor;
-			fixed _ApicesCompensation;
-
-			v2f vert(appdata_full v)
-			{
-				v.vertex *= (1 + _OutlineWidth * _ApicesCompensation);
-
-				v2f o;
-				o.pos = UnityObjectToClipPos(v.vertex);
-
-				fixed3 worldNormal = normalize(UnityObjectToWorldNormal(v.color));
-				fixed3 offset = normalize(TransformViewToProjection(worldNormal).xyz);
-
-				o.pos.xyz += offset.xyz * 1.5 * _OutlineWidth * (1 - _ApicesCompensation);
-				
-				return o;
-			}
-
-			fixed4 frag(v2f IN) : SV_Target
-			{
-				return _OutlineColor;
-			}
-
-			ENDCG
-		}
+        // ------------------------------------------------------------------
+        //  Outline pass
+        Pass {
+        	Tags { "LightMode" = "Always" }
+        
+        	ZWrite Off
+        	Cull Off
+        
+        	CGPROGRAM
+        	#include "UnityCG.cginc"
+        
+        	#pragma vertex vert
+        	#pragma fragment frag
+        	#pragma target 3.0
+        
+        	struct v2f
+        	{
+        		float4 pos : SV_POSITION;
+        	};
+        
+        	fixed _OutlineWidth;
+        	fixed4 _OutlineColor;
+        	fixed _ApicesCompensation;
+        
+        	v2f vert(appdata_full v)
+        	{
+        		v.vertex *= (1 + _OutlineWidth * _ApicesCompensation);
+        
+        		v2f o;
+        		o.pos = UnityObjectToClipPos(v.vertex);
+        
+        		fixed3 worldNormal = normalize(UnityObjectToWorldNormal(v.color));
+        		fixed3 offset = normalize(TransformViewToProjection(worldNormal).xyz);
+        
+        		o.pos.xyz += offset.xyz * 1.5 * _OutlineWidth * (1 - _ApicesCompensation);
+        		
+        		return o;
+        	}
+        
+        	fixed4 frag(v2f IN) : SV_Target
+        	{
+        		return _OutlineColor;
+        	}
+        
+        	ENDCG
+        }
 
         // ------------------------------------------------------------------
         //  Base forward pass (directional light, emission, lightmaps, ...)
@@ -335,7 +332,7 @@ Shader "Custom/OutlineStandard"
 
             Blend [_SrcBlend] [_DstBlend]
             ZWrite [_ZWrite]
-			Cull Back
+            Cull Back
 
             CGPROGRAM
             #pragma target 2.0
