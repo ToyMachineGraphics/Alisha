@@ -23,18 +23,21 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Dev/Attract/AttractObject.unity
     guid: 7f89bce35a8dec748b5abea37696674c
-  - enabled: 1
+  - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/Generic/Scenes/BluetoothDemoMenu.unity
     guid: c5a4c6612e053894aae4b1e9582f57bd
-  - enabled: 1
+  - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/Generic/Scenes/BluetoothDiscoveryDemo.unity
     guid: 8fd37d97f9905d742b33a9c775985afd
-  - enabled: 1
+  - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/LegacyNetworking/Scenes/BluetoothMultiplayerLegacyDemo.unity
     guid: 09db8159faa2447498a2c26ba586124c
-  - enabled: 1
+  - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/LegacyNetworking/Scenes/BluetoothFileTransferLegacyDemo.unity
     guid: e0a64a8979d6802449377620d7388f1f
-  - enabled: 1
+  - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/UNet/BluetoothMultiplayerDemo.unity
     guid: e45614ac4da622849b314ef4c5157795
+  - enabled: 1
+    path: Assets/Alisha/Scenes/3_Chapter2/3_Chapter2.unity
+    guid: 79c8614e51d159441b99ac1a4e448f0b

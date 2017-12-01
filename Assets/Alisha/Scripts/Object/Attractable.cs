@@ -4,23 +4,31 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(EventTriggerSwitch))]
 public class Attractable : MonoBehaviour
 {
+    private Vector3 _originalPosition;
+    private Quaternion _originalRotation;
+
     private EventTriggerSwitch _attractableSwitch;
 
-    public ISwitch FollowSwitch;
-    public LookFollowTransform FollowTransform;
+    private ISwitch _followSwitch;
+    [SerializeField]
+    private LookFollowTransform _followTransform;
     public Transform FollowTarget;
+    [SerializeField]
+    private float _reachThreshold;
+    [SerializeField]
+    private float _attractSpeed;
     private bool _arrived;
 
     private void Awake()
     {
         _attractableSwitch = GetComponent<EventTriggerSwitch>();
 
-        FollowTransform = GetComponent<LookFollowTransform>();
-        if (FollowTransform == null)
+        _followTransform = GetComponent<LookFollowTransform>();
+        if (_followTransform == null)
         {
-            FollowTransform = gameObject.AddComponent<LookFollowTransform>();
+            _followTransform = gameObject.AddComponent<LookFollowTransform>();
         }
-        FollowSwitch = FollowTransform as ISwitch;
+        _followSwitch = _followTransform as ISwitch;
     }
 
     private void Start()
@@ -28,46 +36,77 @@ public class Attractable : MonoBehaviour
         VRSceneObjectManager.Instance.AttractableObjects.Add(this);
     }
 
-#if UNITY_EDITOR
     private void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            FollowTarget = MinimalDaydream.Instance.ControllerModel;
             OnPointerClick(null);
         }
-    }
 #endif
+
+        if (_arrived && GvrControllerInput.ClickButtonDown)
+        {
+            _arrived = false;
+            transform.SetParent(null);
+            transform.position = _originalPosition;
+            transform.rotation = _originalRotation;
+            Collider[] colliders = transform.GetComponentsInChildren<Collider>();
+            foreach (Collider c in colliders)
+            {
+                c.enabled = true;
+            }
+        }
+    }
 
     private void LateUpdate()
     {
         if (_arrived)
         {
-            transform.LookAt(MinimalDaydream.Instance.ControllerModel.position + MinimalDaydream.Instance.ControllerModel.forward, MinimalDaydream.Instance.ControllerModel.up);
+            transform.rotation = Quaternion.LookRotation(FollowTarget.forward, FollowTarget.up);
         }
+    }
+
+    private void SaveTransform()
+    {
+        _originalPosition = transform.position;
+        _originalRotation = transform.rotation;
     }
 
     public void OnPointerClick(BaseEventData eventData)
     {
-        FollowTransform.OnArrived -= OnArrived;
-        FollowTransform.OnArrived += OnArrived;
-        FollowTransform.Reset(FollowTarget);
-        FollowTransform.ReachThreshold = 1.25f;
-        FollowTransform.MoveSpeed = 32;
-        FollowTransform.RotateSpeed = 24;
-        FollowSwitch.Toggle(true);
+        if (!_arrived)
+        {
+            SaveTransform();
+
+            _followTransform.OnArrived -= OnArrived;
+            _followTransform.OnArrived += OnArrived;
+            _followTransform.Reset(FollowTarget);
+            _followTransform.ReachThreshold = _reachThreshold;
+            _followTransform.MoveSpeed = _attractSpeed;
+            _followTransform.RotateSpeed = _attractSpeed;
+            _followSwitch.Toggle(true);
+        }
     }
 
     private void OnArrived(GameObject go)
     {
-        _arrived = true;
-        transform.SetParent(MinimalDaydream.Instance.ControllerModel, true);
+        
+        //transform.SetParent(MinimalDaydream.Instance.ControllerModel, true);
+        //Collider[] colliders = transform.GetComponentsInChildren<Collider>();
+        //foreach (Collider c in colliders)
+        //{
+        //    c.enabled = false;
+        //}
+        //transform.position += MinimalDaydream.Instance.ControllerModel.forward * FollowTransform.ReachThreshold;
+        //transform.SetParent(null);
+        transform.SetParent(FollowTarget, true);
+        transform.position += (FollowTarget.forward - 2 * FollowTarget.up) * _reachThreshold;
         Collider[] colliders = transform.GetComponentsInChildren<Collider>();
         foreach (Collider c in colliders)
         {
             c.enabled = false;
         }
-        transform.position += MinimalDaydream.Instance.ControllerModel.forward * FollowTransform.ReachThreshold;
-        transform.SetParent(null);
+        _arrived = true;
     }
 }

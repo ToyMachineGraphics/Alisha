@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public sealed class MinimalDaydream : MonoBehaviour
+public class MinimalDaydream : MonoBehaviour
 {
     public GameObject Player;
     public float PlayerHeight;
@@ -26,53 +26,53 @@ public sealed class MinimalDaydream : MonoBehaviour
     public Transform ControllerModel;
     public DemoInputManager InputManager;
 
-    #region Prefab Singleton
-    private static bool _isQuitting;
-    private static MinimalDaydream _instance;
-    public static MinimalDaydream Instance
-    {
-        get
-        {
-            if (_isQuitting)
-            {
-                return null;
-            }
-            if (_instance == null)
-            {
-                MinimalDaydream prefab = Resources.Load<MinimalDaydream>(typeof(MinimalDaydream).Name);
-                _instance = Instantiate(prefab);
-            }
-            return _instance;
-        }
-    }
+    //#region Prefab Singleton
+    //private static bool _isQuitting;
+    //private static MinimalDaydream _instance;
+    //public static MinimalDaydream Instance
+    //{
+    //    get
+    //    {
+    //        if (_isQuitting)
+    //        {
+    //            return null;
+    //        }
+    //        if (_instance == null)
+    //        {
+    //            MinimalDaydream prefab = Resources.Load<MinimalDaydream>(typeof(MinimalDaydream).Name);
+    //            _instance = Instantiate(prefab);
+    //        }
+    //        return _instance;
+    //    }
+    //}
 
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            if (_instance.gameObject != gameObject)
-            {
-                Destroy(gameObject);
-            }
-            else if (_instance != this)
-            {
-                Destroy(this);
-            }
-        }
-        else
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
+    //private void Awake()
+    //{
+    //    if (_instance != null)
+    //    {
+    //        if (_instance.gameObject != gameObject)
+    //        {
+    //            Destroy(gameObject);
+    //        }
+    //        else if (_instance != this)
+    //        {
+    //            Destroy(this);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        _instance = this;
+    //        DontDestroyOnLoad(gameObject);
+    //    }
+    //}
 
-    private void OnApplicationQuit()
-    {
-        _isQuitting = true;
-    }
-    #endregion
+    //private void OnApplicationQuit()
+    //{
+    //    _isQuitting = true;
+    //}
+    //#endregion
 
-    private void Start()
+    protected virtual void Start()
     {
         Player.transform.localPosition = Vector3.up * PlayerHeight;
 
@@ -93,15 +93,15 @@ public sealed class MinimalDaydream : MonoBehaviour
         InputManager.reticlePointer = ReticlePointer.gameObject;
     }
 
-    private void Update()
-    {
-        if (GvrPointerInputModule.CurrentRaycastResult.isValid)
-        {
-            Attractable attractable = GvrPointerInputModule.CurrentRaycastResult.gameObject.GetComponent<Attractable>();
-            if (attractable)
-            {
-                attractable.FollowTarget = ControllerModel;
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    if (GvrPointerInputModule.CurrentRaycastResult.isValid)
+    //    {
+    //        Attractable attractable = GvrPointerInputModule.CurrentRaycastResult.gameObject.GetComponent<Attractable>();
+    //        if (attractable)
+    //        {
+    //            attractable.FollowTarget = ControllerModel;
+    //        }
+    //    }
+    //}
 }

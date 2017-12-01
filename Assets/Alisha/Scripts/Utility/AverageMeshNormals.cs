@@ -7,7 +7,7 @@ public class AverageMeshNormals : MonoBehaviour
     public MeshFilter[] MeshSources;
     private static readonly Vector3 _zeroVec = Vector3.zero;
 
-    private void Start()
+    private void Awake()
     {
         foreach (MeshFilter meshSource in MeshSources)
         {
