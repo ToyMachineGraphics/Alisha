@@ -81,7 +81,7 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
                 }
                 return isModified;
             } catch (Exception e) {
-                throw new Exception("Can't patch AndroidManifest.xml!\n" + e);
+                throw new Exception("Can't patch AndroidManifest.xml!\n", e);
             }
         }
 
@@ -106,13 +106,11 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
         private static bool PatchManifestPermissions(XmlDocument manifestXmlDocument) {
             bool isModified = false;
             IEnumerable<XmlElement> permissionNodes = GetChildElementsWithName(manifestXmlDocument.DocumentElement, "uses-permission");
-            List<string> existingPermissions = new List<string>();
-            foreach (XmlElement permissionNode in permissionNodes) {
-                if (!permissionNode.HasAttribute("android:name"))
-                    continue;
-
-                existingPermissions.Add(permissionNode.Attributes["android:name"].Value);
-            }
+            List<string> existingPermissions =
+                permissionNodes
+                    .Where(node => node.HasAttribute("android:name"))
+                    .Select(node => node.Attributes["android:name"].Value)
+                    .ToList();
 
             List<string> missingPermissions = kRequiredPermissions.Except(existingPermissions).ToList();
 
@@ -164,29 +162,28 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
 
         private static string GetProjectManifestPath() {
             string manifestFilePath = PathCombine("Assets", "Plugins", "Android", "AndroidManifest.xml");
-
             return manifestFilePath;
         }
 
         private static string GetDefaultManifestText() {
             try {
-				string unityContentsPath = EditorApplication.applicationContentsPath;
+                string unityContentsPath = EditorApplication.applicationContentsPath;
 
-				string[] manifestPathComponentsStyle1 = new [] { "PlaybackEngines", "androidplayer", "Apk", "AndroidManifest.xml" };
-				string[] manifestPathComponentsStyle2 = new [] { "PlaybackEngines", "androidplayer", "AndroidManifest.xml" };
+                string[] manifestPathComponentsStyle1 = { "PlaybackEngines", "androidplayer", "Apk", "AndroidManifest.xml" };
+                string[] manifestPathComponentsStyle2 = { "PlaybackEngines", "androidplayer", "AndroidManifest.xml" };
 
-				string manifestPath = PathCombine(unityContentsPath, PathCombine(manifestPathComponentsStyle1));
+                string manifestPath = PathCombine(unityContentsPath, PathCombine(manifestPathComponentsStyle1));
 
                 if (!File.Exists(manifestPath)) {
-					manifestPath = PathCombine(unityContentsPath, PathCombine(manifestPathComponentsStyle2));
+                    manifestPath = PathCombine(unityContentsPath, PathCombine(manifestPathComponentsStyle2));
 
-					if (!File.Exists(manifestPath)) {
-						string unityRootPath = Path.Combine(EditorApplication.applicationPath, "..");
+                    if (!File.Exists(manifestPath)) {
+                        string unityRootPath = PathCombine(EditorApplication.applicationPath, "..");
 
-						manifestPath = PathCombine(unityRootPath, PathCombine(manifestPathComponentsStyle1));
-						if (!File.Exists(manifestPath))
-							throw new FileNotFoundException("Default AndroidManifest.xml not found");
-					}
+                        manifestPath = PathCombine(unityRootPath, PathCombine(manifestPathComponentsStyle1));
+                        if (!File.Exists(manifestPath))
+                            throw new FileNotFoundException("Default AndroidManifest.xml not found");
+                    }
                 }
 
                 string manifest = File.ReadAllText(manifestPath);
@@ -217,7 +214,7 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
             return nodes;
         }
 
-        private static void SaveAsUtf8(this XmlDocument xmlDocument, string filePath, bool reindent = false) {
+        private static void SaveAsUtf8(XmlDocument xmlDocument, string filePath, bool reindent = false) {
             UTF8Encoding utf8EncodingNoBom = new UTF8Encoding(false);
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = utf8EncodingNoBom; // Do not emit the BOM

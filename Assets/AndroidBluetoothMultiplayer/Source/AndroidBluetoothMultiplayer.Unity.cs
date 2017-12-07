@@ -21,12 +21,12 @@ namespace LostPolygon.AndroidBluetoothMultiplayer {
         /// <summary>
         /// A reference to the Java BluetoothMediator object .
         /// </summary>
-        private static readonly AndroidJavaObject _plugin;
+        private static AndroidJavaObject _plugin;
 
         /// <summary>
         /// Whether the plugin is available and was loaded successfully.
         /// </summary>
-        private static readonly bool _isPluginAvailable;
+        private static bool _isPluginAvailable;
 
         /// <summary>
         /// A reference to singleton instance.
@@ -36,18 +36,10 @@ namespace LostPolygon.AndroidBluetoothMultiplayer {
         /// <summary>
         /// Initializes <see cref="AndroidBluetoothMultiplayer"/> class.
         /// Retrieves a pointer to the Java plugin object.
-        /// Initalizes the singleton instance on the first usage of the class.
         /// </summary>
         static AndroidBluetoothMultiplayer() {
             _plugin = null;
             _isPluginAvailable = false;
-
-            try {
-                UpdateInstance();
-            } catch {
-                // Happens when this static constructor is called from a GameObject being created.
-                // Just ignoring, as this is intended.
-            }
 
 #if !UNITY_EDITOR && UNITY_ANDROID
             // Retrieve BluetoothMediator singleton instance
@@ -59,10 +51,23 @@ namespace LostPolygon.AndroidBluetoothMultiplayer {
                     }
                 }
             } catch {
-                Debug.LogError("AndroidBluetoothMultiplayer initialization failed. Probably .jar not present?");
+                Debug.LogError("AndroidBluetoothMultiplayer initialization failed. Probably .aar not present?");
                 throw;
             }
 #endif
+        }
+
+        /// <summary>
+        /// Initalizes the singleton instance at the application start.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void TryUpdateInstance() {
+            try {
+                UpdateInstance();
+            } catch {
+                // Happens when this static constructor is called from a GameObject being created.
+                // Just ignoring, as this is intended and can't be avoided.
+            }
         }
 
         /// <summary>

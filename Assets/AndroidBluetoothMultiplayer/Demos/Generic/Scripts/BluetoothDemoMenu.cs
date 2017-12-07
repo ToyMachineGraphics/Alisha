@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LostPolygon.AndroidBluetoothMultiplayer.Examples {
     public class BluetoothDemoMenu : MonoBehaviour {
-#if !UNITY_5 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3
+#if UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3
         protected void OnLevelWasLoaded(int level) {
             SceneLoadedHandler(level);
         }

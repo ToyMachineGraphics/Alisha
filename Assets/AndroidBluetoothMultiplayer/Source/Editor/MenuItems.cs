@@ -19,7 +19,7 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
                 return;
 
             if (!ManifestGenerator.PatchManifest()) {
-                Debug.Log("AndroidManifest.xml not patched, nothing to patch.");
+                Debug.Log("AndroidManifest.xml is already patched.");
             }
         }
 
@@ -29,7 +29,7 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
         }
 
         [MenuItem(kMenuRoot + "UUID Generator", false, 10000)]
-        private static void ShowWindow() {
+        private static void ShowUuidGeneratorWindow() {
             if (ShowWrongBuildPlatformDialog())
                 return;
 
@@ -40,7 +40,12 @@ namespace LostPolygon.AndroidBluetoothMultiplayer.Editor {
             if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
                 return false;
 
-            EditorUtility.DisplayDialog("Wrong build platform", "Build platform is not set to Android. Please choose Android as build Platform in File - Build Settings...", "OK");
+            EditorUtility.DisplayDialog(
+                "Wrong build platform",
+                "Build platform is not set to Android. " +
+                "Please choose Android as build Platform in File - Build Settings...",
+                "OK"
+            );
             return true;
         }
     }

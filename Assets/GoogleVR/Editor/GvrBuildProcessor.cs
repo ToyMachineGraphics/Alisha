@@ -38,29 +38,29 @@ class GvrBuildProcessor : IPreprocessBuild {
 
   public void OnPreprocessBuild (BuildTarget target, string path)
   {
-    if (target != BuildTarget.Android && target != BuildTarget.iOS) {
-      // Do nothing when not building for Android or iOS.
-      return;
-    }
+    //if (target != BuildTarget.Android && target != BuildTarget.iOS) {
+    //  // Do nothing when not building for Android or iOS.
+    //  return;
+    //}
 
-    // 'Player Settings > Virtual Reality Supported' must be enabled.
-    if (!IsVRSupportEnabled()) {
-      Debug.LogErrorFormat(VR_SETTINGS_NOT_ENABLED_ERROR_MESSAGE_FORMAT, target);
-    }
+    //// 'Player Settings > Virtual Reality Supported' must be enabled.
+    //if (!IsVRSupportEnabled()) {
+    //  Debug.LogErrorFormat(VR_SETTINGS_NOT_ENABLED_ERROR_MESSAGE_FORMAT, target);
+    //}
 
-    if (target == BuildTarget.Android) {
-      // On Android VR SDKs must include 'Daydream' and/or 'Cardboard'.
-      if (!IsDaydreamSDKIncluded() && !IsCardboardSDKIncluded()) {
-        Debug.LogError(ANDROID_MISSING_GVR_SDK_ERROR_MESSAGE);
-      }
-    }
+    //if (target == BuildTarget.Android) {
+    //  // On Android VR SDKs must include 'Daydream' and/or 'Cardboard'.
+    //  if (!IsDaydreamSDKIncluded() && !IsCardboardSDKIncluded()) {
+    //    Debug.LogError(ANDROID_MISSING_GVR_SDK_ERROR_MESSAGE);
+    //  }
+    //}
 
-    if (target == BuildTarget.iOS) {
-      // On iOS VR SDKs must include 'Cardboard'.
-      if (!IsCardboardSDKIncluded()) {
-        Debug.LogError(IOS_MISSING_GVR_SDK_ERROR_MESSAGE);
-      }
-    }
+    //if (target == BuildTarget.iOS) {
+    //  // On iOS VR SDKs must include 'Cardboard'.
+    //  if (!IsCardboardSDKIncluded()) {
+    //    Debug.LogError(IOS_MISSING_GVR_SDK_ERROR_MESSAGE);
+    //  }
+    //}
   }
 
   // 'Player Settings > Virtual Reality Supported' enabled?
