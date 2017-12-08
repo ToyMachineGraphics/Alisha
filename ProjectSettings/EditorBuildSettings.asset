@@ -15,14 +15,8 @@ EditorBuildSettings:
     path: Assets/Alisha/Scenes/2_MainMenu/MainMenu.unity
     guid: d945893dc3bec7a4aa5d4ec1f21570c7
   - enabled: 0
-    path: Assets/Dev/DaydreamSample/MinimalDaydream/MinimalDaydream.unity
-    guid: 428291b2371f73f4e932b649948db594
-  - enabled: 0
     path: Assets/GoogleVR/Demos/Scenes/GVRDemo.unity
     guid: bb36d2905dc634f1c9eecb35beecaca8
-  - enabled: 0
-    path: Assets/Dev/Attract/AttractObject.unity
-    guid: 7f89bce35a8dec748b5abea37696674c
   - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/Generic/Scenes/BluetoothDemoMenu.unity
     guid: c5a4c6612e053894aae4b1e9582f57bd
@@ -38,6 +32,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/UNet/BluetoothMultiplayerDemo.unity
     guid: e45614ac4da622849b314ef4c5157795
-  - enabled: 1
+  - enabled: 0
     path: Assets/Alisha/Scenes/3_Chapter2/3_Chapter2.unity
     guid: 79c8614e51d159441b99ac1a4e448f0b
+  - enabled: 0
+    path: Assets/Alisha/Scenes/3_NonVR/NonVR.unity
+    guid: 16754243602d40c41b381059d12a95f2

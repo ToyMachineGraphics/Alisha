@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 
-public class CirclePuzzleManager : MonoBehaviour
+public class CirclePuzzleManager : NetworkBehaviour
 {
     public GameObject UnlockImg;
     public GameObject Cue;
+
+    [SyncVar(hook = "UnlockUpdate")]
+    private bool _isUnlock;
+
     private CirclePuzzleBehavior[] Puzzles;
 
     // Use this for initialization
@@ -20,10 +25,10 @@ public class CirclePuzzleManager : MonoBehaviour
         for (int i = 0; i < Puzzles.Length; i++)
         {
             if (Puzzles[i].CurrentSplits == 0 && i == Puzzles.Length - 1)
-                Unlock();
+                Unlock(true);
             else if (Puzzles[i].CurrentSplits != 0)
             {
-                UnlockImg.SetActive(false);
+                Unlock(false);
                 break;
             }
         }
@@ -46,8 +51,22 @@ public class CirclePuzzleManager : MonoBehaviour
         }
     }
 
-    private void Unlock()
+    private void Unlock(bool isUnlock)
     {
-        UnlockImg.SetActive(true);
+        if (isServer)
+            _isUnlock = isUnlock;
+        else
+            Cmd_Unlock(isUnlock);
+    }
+
+    [Command]
+    private void Cmd_Unlock(bool isUnlock)
+    {
+        _isUnlock = isUnlock;
+    }
+
+    private void UnlockUpdate(bool isUnlock)
+    {
+        UnlockImg.SetActive(isUnlock);
     }
 }

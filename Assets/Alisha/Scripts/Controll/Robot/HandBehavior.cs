@@ -44,11 +44,13 @@ public class HandBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!RobotBehavior.Instance.isLocalPlayer)
+            return;
         if (other.tag == "CircleTrigger")
         {
             transform.DOPause();
             transform.DOKill();
-            other.GetComponent<CirclePuzzleManager>().PuzzleTrigger(true);
+            other.transform.parent.GetComponent<CirclePuzzleManager>().PuzzleTrigger(true);
         }
     }
 }
