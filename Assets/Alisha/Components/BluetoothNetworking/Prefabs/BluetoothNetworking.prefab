@@ -122,6 +122,10 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  IsVR: 0
+  VRPlayerPrefab: {fileID: 0}
+  NonVRPlayerPrefab: {fileID: 0}
+  MaxPlayers: 2
 --- !u!114 &114725298093663340
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,6 +142,10 @@ MonoBehaviour:
     _defaultBluetoothDiscoverabilityInterval: 120
     _stopBluetoothServerOnListeningStopped: 1
     _logBluetoothEvents: 0
+  _initResult: 0
+  _isBluetoothEnabled: 0
+  _isDiscoverable: 0
+  _isDiscovering: 0
   OnBluetoothAdapterEnabledAction:
     m_PersistentCalls:
       m_Calls:
@@ -154,6 +162,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothAdapterEnableFailedAction:
     m_PersistentCalls:
       m_Calls:
@@ -170,6 +179,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothAdapterDisabledAction:
     m_PersistentCalls:
       m_Calls:
@@ -186,6 +196,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothDiscoverabilityEnabledAction:
     m_PersistentCalls:
       m_Calls:
@@ -202,6 +213,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothDiscoverabilityEnableFailedAction:
     m_PersistentCalls:
       m_Calls:
@@ -218,6 +230,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothDiscoveryStartedAction:
     m_PersistentCalls:
       m_Calls:
@@ -234,6 +247,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothDiscoveryFinishedAction:
     m_PersistentCalls:
       m_Calls:
@@ -250,6 +264,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_CallsDirty: 1
   OnBluetoothDeviceDiscoveredAction:
     m_PersistentCalls:
       m_Calls:
@@ -266,4 +281,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: BluetoothDeviceEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    m_CallsDirty: 1
   _networkManager: {fileID: 0}
+  _desiredMode: 0
