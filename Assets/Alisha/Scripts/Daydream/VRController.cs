@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public sealed class VRController : MinimalDaydream
@@ -44,6 +43,12 @@ public sealed class VRController : MinimalDaydream
         }
     }
 
+    private void OnDestroy()
+    {
+        _instance = null;
+        _isQuitting = true;
+    }
+
     private void OnApplicationQuit()
     {
         _isQuitting = true;
@@ -59,9 +64,15 @@ public sealed class VRController : MinimalDaydream
     [SerializeField]
     private Transform _hand;
 
+    public Action<float> OnPlayerHeightChanged;
+
     protected override void Start ()
     {
         base.Start();
+        if (OnPlayerHeightChanged != null)
+        {
+            OnPlayerHeightChanged(Player.transform.position.y);
+        }
 
         _laserPointer = ControllerPointer.transform.GetChild(1).GetComponent<GvrLaserPointer>();
         _laserPointer.raycastMode = GvrBasePointer.RaycastMode.Direct;

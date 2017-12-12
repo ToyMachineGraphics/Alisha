@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GoogleVR.Demos;
+using UnityEngine;
 
 public class MinimalDaydream : MonoBehaviour
 {
