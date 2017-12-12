@@ -6,6 +6,12 @@ using UnityEngine.Networking;
 public class Aisha : NetworkBehaviour
 {
     public VRController Controller;
+    private NetworkIdentity _networkId;
+
+    private void Awake()
+    {
+        _networkId = GetComponent<NetworkIdentity>();
+    }
 
     public override void OnStartLocalPlayer()
     {

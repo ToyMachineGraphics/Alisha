@@ -74,11 +74,18 @@ public class ALishaNetworkMain : MonoBehaviour
         AndroidBluetoothNetworkManagerHelper.StartClient();
     }
 
-    public void OnDisconnectButton()
+    public void OnStopServerButton()
     {
         AndroidBluetoothMultiplayer.StopDiscovery();
         AndroidBluetoothMultiplayer.Stop();
         BluetoothMultiplayerDemoNetworkManager.StopHost();
+    }
+
+    public void OnDisconnectButton()
+    {
+        AndroidBluetoothMultiplayer.StopDiscovery();
+        AndroidBluetoothMultiplayer.Stop();
+        BluetoothMultiplayerDemoNetworkManager.StopClient();
     }
     #endregion
 #endif
