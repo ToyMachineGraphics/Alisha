@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 
-public class CirclePuzzleManager : NetworkBehaviour
+public class CirclePuzzleManager : MonoBehaviour
 {
     public GameObject UnlockImg;
     public GameObject Cue;
 
-    [SyncVar(hook = "UnlockUpdate")]
     private bool _isUnlock;
 
     private CirclePuzzleBehavior[] Puzzles;
@@ -17,6 +16,7 @@ public class CirclePuzzleManager : NetworkBehaviour
     private void Start()
     {
         Puzzles = GameObject.FindObjectsOfType<CirclePuzzleBehavior>();
+        NetworkSyncField.Instance.OnPuzzel_TriggersChanged += UnlockUpdate;
     }
 
     // Update is called once per frame
@@ -53,20 +53,21 @@ public class CirclePuzzleManager : NetworkBehaviour
 
     private void Unlock(bool isUnlock)
     {
-        if (isServer)
-            _isUnlock = isUnlock;
-        else
-            Cmd_Unlock(isUnlock);
+        NetworkSyncField.Instance.Setvalue(SyncFields.boolArray5_Puzzel_Triggers, new bool[5] { isUnlock, false, false, false, false });
+        //if (isServer)
+        //    _isUnlock = isUnlock;
+        //else
+        //    Cmd_Unlock(isUnlock);
     }
 
-    [Command]
-    private void Cmd_Unlock(bool isUnlock)
-    {
-        _isUnlock = isUnlock;
-    }
+    //[Command]
+    //private void Cmd_Unlock(bool isUnlock)
+    //{
+    //    _isUnlock = isUnlock;
+    //}
 
-    private void UnlockUpdate(bool isUnlock)
+    private void UnlockUpdate(SyncListBool isUnlock)
     {
-        UnlockImg.SetActive(isUnlock);
+        UnlockImg.SetActive(isUnlock[0]);
     }
 }
