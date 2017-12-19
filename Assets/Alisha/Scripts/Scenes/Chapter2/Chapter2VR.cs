@@ -11,11 +11,14 @@ public class Chapter2VR : MonoBehaviour
 
     [SerializeField]
     private Canvas _networkUI;
+    [SerializeField]
+    private GameObject _vrMenuUI;
 
     private void Awake()
     {
         _controller = VRController.Instance;
         _controller.OnPlayerHeightChanged = OnPlayerHeightChanged;
+        _controller.VRMenuUI = _vrMenuUI;
     }
 
     private void Start ()
