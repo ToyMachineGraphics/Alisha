@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
+using DG.Tweening;
 
 public enum MoveState
 {
@@ -17,6 +18,8 @@ public class RobotBehavior : NetworkBehaviour
     public float Speed = 5;
     public float TurnSpeed = 45;
     public GameObject[] LocalPlayerObjects;
+
+    private bool _flying = false;
     private CharacterController _controller;
 
     [SyncVar]
@@ -51,18 +54,28 @@ public class RobotBehavior : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
+        if (!_flying && !_controller.isGrounded)
+        {
+            _controller.SimpleMove(Physics.gravity * Time.deltaTime);
+        }
         switch (_state)
         {
             case MoveState.Idel:
                 break;
 
             case MoveState.Forward:
-                _controller.SimpleMove(transform.forward * Speed);
+                if (_flying)
+                    _controller.Move(transform.forward * Speed * Time.deltaTime);
+                else
+                    _controller.SimpleMove(transform.forward * Speed);
 
                 break;
 
             case MoveState.Back:
-                _controller.SimpleMove(transform.forward * -Speed);
+                if (_flying)
+                    _controller.Move(transform.forward * -Speed * Time.deltaTime);
+                else
+                    _controller.SimpleMove(transform.forward * -Speed);
 
                 break;
 
@@ -125,5 +138,16 @@ public class RobotBehavior : NetworkBehaviour
     private void Cmd_ChangeState(MoveState state)
     {
         _state = state;
+    }
+
+    public void FlyOrLanding()
+    {
+        _flying = !_flying;
+        if (_flying)
+        {
+            transform.DOLocalMoveY(2, 1)
+                .SetEase(Ease.OutBack)
+                .SetRelative();
+        }
     }
 }

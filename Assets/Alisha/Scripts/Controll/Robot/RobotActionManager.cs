@@ -14,4 +14,9 @@ public class RobotActionManager : MonoBehaviour
     {
         HandBehavior.Instance.Stretch();
     }
+
+    public void Fly()
+    {
+        RobotBehavior.Instance.FlyOrLanding();
+    }
 }
