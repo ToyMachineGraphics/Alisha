@@ -24,9 +24,10 @@ public class ALishaNetworkMain : MonoBehaviour
             Debug.LogError("Build platform is not set to Android. Please choose Android as build Platform in File - Build Settings...");
         }
 
-        protected override void OnEnable() {
-            base.OnEnable();
-
+        //protected override void OnEnable() {
+        //    base.OnEnable();
+        private void OnEnable()
+        {
             UIPanelGameObject.SetActive(false);
             ErrorUIPanelGameObject.SetActive(true);
         }

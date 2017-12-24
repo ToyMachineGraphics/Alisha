@@ -91,6 +91,10 @@ public class NetworkSyncField : NetworkBehaviour
 
     public void Setvalue(SyncFields variableName, object value)
     {
+        if (!hasAuthority)
+        {
+            return;
+        }
         _value = value;
         _variableName = variableName.ToString();
         SyncFieldStruct field = new SyncFieldStruct();

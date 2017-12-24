@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class Chapter2VR : MonoBehaviour
 {
@@ -14,22 +15,42 @@ public class Chapter2VR : MonoBehaviour
     [SerializeField]
     private GameObject _vrMenuUI;
 
-    private void Awake()
+    private IEnumerator Start ()
     {
-        _controller = VRController.Instance;
+        do
+        {
+            _controller = VRController.Instance;
+        } while (!_controller);
         _controller.OnPlayerHeightChanged = OnPlayerHeightChanged;
         _controller.VRMenuUI = _vrMenuUI;
-    }
+        _controller.MainCamera.enabled = true;
 
-    private void Start ()
-    {
         _denryuIrairaBo.RaycastAction = AttractDenryuIrairaBoAgent;
+        while (!_denryuIrairaBo.gameObject.activeInHierarchy)
+        {
+            yield return null;
+        }
+
+        //if (_denryuIrairaBo.isServer)
+        //{
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        _denryuIrairaBo.CmdSpawnAgentDefault();
+        //        yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
+        //    }
+        //}
     }
 
     private void Update ()
     {
-		
-	}
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_denryuIrairaBo.isServer)
+            {
+                _denryuIrairaBo.SpawnAgentDefault();
+            }
+        }
+    }
 
     public void OnPlayerHeightChanged(float height)
     {

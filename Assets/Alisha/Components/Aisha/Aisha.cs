@@ -9,9 +9,19 @@ public class Aisha : NetworkBehaviour
     private NetworkIdentity _networkId;
     public GameObject Flashlight;
     private Light _spotlight;
+    public static Aisha Instance = null;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+
         _networkId = GetComponent<NetworkIdentity>();
     }
 
@@ -28,7 +38,7 @@ public class Aisha : NetworkBehaviour
 	
 	private void Update ()
     {
-		if (localPlayerAuthority)
+		if (localPlayerAuthority && Controller)
         {
             if (Flashlight.activeInHierarchy)
             {

@@ -1,13 +1,24 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 
-public class DenryuIrairaBo : MonoBehaviour
+public class DenryuIrairaBo : NetworkBehaviour
 {
     public const string DENRYU_IRAIRA_BO_KILLER = "DenryuIrairaBoKiller";
     public const string DENRYU_IRAIRA_BO_DUPLICATE = "DenryuIrairaBoDuplicate";
+
+    [SerializeField]
+    private DenryuIrairaBoAgent _agentPrefab;
+    public int m_ObjectPoolSize = 50;
+
+    public NetworkHash128 assetId { get; set; }
+
+    public delegate GameObject SpawnDelegate(Vector3 position, NetworkHash128 assetId);
+    public delegate void UnSpawnDelegate(GameObject spawned);
 
     [SerializeField]
     private List<DenryuIrairaBoAgent> _agentPool = new List<DenryuIrairaBoAgent>();
@@ -19,12 +30,22 @@ public class DenryuIrairaBo : MonoBehaviour
 
     [SerializeField]
     private NavMeshSurface[] _surfaces;
-    private List<Vector3[]> _surfacesVertices = new List<Vector3[]>();
 
     private bool _rayHover;
     public Action RaycastAction;
 
-    private void Start()
+    private void Awake()
+    {
+        //assetId = _agentPrefab.GetComponent<NetworkIdentity>().assetId;
+        //_agentPool = new List<DenryuIrairaBoAgent>(m_ObjectPoolSize);
+        //for (int i = 0; i < m_ObjectPoolSize; ++i)
+        //{
+        //    DenryuIrairaBoAgent a = Instantiate(_agentPrefab, transform);
+        //    _agentPool.Add(a);
+        //}
+    }
+
+    private IEnumerator Start()
     {
         foreach (NavMeshSurface s in _surfaces)
         {
@@ -33,10 +54,12 @@ public class DenryuIrairaBo : MonoBehaviour
 
         _rayHover = false;
         DenryuIrairaBoMask = LayerMask.GetMask("DenryuIrairaBo");
+        yield return new WaitForSeconds(1);
         //DenryuIrairaBoAgent agent;
         //for (int i = 0; i < 10; i++)
         //{
         //    SpawnAgent(out agent);
+        //    yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
         //}
     }
 
@@ -47,30 +70,35 @@ public class DenryuIrairaBo : MonoBehaviour
 
     private void Update ()
     {
-        if (Target == null)
-        {
-            return;
-        }
+        //if (!isServer)
+        //{
+        //    return;
+        //}
 
-		foreach (DenryuIrairaBoAgent a in _activeAgent)
-        {
-            //a.Agent.SetDestination(Target.position);
-        }
+        //if (Target == null)
+        //{
+        //    return;
+        //}
 
-        if (_rayHover && RaycastAction != null)
-        {
-            RaycastAction();
-        }
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DenryuIrairaBoAgent agent;
-            if (SpawnAgent(out agent))
-            {
+        //foreach (DenryuIrairaBoAgent a in _activeAgent)
+        //      {
+        //          a.Agent.SetDestination(Target.position);
+        //      }
 
-            }
-        }
-#endif
+        //        if (_rayHover && RaycastAction != null)
+        //        {
+        //            RaycastAction();
+        //        }
+        //#if UNITY_EDITOR
+        //        if (Input.GetKeyDown(KeyCode.Space))
+        //        {
+        //            DenryuIrairaBoAgent agent;
+        //            if (SpawnAgent(out agent))
+        //            {
+
+        //            }
+        //        }
+        //#endif
     }
 
     #region Event Trigger
@@ -88,6 +116,69 @@ public class DenryuIrairaBo : MonoBehaviour
 
     #endregion
 
+    [Server]
+    public void SpawnAgentDefault()
+    {
+        var agent = Instantiate(_agentPrefab);
+        agent.transform.position = _agentPrefab.transform.position;
+        DenryuIrairaBoAgent.DenryuIrairaBo = this;
+        agent.gameObject.SetActive(true);
+        NetworkServer.Spawn(agent.gameObject);
+    }
+
+    [Server]
+    public void SpawnAgent(Vector3 position)
+    {
+        var agent = Instantiate(_agentPrefab, position, Quaternion.identity, transform);
+        NetworkServer.Spawn(agent.gameObject);
+    }
+
+    //[Command]
+    //public void CmdSpawnAgent(Vector3 position)
+    //{
+    //    var agent = GetFromPool(position);
+    //    if (agent != null)
+    //    {
+    //        NetworkServer.Spawn(agent, assetId);
+    //    }
+    //}
+
+    //[Command]
+    //public void CmdDespawnAgent(GameObject go)
+    //{
+    //    UnSpawnObject(go);
+    //    NetworkServer.UnSpawn(go);
+    //}
+
+    //public GameObject SpawnAgent(Vector3 position, NetworkHash128 assetId)
+    //{
+    //    return GetFromPool(position);
+    //}
+
+    //public void UnSpawnObject(GameObject spawned)
+    //{
+    //    Debug.Log("Re-pooling object " + spawned.name);
+    //    spawned.SetActive(false);
+    //}
+
+    //public GameObject GetFromPool(Vector3 position)
+    //{
+    //    foreach (var obj in _agentPool)
+    //    {
+    //        if (!obj.gameObject.activeInHierarchy)
+    //        {
+    //            Debug.Log("Activating object " + obj.name + " at " + position);
+    //            //obj.transform.position = position;
+    //            obj.transform.SetParent(transform, true);
+    //            obj.DenryuIrairaBo = this;
+    //            obj.gameObject.SetActive(true);
+    //            return obj.gameObject;
+    //        }
+    //    }
+    //    Debug.LogError("Could not grab object from pool, nothing available");
+    //    return null;
+    //}
+
     public bool SpawnAgent(out DenryuIrairaBoAgent agent)
     {
         foreach (DenryuIrairaBoAgent a in _agentPool)
@@ -96,7 +187,7 @@ public class DenryuIrairaBo : MonoBehaviour
             {
                 _activeAgent.Add(a);
                 agent = a;
-                agent.DenryuIrairaBo = this;
+                DenryuIrairaBoAgent.DenryuIrairaBo = this;
                 agent.gameObject.SetActive(true);
                 return true;
             }

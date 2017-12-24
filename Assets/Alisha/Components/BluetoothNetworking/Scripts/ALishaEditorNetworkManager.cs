@@ -1,9 +1,9 @@
-﻿using LostPolygon.AndroidBluetoothMultiplayer;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Networking;
 
-public class ALishaNetworkManager : AndroidBluetoothNetworkManager
+public class ALishaEditorNetworkManager : NetworkManager
 {
     public bool IsVR;
 
@@ -93,16 +93,7 @@ public class ALishaNetworkManager : AndroidBluetoothNetworkManager
     {
         SendScreenshotMessage sendScreenshot = netMsg.ReadMessage<SendScreenshotMessage>();
         Texture2D texture = new Texture2D(sendScreenshot.width, sendScreenshot.height, TextureFormat.RGBA32, true);
-        bool succeess =texture.LoadImage(sendScreenshot.ImageBytes);
+        bool succeess = texture.LoadImage(sendScreenshot.ImageBytes);
     }
     #endregion
-}
-
-public class GameObjectEvent : UnityEvent<GameObject>
-{
-}
-
-public class PlayerTypeMessgage : MessageBase
-{
-    public bool IsVR;
 }

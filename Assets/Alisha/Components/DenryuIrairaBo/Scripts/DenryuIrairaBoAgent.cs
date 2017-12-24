@@ -2,22 +2,24 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Networking;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class DenryuIrairaBoAgent : MonoBehaviour
+public class DenryuIrairaBoAgent : NetworkBehaviour
 {
     private NavMeshAgent _agent;
     public NavMeshAgent Agent
     {
         get { return _agent; }
     }
-    public DenryuIrairaBo DenryuIrairaBo;
+    public static DenryuIrairaBo DenryuIrairaBo;
 
     private Vector3 _lastPosition;
     private Vector3 _motion;
 
     #region Navigation
     private int stage = 0;
+    //[SyncVar]
     private Vector3 _destination;
 
     [SerializeField]
@@ -42,19 +44,32 @@ public class DenryuIrairaBoAgent : MonoBehaviour
     private Action _setDestinationAction;
     #endregion
 
+    [SerializeField]
+    private GameObject _targetPrefab;
     public Transform Target;
 
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         Target = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
-        Target.transform.localScale = Vector3.one * 0.0625f;
+        Target.transform.SetParent(transform.parent);
+        Target.transform.localScale = Vector3.one * 0.03125f;
+        if (DenryuIrairaBo == null)
+        {
+            DenryuIrairaBo = FindObjectOfType<DenryuIrairaBo>();
+        }
     }
 
     private void OnEnable()
     {
         _lastPosition = transform.position;
     }
+
+    //public override void OnStartServer()
+    //{
+    //    base.OnStartServer();
+    //    _agent.enabled = true;
+    //}
 
     private void Start ()
     {
@@ -64,16 +79,14 @@ public class DenryuIrairaBoAgent : MonoBehaviour
     private Coroutine _waitForMoveRoutine;
     private void FindNextDestination()
     {
-        stage = -1;
-        if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref _destination))
+        if (isServer)
         {
-            //Target.position = _destination;
-            //_agent.destination = _destination;
-
-            //stage = 0;
-
-            stage = 1;
-            _waitForMoveRoutine = StartCoroutine(WaitForMove());
+            stage = -1;
+            if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref _destination))
+            {
+                stage = 1;
+                _waitForMoveRoutine = StartCoroutine(WaitForMove());
+            }
         }
     }
 
@@ -81,12 +94,14 @@ public class DenryuIrairaBoAgent : MonoBehaviour
     {
         float random = UnityEngine.Random.Range(0f, 1f);
         yield return new WaitForSeconds(random * random * 4);
-        Target.position = _destination;
-        _agent.destination = _destination;
-        stage = 0;
+        RpcSetDestination(_destination);
+        //Target.position = _destination;
+        //_agent.destination = _destination;
+        //stage = 0;
         _waitForMoveRoutine = null;
     }
 
+    [Server]
     public void CompleteWaitForMove()
     {
         if (_waitForMoveRoutine != null)
@@ -94,6 +109,13 @@ public class DenryuIrairaBoAgent : MonoBehaviour
             StopCoroutine(_waitForMoveRoutine);
             _waitForMoveRoutine = null;
         }
+        RpcSetDestination(_destination);
+    }
+
+    [ClientRpc]
+    private void RpcSetDestination(Vector3 destination)
+    {
+        _destination = destination;
         Target.position = _destination;
         _agent.destination = _destination;
         stage = 0;
@@ -132,6 +154,7 @@ public class DenryuIrairaBoAgent : MonoBehaviour
                 }
             }
         }
+        // stage equals to 1, no action
     }
 
     #region Surface Transition
@@ -165,21 +188,32 @@ public class DenryuIrairaBoAgent : MonoBehaviour
     }
     #endregion
 
+    [ServerCallback]
     public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(DenryuIrairaBo.DENRYU_IRAIRA_BO_KILLER))
         {
             Debug.Log("Kill");
-            DenryuIrairaBo.DespawnAgent(this);
+            //DenryuIrairaBo.DespawnAgent(this);
+            Destroy(gameObject);
         }
         else if (other.CompareTag(DenryuIrairaBo.DENRYU_IRAIRA_BO_DUPLICATE))
         {
             Debug.Log("Duplicate");
-            DenryuIrairaBoAgent agent;
-            if (DenryuIrairaBo.SpawnAgent(out agent))
-            {
-                agent.transform.position = transform.position;
-            }
+            //DenryuIrairaBoAgent agent;
+            //if (DenryuIrairaBo.SpawnAgent(out agent))
+            //{
+            //    agent.transform.position = transform.position;
+            //}
+            DenryuIrairaBo.SpawnAgent(transform.position);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Target)
+        {
+            Destroy(Target.gameObject);
         }
     }
 }
