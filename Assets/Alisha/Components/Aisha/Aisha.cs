@@ -7,7 +7,7 @@ public class Aisha : NetworkBehaviour
 {
     public VRController Controller;
     private NetworkIdentity _networkId;
-    public GameObject Flashlight;
+    public Flashlight _flashlight;
     private Light _spotlight;
     public static Aisha Instance = null;
 
@@ -40,15 +40,18 @@ public class Aisha : NetworkBehaviour
     {
 		if (localPlayerAuthority && Controller)
         {
-            if (Flashlight.activeInHierarchy)
+            if (_flashlight && _flashlight.gameObject.activeInHierarchy)
             {
-                Flashlight.transform.rotation = Controller.ControllerModel.transform.rotation;
+                _flashlight.transform.rotation = Controller.ControllerModel.transform.rotation;
             }
         }
 	}
 
     public void UseSpotlight(bool use)
     {
-        Flashlight.SetActive(use);
+        if (_flashlight)
+        {
+            _flashlight.gameObject.SetActive(use);
+        }
     }
 }

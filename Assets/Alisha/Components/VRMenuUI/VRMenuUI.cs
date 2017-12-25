@@ -17,6 +17,7 @@ public class VRMenuUI : MonoBehaviour
     public UnityEvent[] SelectActions;
 
     private Func<int, bool> GetPressed;
+    private Func<Vector2> TouchPosition;
 
     public Transform LookTowardsCamera;
 	[SerializeField]
@@ -36,20 +37,44 @@ public class VRMenuUI : MonoBehaviour
 
     private void Start ()
     {
+#if UNITY_EDITOR
         GetPressed = Input.GetMouseButton;
+        TouchPosition = MousePositionCentered;
+#elif UNITY_ANDROID
+        GetPressed = ClickButton;
+        TouchPosition = GetTouchPosition;
+#endif
         LookTowardsCamera = new GameObject("LookTowardsCamera").transform;
         LookTowardsCamera.position = transform.position;
         gameObject.SetActive(false);
 		Debug.Log ("VRMenuUI Start");
     }
 
+    private Vector2 MousePositionCentered()
+    {
+        float deltaX = Input.mousePosition.x - Screen.width / 2;
+        float deltaY = Input.mousePosition.y - Screen.height / 2;
+        return new Vector2(deltaX, deltaY);
+    }
+
+#if UNITY_ANDROID
+    private bool ClickButton(int button)
+    {
+        return GvrControllerInput.ClickButton;
+    }
+
+    private Vector2 GetTouchPosition()
+    {
+        return GvrControllerInput.TouchPosCentered;
+    }
+#endif
+
     private void Update ()
     {
 		if (GetPressed(0))
         {
-            float deltaX = Input.mousePosition.x - Screen.width / 2;
-            float deltaY = Input.mousePosition.y - Screen.height / 2;
-            Touch(new Vector2(deltaX, deltaY));
+            Vector2 position = TouchPosition();
+            Touch(position);
         }
 
         LookTowardsCamera.position = VRController.Instance.Hand.transform.position + Vector3.up * 0.25f;
@@ -76,7 +101,6 @@ public class VRMenuUI : MonoBehaviour
         {
             deg += 360;
         }
-        Debug.Log(deg);
         float anglePerSection = 360.0f / Sections.Length;
         for (int i = 0; i < Sections.Length; i++)
         {

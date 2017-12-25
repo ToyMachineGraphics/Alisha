@@ -13,12 +13,12 @@ public class DenryuIrairaBo : NetworkBehaviour
 
     [SerializeField]
     private DenryuIrairaBoAgent _agentPrefab;
-    public int m_ObjectPoolSize = 50;
+    //public int m_ObjectPoolSize = 50;
 
-    public NetworkHash128 assetId { get; set; }
+    //public NetworkHash128 assetId { get; set; }
 
-    public delegate GameObject SpawnDelegate(Vector3 position, NetworkHash128 assetId);
-    public delegate void UnSpawnDelegate(GameObject spawned);
+    //public delegate GameObject SpawnDelegate(Vector3 position, NetworkHash128 assetId);
+    //public delegate void UnSpawnDelegate(GameObject spawned);
 
     [SerializeField]
     private List<DenryuIrairaBoAgent> _agentPool = new List<DenryuIrairaBoAgent>();
