@@ -67,6 +67,7 @@ public sealed class VRController : MinimalDaydream
     {
         get { return _hand; }
     }
+	private Vector3 _defaultControllerModelForward = Vector3.forward;
 
     public Action<float> OnPlayerHeightChanged;
 
@@ -103,8 +104,12 @@ public sealed class VRController : MinimalDaydream
         if (GvrControllerInput.Recentered)
         {
             _hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.25f;
+			_defaultControllerModelForward = ControllerModel.transform.forward;
         }
-        _hand.rotation = ControllerModel.transform.rotation;
+		if (_state == ControllerState.Normal)
+		{
+			_hand.rotation = ControllerModel.transform.rotation;
+		}
 
         if (GvrPointerInputModule.CurrentRaycastResult.isValid)
         {
@@ -115,7 +120,11 @@ public sealed class VRController : MinimalDaydream
             }
         }
 
+#if UNITY_EDITOR
+		if (Input.GetMouseButtonDown(0))
+#else
         if (GvrControllerInput.ClickButtonDown)
+#endif
         {
             switch (_state)
             {
@@ -126,7 +135,11 @@ public sealed class VRController : MinimalDaydream
                     break;
             }
         }
+#if UNITY_EDITOR
+		else if (Input.GetMouseButton(0))
+#else
         else if (GvrControllerInput.ClickButton)
+#endif
         {
             VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
             switch (_state)
@@ -135,8 +148,11 @@ public sealed class VRController : MinimalDaydream
                     _uiTriggerTimer += Time.deltaTime;
                     if (_uiTriggerTimer > 1)
                     {
-                        VRMenuUI.transform.position = vrMenuUI.LookTowardsCamera.position = _hand.position + Vector3.up * 0.5f;
-                        vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, MainCamera.transform.up);
+						_hand.position = MainCamera.transform.position + (MainCamera.transform.forward - Vector3.up) * 0.5f;
+						_hand.rotation = Quaternion.Euler(0, -90, 0) * MainCamera.transform.rotation;
+                        VRMenuUI.transform.position = vrMenuUI.LookTowardsCamera.position = _hand.position + Vector3.up * 0.75f;
+						vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, MainCamera.transform.up);
+						VRMenuUI.transform.rotation = vrMenuUI.LookTowardsCamera.rotation;
                         vrMenuUI.Touch(GvrControllerInput.TouchPosCentered);
                         VRMenuUI.SetActive(true);
                         _state = ControllerState.MenuUI;
@@ -146,9 +162,17 @@ public sealed class VRController : MinimalDaydream
                     break;
             }
         }
+#if UNITY_EDITOR
+		else if (Input.GetMouseButtonUp(0))
+#else
         else if (GvrControllerInput.ClickButtonUp)
+#endif
         {
-            VRMenuUI.SetActive(false);
+			if (VRMenuUI.activeInHierarchy) {
+				_state = ControllerState.Normal;
+				_hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.25f;
+				VRMenuUI.GetComponent<VRMenuUI> ().Confirm ();
+			}
         }
     }
 }

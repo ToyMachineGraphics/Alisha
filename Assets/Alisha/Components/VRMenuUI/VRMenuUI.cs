@@ -16,18 +16,31 @@ public class VRMenuUI : MonoBehaviour
     public Material SelectedMaterial;
     public UnityEvent[] SelectActions;
 
-    private float _timer = 0;
     private Func<int, bool> GetPressed;
 
     public Transform LookTowardsCamera;
+	[SerializeField]
+	private float _checkAngleDiffDelay = 0.5f;
+	private float _checkAngleDiffDelayTimer;
+
+	private void OnEnable()
+	{
+		_currentSelectedIndex = _lastSelectedIndex = 0;
+		for (int i = 0; i < Sections.Length; i++)
+		{
+			Sections[i].GetComponent<Renderer>().material = _defaultMaterial;
+		}
+		_checkAngleDiffDelayTimer = 0;
+		Debug.Log ("VRMenuUI OnEnable");
+	}
 
     private void Start ()
     {
-        _currentSelectedIndex = _lastSelectedIndex = 0;
         GetPressed = Input.GetMouseButton;
         LookTowardsCamera = new GameObject("LookTowardsCamera").transform;
         LookTowardsCamera.position = transform.position;
         gameObject.SetActive(false);
+		Debug.Log ("VRMenuUI Start");
     }
 
     private void Update ()
@@ -41,8 +54,17 @@ public class VRMenuUI : MonoBehaviour
 
         LookTowardsCamera.position = VRController.Instance.Hand.transform.position + Vector3.up * 0.25f;
         LookTowardsCamera.LookAt(VRController.Instance.MainCamera.transform.position, VRController.Instance.MainCamera.transform.up);
-        transform.position = Vector3.Lerp(transform.position, LookTowardsCamera.position, Time.deltaTime * 8f);
+		transform.position = LookTowardsCamera.position; //Vector3.Lerp(transform.position, LookTowardsCamera.position, Time.deltaTime * 8f);
         transform.rotation = LookTowardsCamera.rotation;
+
+		_checkAngleDiffDelayTimer += Time.deltaTime;
+		Vector3 camForward = VRController.Instance.MainCamera.transform.forward;
+		float angle = Vector3.Angle (-transform.forward, camForward);
+		if (_checkAngleDiffDelayTimer > _checkAngleDiffDelay && angle > 45) {
+			gameObject.SetActive (false);
+			Debug.LogFormat ("VRMenuUI Update {0} over 45 degree: {1} {2}", angle, camForward, -transform.forward);
+			return;
+		}
     }
 
     public void Touch(Vector2 position)
@@ -82,9 +104,10 @@ public class VRMenuUI : MonoBehaviour
 
     public void Confirm()
     {
-        if (SelectActions[_currentSelectedIndex] != null)
+		if (SelectActions.Length > _currentSelectedIndex && SelectActions[_currentSelectedIndex] != null)
         {
             SelectActions[_currentSelectedIndex].Invoke();
         }
+		gameObject.SetActive (false);
     }
 }
