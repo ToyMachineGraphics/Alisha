@@ -130,7 +130,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1500885249232790}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4214699908105480}
@@ -328,7 +328,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Controller: {fileID: 0}
-  Flashlight: {fileID: 0}
+  _flashlightPrefab: {fileID: 114415184884895290, guid: f072191026551494a922dfa22922f708,
+    type: 2}
+  _flashlight: {fileID: 0}
 --- !u!136 &136708846355909214
 CapsuleCollider:
   m_ObjectHideFlags: 1

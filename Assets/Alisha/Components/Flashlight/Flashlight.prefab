@@ -62,6 +62,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1702689276728928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4352494876676796}
+  m_Layer: 0
+  m_Name: ChildRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1772918932097290
 GameObject:
   m_ObjectHideFlags: 1
@@ -75,7 +90,7 @@ GameObject:
   - component: {fileID: 23683856040303780}
   - component: {fileID: 54342740172078448}
   - component: {fileID: 114242728386962100}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +110,7 @@ GameObject:
   - component: {fileID: 23425027271863550}
   - component: {fileID: 54435561421261394}
   - component: {fileID: 114912903281345266}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +119,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1960728666314254
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -128,13 +143,27 @@ Transform:
   m_GameObject: {fileID: 1960728666314254}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.125, y: 0.125, z: 0.125}
+  m_LocalScale: {x: 0.125, y: 0.12500006, z: 0.12500006}
+  m_Children: []
+  m_Father: {fileID: 4352494876676796}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!4 &4352494876676796
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1702689276728928}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4250279293240232}
   - {fileID: 4516861122653482}
   - {fileID: 4811782046770014}
   m_Father: {fileID: 4421940712070932}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4421940712070932
 Transform:
   m_ObjectHideFlags: 1
@@ -145,7 +174,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4250279293240232}
+  - {fileID: 4352494876676796}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -168,13 +197,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1563926730120056}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4913068996200062}
-  m_Father: {fileID: 4250279293240232}
-  m_RootOrder: 0
+  m_Father: {fileID: 4352494876676796}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!4 &4811782046770014
 Transform:
@@ -182,13 +211,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1624206040944626}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4439798045580516}
-  m_Father: {fileID: 4250279293240232}
-  m_RootOrder: 1
+  m_Father: {fileID: 4352494876676796}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!4 &4913068996200062
 Transform:
@@ -366,7 +395,7 @@ Light:
   serializedVersion: 8
   m_Type: 0
   m_Color: {r: 0.9338235, g: 0.91810197, b: 0.36391655, a: 1}
-  m_Intensity: 1
+  m_Intensity: 4
   m_Range: 10
   m_SpotAngle: 15
   m_CookieSize: 10
@@ -402,7 +431,7 @@ Light:
   serializedVersion: 8
   m_Type: 0
   m_Color: {r: 0.92596275, g: 0.9338235, b: 0.36391658, a: 1}
-  m_Intensity: 0.25
+  m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 40
   m_CookieSize: 10
@@ -475,8 +504,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114415184884895290}
-        m_MethodName: OnTriggerBugEnter
-        m_Mode: 1
+        m_MethodName: OnOuterLightTriggerBugEnter
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -496,8 +525,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114415184884895290}
-        m_MethodName: OnTriggerBugExit
-        m_Mode: 1
+        m_MethodName: OnOuterLightTriggerBugExit
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -522,6 +551,7 @@ MonoBehaviour:
   Model: {fileID: 1960728666314254}
   _innerSpotlight: {fileID: 108419116261907334}
   LightLength: 1
+  RayPoint: {x: 0, y: 0, z: 0}
   InnerCollider: {fileID: 135396248867883136}
   _outerSpotlight: {fileID: 108765749519730464}
   OuterCollider: {fileID: 135066433128681692}
@@ -537,7 +567,7 @@ MonoBehaviour:
   m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Target: {fileID: 4250279293240232}
+  m_Target: {fileID: 4352494876676796}
   m_ChildIndex: 0
   m_SendInterval: 0.1
   m_SyncRotationAxis: 7
@@ -581,11 +611,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114415184884895290}
-        m_MethodName: OnTriggerBugEnter
-        m_Mode: 2
+        m_MethodName: OnInnerLightTriggerBugEnter
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Collider, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -602,11 +632,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114415184884895290}
-        m_MethodName: OnTriggerBugExit
-        m_Mode: 2
+        m_MethodName: OnInnerLightTriggerBugExit
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Collider, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

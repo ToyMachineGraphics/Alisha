@@ -7,9 +7,18 @@ public class Aisha : NetworkBehaviour
 {
     public VRController Controller;
     private NetworkIdentity _networkId;
-    public Flashlight _flashlight;
+    [SerializeField]
+    private Flashlight _flashlightPrefab;
+    [SerializeField]
+    private Flashlight _flashlight;
     private Light _spotlight;
     public static Aisha Instance = null;
+
+    private Ray _ray;
+    private RaycastHit[] _raycastHitBuffer = new RaycastHit[1];
+    private int _denryuIrairaBoMask;
+    private float _flashlightUpdateInterval = 0.125f;
+    private float _flashlightUpdateTimer;
 
     private void Awake()
     {
@@ -23,6 +32,7 @@ public class Aisha : NetworkBehaviour
         }
 
         _networkId = GetComponent<NetworkIdentity>();
+        _denryuIrairaBoMask = LayerMask.GetMask("DenryuIrairaBo");
     }
 
     public override void OnStartLocalPlayer()
@@ -30,6 +40,8 @@ public class Aisha : NetworkBehaviour
         base.OnStartLocalPlayer();
 
         Controller = VRController.Instance;
+        CmdSpawnFlashlight();
+        _flashlightUpdateTimer = 0;
     }
 
     private void Start ()
@@ -38,14 +50,48 @@ public class Aisha : NetworkBehaviour
 	
 	private void Update ()
     {
-		if (localPlayerAuthority && Controller)
+        if (localPlayerAuthority && Controller && _flashlight)
         {
-            if (_flashlight && _flashlight.gameObject.activeInHierarchy)
+            if (_flashlight.gameObject.activeInHierarchy)
             {
-                _flashlight.transform.rotation = Controller.ControllerModel.transform.rotation;
+                _flashlight.transform.position = Controller.MainCamera.transform.position;
+                _flashlight.transform.rotation = Controller.MainCamera.transform.rotation;
+                _flashlightUpdateTimer += Time.deltaTime;
+                if (_flashlightUpdateTimer > _flashlightUpdateInterval)
+                {
+                    _flashlightUpdateTimer = 0;
+                    _ray.origin = _flashlight.transform.position;
+                    _ray.direction = _flashlight.transform.forward;
+                    if (_flashlight.hasAuthority && Physics.RaycastNonAlloc(_ray, _raycastHitBuffer, 8, _denryuIrairaBoMask) > 0)
+                    {
+                        RaycastHit hit = _raycastHitBuffer[0];
+                        CmdSetFlashlightParam(hit.point, Controller.MainCamera.transform.position);
+                    }
+                }
             }
         }
-	}
+    }
+
+    [Command]
+    private void CmdSpawnFlashlight()
+    {
+        _flashlight = Instantiate(_flashlightPrefab);
+        NetworkServer.SpawnWithClientAuthority(_flashlight.gameObject, gameObject);
+        RpcSpawnFlashlight(_flashlight.gameObject);
+    }
+
+    [ClientRpc]
+    private void RpcSpawnFlashlight(GameObject flashlight)
+    {
+        _flashlight = flashlight.GetComponent<Flashlight>();
+    }
+
+    [Command]
+    private void CmdSetFlashlightParam(Vector3 point, Vector3 cameraPosition)
+    {
+        _flashlight.RayPoint = point;
+        _flashlight.LightLength = Vector3.Distance(point, cameraPosition);
+    }
 
     public void UseSpotlight(bool use)
     {

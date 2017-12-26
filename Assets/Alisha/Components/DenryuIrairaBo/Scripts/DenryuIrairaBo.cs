@@ -43,17 +43,17 @@ public class DenryuIrairaBo : NetworkBehaviour
         //    DenryuIrairaBoAgent a = Instantiate(_agentPrefab, transform);
         //    _agentPool.Add(a);
         //}
-    }
 
-    private IEnumerator Start()
-    {
         foreach (NavMeshSurface s in _surfaces)
         {
             s.BuildNavMesh();
         }
-
         _rayHover = false;
         DenryuIrairaBoMask = LayerMask.GetMask("DenryuIrairaBo");
+    }
+
+    private IEnumerator Start()
+    {
         yield return new WaitForSeconds(1);
         //DenryuIrairaBoAgent agent;
         //for (int i = 0; i < 10; i++)

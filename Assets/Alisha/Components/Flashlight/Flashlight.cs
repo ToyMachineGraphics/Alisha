@@ -11,6 +11,8 @@ public class Flashlight : NetworkBehaviour
     private Light _innerSpotlight;
 	[SyncVar]
 	public float LightLength = 1;
+    [SyncVar]
+    public Vector3 RayPoint;
     public SphereCollider InnerCollider;
     [SerializeField]
     private Light _outerSpotlight;
@@ -33,12 +35,30 @@ public class Flashlight : NetworkBehaviour
 
 			_diffSet = _outerLightTriggered.Except (_innerLightTriggered);
 			foreach (DenryuIrairaBoAgent a in _diffSet) {
+                CmdSetAgentAttracted(a.gameObject, true, RayPoint);
 			}
 		}
     }
 
-	#region Trigger
-	private HashSet<DenryuIrairaBoAgent> _outerLightTriggered = new HashSet<DenryuIrairaBoAgent>();
+    [Command]
+    public void CmdSetAgentAttracted(GameObject agent, bool attracted, Vector3 destination)
+    {
+        RpcSetAgentAttracted(agent, attracted, destination);
+    }
+
+    [ClientRpc]
+    public void RpcSetAgentAttracted(GameObject agent, bool attracted, Vector3 destination)
+    {
+        DenryuIrairaBoAgent a = agent.GetComponent<DenryuIrairaBoAgent>();
+        if (attracted)
+        {
+            a._destination = destination;
+        }
+        a.Attracted = attracted;
+    }
+
+    #region Trigger
+    private HashSet<DenryuIrairaBoAgent> _outerLightTriggered = new HashSet<DenryuIrairaBoAgent>();
 	private HashSet<DenryuIrairaBoAgent> _innerLightTriggered = new HashSet<DenryuIrairaBoAgent>();
 	private IEnumerable<DenryuIrairaBoAgent> _diffSet;
 	private bool _triggerChanged;
@@ -58,7 +78,8 @@ public class Flashlight : NetworkBehaviour
 			_triggerChanged = true;
 			DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent> ();
 			_outerLightTriggered.Remove (agent);
-		}
+            CmdSetAgentAttracted(agent.gameObject, false, Vector3.zero);
+        }
 	}
 
 	public void OnInnerLightTriggerBugEnter(Collider other)

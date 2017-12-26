@@ -120,8 +120,13 @@ public sealed class VRController : MinimalDaydream
             }
         }
 
+        if (!VRMenuUI)
+        {
+            return;
+        }
+
 #if UNITY_EDITOR
-		if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
 #else
         if (GvrControllerInput.ClickButtonDown)
 #endif

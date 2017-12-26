@@ -19,8 +19,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
 
     #region Navigation
     private int stage = 0;
-    //[SyncVar]
-    private Vector3 _destination;
+    public Vector3 _destination;
 
     [SerializeField]
     private float _detectLength;
@@ -31,14 +30,16 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         set
         {
             _attracted = value;
+            stage = -1;
             if (!value)
             {
                 _setDestinationAction = FindNextDestination;
             }
             else
             {
-                _setDestinationAction = GetDestinationFromController;
+                _setDestinationAction = GetDestinationFromFlashlight;
             }
+            _setDestinationAction();
         }
     }
     private Action _setDestinationAction;
@@ -77,13 +78,13 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
     }
 
 	[Command]
-	public void CmdSetAttracted(bool attracted)
+	public void CmdSetAttracted(bool attracted, Vector3 destination)
 	{
-		RpcSetAttracted (attracted);
+		RpcSetAttracted (attracted, destination);
 	}
 
 	[ClientRpc]
-	public void RpcSetAttracted(bool attracted)
+	public void RpcSetAttracted(bool attracted, Vector3 destination)
 	{
 		_attracted = attracted;
 		stage = -1;
@@ -93,8 +94,10 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
 		}
 		else
 		{
-			_setDestinationAction = GetDestinationFromFlashlight;
-		}
+            _destination = destination;
+            _setDestinationAction = GetDestinationFromFlashlight;
+            GetDestinationFromFlashlight();
+        }
 	}
 
     private Coroutine _waitForMoveRoutine;
@@ -103,7 +106,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         if (isServer)
         {
             stage = -1;
-            if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref Destination))
+            if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref _destination))
             {
                 stage = 1;
                 _waitForMoveRoutine = StartCoroutine(WaitForMove());
@@ -115,7 +118,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
     {
         float random = UnityEngine.Random.Range(0f, 1f);
         yield return new WaitForSeconds(random * random * 4);
-        RpcSetDestination(Destination);
+        RpcSetDestination(_destination);
         //Target.position = _destination;
         //_agent.destination = _destination;
         //stage = 0;
@@ -130,22 +133,22 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
             StopCoroutine(_waitForMoveRoutine);
             _waitForMoveRoutine = null;
         }
-        RpcSetDestination(Destination);
+
+        RpcSetDestination(_destination);
     }
 
     [ClientRpc]
     private void RpcSetDestination(Vector3 destination)
     {
-        Destination = destination;
-        Target.position = Destination;
-        _agent.destination = Destination;
+        Target.position = destination;
+        _agent.destination = destination;
         stage = 0;
     }
 
     private void GetDestinationFromFlashlight()
     {
         stage = -1;
-		_agent.destination = DenryuIrairaBo.Target.position = Destination;
+		_agent.destination = DenryuIrairaBo.Target.position = _destination;
 
         stage = 0;
     }
@@ -201,7 +204,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
                 found = _agent.Warp(samplePosition);
                 if (found && _agent.navMeshOwner != owner)
                 {
-					_agent.destination = Destination;
+					_agent.destination = _destination;
                     break;
                 }
             }
