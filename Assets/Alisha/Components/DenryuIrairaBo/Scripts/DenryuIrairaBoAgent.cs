@@ -76,13 +76,34 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         _setDestinationAction = FindNextDestination;
     }
 
+	[Command]
+	public void CmdSetAttracted(bool attracted)
+	{
+		RpcSetAttracted (attracted);
+	}
+
+	[ClientRpc]
+	public void RpcSetAttracted(bool attracted)
+	{
+		_attracted = attracted;
+		stage = -1;
+		if (!attracted)
+		{
+			_setDestinationAction = FindNextDestination;
+		}
+		else
+		{
+			_setDestinationAction = GetDestinationFromFlashlight;
+		}
+	}
+
     private Coroutine _waitForMoveRoutine;
     private void FindNextDestination()
     {
         if (isServer)
         {
             stage = -1;
-            if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref _destination))
+            if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref Destination))
             {
                 stage = 1;
                 _waitForMoveRoutine = StartCoroutine(WaitForMove());
@@ -94,7 +115,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
     {
         float random = UnityEngine.Random.Range(0f, 1f);
         yield return new WaitForSeconds(random * random * 4);
-        RpcSetDestination(_destination);
+        RpcSetDestination(Destination);
         //Target.position = _destination;
         //_agent.destination = _destination;
         //stage = 0;
@@ -109,22 +130,22 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
             StopCoroutine(_waitForMoveRoutine);
             _waitForMoveRoutine = null;
         }
-        RpcSetDestination(_destination);
+        RpcSetDestination(Destination);
     }
 
     [ClientRpc]
     private void RpcSetDestination(Vector3 destination)
     {
-        _destination = destination;
-        Target.position = _destination;
-        _agent.destination = _destination;
+        Destination = destination;
+        Target.position = Destination;
+        _agent.destination = Destination;
         stage = 0;
     }
 
-    private void GetDestinationFromController()
+    private void GetDestinationFromFlashlight()
     {
         stage = -1;
-        _agent.destination = DenryuIrairaBo.Target.position;
+		_agent.destination = DenryuIrairaBo.Target.position = Destination;
 
         stage = 0;
     }
@@ -180,7 +201,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
                 found = _agent.Warp(samplePosition);
                 if (found && _agent.navMeshOwner != owner)
                 {
-                    _agent.destination = _destination;
+					_agent.destination = Destination;
                     break;
                 }
             }
