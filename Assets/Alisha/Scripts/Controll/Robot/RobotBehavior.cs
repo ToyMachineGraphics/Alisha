@@ -20,6 +20,8 @@ public class RobotBehavior : NetworkBehaviour
     public GameObject[] LocalPlayerObjects;
 
     private bool _flying = false;
+    private bool _falling = false;
+    private int _flyPhase = 0;
     private CharacterController _controller;
 
     [SyncVar]
@@ -51,12 +53,17 @@ public class RobotBehavior : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
+        Debug.Log(_controller.isGrounded);
         if (!isLocalPlayer)
             return;
 
-        if (!_flying && !_controller.isGrounded)
+        if (_falling)
         {
-            _controller.SimpleMove(Physics.gravity * Time.deltaTime);
+            _controller.Move(Physics.gravity * Time.deltaTime);
+            if (_controller.isGrounded)
+            {
+                _falling = false;
+            }
         }
         switch (_state)
         {
@@ -64,7 +71,7 @@ public class RobotBehavior : NetworkBehaviour
                 break;
 
             case MoveState.Forward:
-                if (_flying)
+                if (!_controller.isGrounded)
                     _controller.Move(transform.forward * Speed * Time.deltaTime);
                 else
                     _controller.SimpleMove(transform.forward * Speed);
@@ -72,7 +79,7 @@ public class RobotBehavior : NetworkBehaviour
                 break;
 
             case MoveState.Back:
-                if (_flying)
+                if (!_controller.isGrounded)
                     _controller.Move(transform.forward * -Speed * Time.deltaTime);
                 else
                     _controller.SimpleMove(transform.forward * -Speed);
@@ -142,12 +149,28 @@ public class RobotBehavior : NetworkBehaviour
 
     public void FlyOrLanding()
     {
-        _flying = !_flying;
-        if (_flying)
+        if (_flying || _falling)
+            return;
+
+        if (_flyPhase < 2)
         {
+            _flying = true;
+            _flyPhase++;
+
             transform.DOLocalMoveY(2, 1)
                 .SetEase(Ease.OutBack)
-                .SetRelative();
+                .SetRelative()
+                .OnComplete(() =>
+                {
+                    //To update IsGrounded
+                    _controller.Move(transform.forward * Speed * Time.deltaTime);
+                    _flying = false;
+                });
+        }
+        else
+        {
+            _falling = true;
+            _flyPhase = 0;
         }
     }
 }

@@ -8,6 +8,7 @@ TagManager:
   - DenryuIrairaBoKiller
   - DenryuIrairaBoDuplicate
   - CircleTrigger
+  - RadioCam
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - DenryuIrairaBo
   - DenryuIrairaBoAgent
   - Terrain
-  - 
+  - RadioCam
   - 
   - 
   - 
