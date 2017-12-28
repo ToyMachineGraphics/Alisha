@@ -583,7 +583,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1413302859390966
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -709,6 +709,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4901752560277872}
   - component: {fileID: 114985201285670020}
+  - component: {fileID: 114762837384869128}
   m_Layer: 0
   m_Name: CM vcam2
   m_TagString: Untagged
@@ -1894,7 +1895,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4596340079437526
 Transform:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1413302859390966}
@@ -3626,7 +3627,7 @@ MonoBehaviour:
   m_Text: v
 --- !u!114 &114259707601666244
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1413302859390966}
@@ -3727,7 +3728,7 @@ MonoBehaviour:
   m_FillOrigin: 0
 --- !u!114 &114302165331758620
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1413302859390966}
@@ -5764,6 +5765,17 @@ MonoBehaviour:
   preset: 0
   onEnableBehaviour: 2
   onDisableBehaviour: 2
+--- !u!114 &114762837384869128
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1510293512258550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 980d0a1bf610a1147877057b44b3515d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114769632212998042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6063,7 +6075,7 @@ MonoBehaviour:
   delegates: []
 --- !u!114 &114840494994922810
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1413302859390966}
@@ -6265,7 +6277,7 @@ MonoBehaviour:
   optionalString: 
 --- !u!114 &114878584889400736
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1413302859390966}
