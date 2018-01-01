@@ -53,7 +53,6 @@ public class RobotBehavior : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
-        Debug.Log(_controller.isGrounded);
         if (!isLocalPlayer)
             return;
 

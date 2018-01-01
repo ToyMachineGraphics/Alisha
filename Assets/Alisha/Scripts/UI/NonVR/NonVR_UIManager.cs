@@ -44,7 +44,6 @@ public class NonVR_UIManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        Debug.Log(EnergyPercentage);
         if (EnergyPercentage < 1)
             EnergyFill.anchoredPosition += Vector2.up * Time.deltaTime * 5;
         _timeAccumulate += Time.deltaTime;

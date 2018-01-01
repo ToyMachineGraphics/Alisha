@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class RobotActionManager : MonoBehaviour
 {
+    private bool _xrayMode = false;
+
     private void Start()
     {
     }
@@ -20,5 +22,14 @@ public class RobotActionManager : MonoBehaviour
     {
         RobotBehavior.Instance.FlyOrLanding();
         NonVR_UIManager.Instance.CostEnergy(0.5f);
+    }
+
+    public void Xray()
+    {
+        _xrayMode = !_xrayMode;
+        foreach (BoxXray target in FindObjectsOfType<BoxXray>())
+        {
+            target.SwitchXrayMode(_xrayMode);
+        }
     }
 }
