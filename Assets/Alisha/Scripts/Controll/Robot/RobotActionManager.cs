@@ -20,7 +20,13 @@ public class RobotActionManager : MonoBehaviour
 
     public void Fly()
     {
-        RobotBehavior.Instance.FlyOrLanding();
+        RobotBehavior.Instance.Fly();
+        NonVR_UIManager.Instance.CostEnergy(0.5f);
+    }
+
+    public void Landing()
+    {
+        RobotBehavior.Instance.Landing();
         NonVR_UIManager.Instance.CostEnergy(0.5f);
     }
 
@@ -31,5 +37,15 @@ public class RobotActionManager : MonoBehaviour
         {
             target.SwitchXrayMode(_xrayMode);
         }
+        NonVR_UIManager.Instance.CostEnergy(0.5f);
+    }
+
+    public void Sonar()
+    {
+        if (RobotBehavior.Instance.SonarMode)
+            return;
+
+        RobotBehavior.Instance.SonarMode = true;
+        NonVR_UIManager.Instance.CostEnergy(0.5f);
     }
 }
