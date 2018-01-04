@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class Aisha : NetworkBehaviour
 {
     public VRController Controller;
+    public VRMenuUI UI;
     private NetworkIdentity _networkId;
     [SerializeField]
     private Flashlight _flashlightPrefab;
@@ -47,15 +48,15 @@ public class Aisha : NetworkBehaviour
     private void Start ()
     {
     }
-	
+
 	private void Update ()
     {
         if (localPlayerAuthority && Controller && _flashlight)
         {
             if (_flashlight.gameObject.activeInHierarchy)
             {
-                _flashlight.transform.position = Controller.MainCamera.transform.position;
-                _flashlight.transform.rotation = Controller.MainCamera.transform.rotation;
+                _flashlight.transform.position = Controller.ControllerModel.transform.position;
+                _flashlight.transform.rotation = Controller.ControllerModel.transform.rotation;
                 _flashlightUpdateTimer += Time.deltaTime;
                 if (_flashlightUpdateTimer > _flashlightUpdateInterval)
                 {
@@ -67,6 +68,22 @@ public class Aisha : NetworkBehaviour
                         RaycastHit hit = _raycastHitBuffer[0];
                         CmdSetFlashlightParam(hit.point, Controller.MainCamera.transform.position);
                     }
+                }
+            }
+
+            if (UI)
+            {
+                if (UI.OnVRMenuUIEnable)
+                {
+                    UI.OnVRMenuUIEnable = false;
+                    Debug.Log("Aisha update, OnVRMenuUIEnable");
+                    _flashlight.CmdUnuseFlashlight();
+                }
+                if (UI.OnFlashlightSelected)
+                {
+                    UI.OnFlashlightSelected = false;
+                    Debug.Log("Aisha update, OnFlashlightSelected");
+                    _flashlight.CmdUseFlashlight();
                 }
             }
         }
@@ -84,6 +101,9 @@ public class Aisha : NetworkBehaviour
     private void RpcSpawnFlashlight(GameObject flashlight)
     {
         _flashlight = flashlight.GetComponent<Flashlight>();
+        Controller.Flashlight = _flashlight;
+        UI = Controller.VRMenuUI.GetComponent<VRMenuUI>();
+        _flashlight.gameObject.SetActive(false);
     }
 
     [Command]
@@ -91,13 +111,5 @@ public class Aisha : NetworkBehaviour
     {
         _flashlight.RayPoint = point;
         _flashlight.LightLength = Vector3.Distance(point, cameraPosition);
-    }
-
-    public void UseSpotlight(bool use)
-    {
-        if (_flashlight)
-        {
-            _flashlight.gameObject.SetActive(use);
-        }
     }
 }

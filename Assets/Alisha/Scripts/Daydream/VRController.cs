@@ -78,6 +78,7 @@ public sealed class VRController : MinimalDaydream
     private ControllerState _state;
     private float _uiTriggerTimer;
     public GameObject VRMenuUI;
+    public Flashlight Flashlight;
 
     protected override void Start ()
     {
@@ -98,12 +99,12 @@ public sealed class VRController : MinimalDaydream
 
         _state = ControllerState.Normal;
     }
-	
+
 	private void Update ()
     {
         if (GvrControllerInput.Recentered)
         {
-            _hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.25f;
+            _hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.09375f;
 			_defaultControllerModelForward = ControllerModel.transform.forward;
         }
 		if (_state == ControllerState.Normal)

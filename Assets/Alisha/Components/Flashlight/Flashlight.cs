@@ -99,5 +99,31 @@ public class Flashlight : NetworkBehaviour
 			_innerLightTriggered.Remove (agent);
 		}
 	}
-	#endregion
+    #endregion
+
+    [Command]
+    public void CmdUseFlashlight()
+    {
+        RpcUseFlashlight();
+    }
+
+    [ClientRpc]
+    public void RpcUseFlashlight()
+    {
+        gameObject.SetActive(true);
+        Debug.Log("RpcUseFlashlight");
+    }
+
+    [Command]
+    public void CmdUnuseFlashlight()
+    {
+        RpcUnuseFlashlight();
+    }
+
+    [ClientRpc]
+    public void RpcUnuseFlashlight()
+    {
+        gameObject.SetActive(false);
+        Debug.Log("RpcUnuseFlashlight");
+    }
 }

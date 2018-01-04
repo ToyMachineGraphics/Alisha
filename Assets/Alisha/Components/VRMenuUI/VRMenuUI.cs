@@ -24,7 +24,10 @@ public class VRMenuUI : MonoBehaviour
 	private float _checkAngleDiffDelay = 0.5f;
 	private float _checkAngleDiffDelayTimer;
 
-	private void OnEnable()
+    public bool OnVRMenuUIEnable;
+    public bool OnFlashlightSelected;
+
+    private void OnEnable()
 	{
 		_currentSelectedIndex = _lastSelectedIndex = 0;
 		for (int i = 0; i < Sections.Length; i++)
@@ -32,7 +35,9 @@ public class VRMenuUI : MonoBehaviour
 			Sections[i].GetComponent<Renderer>().material = _defaultMaterial;
 		}
 		_checkAngleDiffDelayTimer = 0;
-		Debug.Log ("VRMenuUI OnEnable");
+        OnVRMenuUIEnable = true;
+
+        Debug.Log ("VRMenuUI OnEnable");
 	}
 
     private void Start ()
@@ -130,8 +135,15 @@ public class VRMenuUI : MonoBehaviour
     {
 		if (SelectActions.Length > _currentSelectedIndex && SelectActions[_currentSelectedIndex] != null)
         {
+            Debug.Log("Confirm");
             SelectActions[_currentSelectedIndex].Invoke();
         }
 		gameObject.SetActive (false);
+    }
+
+    public void OnFlashlightSelectedAction()
+    {
+        Debug.Log("OnFlashlightSelected true");
+        OnFlashlightSelected = true;
     }
 }
