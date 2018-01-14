@@ -16,7 +16,9 @@ public enum MoveState
 public class RobotBehavior : NetworkBehaviour
 {
     public bool SonarMode = false;
-    public float Speed = 5;
+    public float Speed = 1;
+    public float FlySpeed = 0.5f;
+    public float FallDrag = 0.2f;
     public float TurnSpeed = 45;
     public float FlyUnit = 1.5f;
     public int FlySteps = 2;
@@ -66,20 +68,31 @@ public class RobotBehavior : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
-        Debug.Log(_controller.isGrounded);
         if (!isLocalPlayer)
             return;
 
         if (_flying)
         {
             if (PosDelta_Y < _targetHeight)
-                _controller.Move(-Physics.gravity * Time.deltaTime);
+            {
+                float smooth = Mathf.Clamp(((_targetHeight - PosDelta_Y) / FlyUnit), 0.1f, 1);
+                _controller.Move(-Physics.gravity * FlySpeed * Time.deltaTime * smooth);
+            }
             else
+            {
+                transform.position = new Vector3(transform.position.x, _initPos.y + _targetHeight, transform.position.z);
                 _flying = false;
+            }
         }
         if (_falling)
         {
-            _controller.Move(Physics.gravity * Time.deltaTime);
+            if (PosDelta_Y > _targetHeight)
+                _controller.Move(Physics.gravity * FallDrag * Time.deltaTime);
+            else
+            {
+                transform.position = new Vector3(transform.position.x, _initPos.y + _targetHeight, transform.position.z);
+                _falling = false;
+            }
         }
         switch (_state)
         {
@@ -87,18 +100,12 @@ public class RobotBehavior : NetworkBehaviour
                 break;
 
             case MoveState.Forward:
-                if (!_controller.isGrounded && _floaing)
-                    _controller.Move(transform.forward * Speed * Time.deltaTime);
-                else
-                    _controller.SimpleMove(transform.forward * Speed);
+                _controller.Move(transform.forward * Speed * Time.deltaTime);
 
                 break;
 
             case MoveState.Back:
-                if (!_controller.isGrounded && _floaing)
-                    _controller.Move(transform.forward * -Speed * Time.deltaTime);
-                else
-                    _controller.SimpleMove(transform.forward * -Speed);
+                _controller.Move(transform.forward * -Speed * Time.deltaTime);
 
                 break;
 
@@ -119,6 +126,11 @@ public class RobotBehavior : NetworkBehaviour
         if (_controller.isGrounded)
         {
             _floaing = _falling = false;
+        }
+        else
+        {
+            if (!_floaing)
+                _controller.Move(Physics.gravity * FallDrag * Time.deltaTime);
         }
     }
 
@@ -182,10 +194,19 @@ public class RobotBehavior : NetworkBehaviour
 
     public void Landing()
     {
-        if (_falling)
+        if (_flying || _falling)
             return;
+        if (PosDelta_Y >= FlySteps)
+        {
+            if (PosDelta_Y % FlyUnit == 0)
+                _targetHeight = FlyUnit * ((PosDelta_Y / FlyUnit) - 1);
+            else
+                _targetHeight = FlyUnit * Mathf.FloorToInt(PosDelta_Y / FlyUnit);
+        }
+        else
+            _targetHeight = 0;
+
         _falling = true;
-        _targetHeight = 0;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

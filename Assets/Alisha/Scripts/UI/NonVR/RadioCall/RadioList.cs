@@ -8,6 +8,7 @@ public class RadioList : MonoBehaviour
     public float[] TargetFrequence;
     public string[] TalkingContent;
     public Sprite[] TargetSprite;
+    public AudioClip[] TargetClip;
     public Sprite ConnectFailedSprite;
 
     // Use this for initialization
@@ -29,6 +30,17 @@ public class RadioList : MonoBehaviour
         }
 
         return "no singal";
+    }
+
+    public AudioClip GetClip(float frequence)
+    {
+        for (int i = 0; i < TargetFrequence.Length; i++)
+        {
+            if (frequence == TargetFrequence[i])
+                return TargetClip[i];
+        }
+
+        return null;
     }
 
     public Sprite GetSprite(float frequence)

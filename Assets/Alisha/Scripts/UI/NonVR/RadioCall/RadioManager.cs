@@ -12,6 +12,7 @@ public class RadioManager : MonoBehaviour
     public Text FrequencceText;
     public Image TargetImage;
     public Text TargetTalk;
+    public AudioSource RadioSound;
 
     private RadioList _radioList;
     private float _currentFrequence = 140;
@@ -59,10 +60,13 @@ public class RadioManager : MonoBehaviour
 
     public void Call()
     {
+        RadioSound.Stop();
         TargetImage.sprite = _radioList.GetSprite(CurrentFrequence);
         TargetTalk.text = "";
         TargetTalk.DOText(_radioList.GetTalk(CurrentFrequence), 1)
             .SetEase(Ease.Linear);
+        RadioSound.clip = _radioList.GetClip(CurrentFrequence);
+        RadioSound.Play();
     }
 
     private void OnDisable()
