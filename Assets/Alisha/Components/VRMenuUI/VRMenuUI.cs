@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.Events;
 
 public class VRMenuUI : MonoBehaviour
 {
+    public Transform SelectionsRoot;
     public Transform[] Sections;
     private int _currentSelectedIndex;
     private int _lastSelectedIndex;
@@ -25,7 +27,24 @@ public class VRMenuUI : MonoBehaviour
 	private float _checkAngleDiffDelayTimer;
 
     public bool OnVRMenuUIEnable;
+    public enum OnOpen
+    {
+        None,
+        Flashlight,
+        Backpack
+    }
+    public OnOpen OnOpenFlag;
     public bool OnFlashlightSelected;
+
+    public Transform BackpackRoot;
+    public Transform BackpackHierachy1;
+    public Transform GalleryHierachy1;
+    public Transform AishaState;
+    public Vector3 BackpackEntryScale;
+    public Transform CurrentSelectedBackpackEntry;
+    public float SlideThreshold = 0.125f;
+    public float SlideTimer = 0;
+    public float SlideInterval; // 0.125f
 
     private void OnEnable()
 	{
@@ -51,15 +70,22 @@ public class VRMenuUI : MonoBehaviour
 #endif
         LookTowardsCamera = new GameObject("LookTowardsCamera").transform;
         LookTowardsCamera.position = transform.position;
-        gameObject.SetActive(false);
-		Debug.Log ("VRMenuUI Start");
+        SelectionsRoot.gameObject.SetActive(false);
+        BackpackRoot.gameObject.SetActive(false);
+        Debug.Log ("VRMenuUI Start");
     }
+
+    private Vector2 _lastTouchPosition;
+    private Vector2 _touchPositionDelta;
 
     private Vector2 MousePositionCentered()
     {
         float deltaX = Input.mousePosition.x - Screen.width / 2;
         float deltaY = Input.mousePosition.y - Screen.height / 2;
-        return new Vector2(deltaX, deltaY);
+        Vector2 centeredPosition = new Vector2(deltaX, deltaY);
+        _touchPositionDelta = centeredPosition - _lastTouchPosition;
+        _lastTouchPosition = centeredPosition;
+        return centeredPosition;
     }
 
 #if UNITY_ANDROID
@@ -70,6 +96,8 @@ public class VRMenuUI : MonoBehaviour
 
     private Vector2 GetTouchPosition()
     {
+        _touchPositionDelta = GvrControllerInput.TouchPosCentered - _lastTouchPosition;
+        _lastTouchPosition = GvrControllerInput.TouchPosCentered;
         return GvrControllerInput.TouchPosCentered;
     }
 #endif
@@ -90,11 +118,52 @@ public class VRMenuUI : MonoBehaviour
 		_checkAngleDiffDelayTimer += Time.deltaTime;
 		Vector3 camForward = VRController.Instance.MainCamera.transform.forward;
 		float angle = Vector3.Angle (-transform.forward, camForward);
-		if (_checkAngleDiffDelayTimer > _checkAngleDiffDelay && angle > 45) {
-			gameObject.SetActive (false);
-			Debug.LogFormat ("VRMenuUI Update {0} over 45 degree: {1} {2}", angle, camForward, -transform.forward);
+		if (OnOpenFlag != OnOpen.None && _checkAngleDiffDelayTimer > _checkAngleDiffDelay && angle > 75) {
+            Disable();
+            Debug.LogFormat ("VRMenuUI Update {0} over 75 degree: {1} {2}", angle, camForward, -transform.forward);
 			return;
 		}
+
+        if (BackpackRoot.gameObject.activeInHierarchy)
+        {
+            BackpackRoot.position = LookTowardsCamera.position;
+            BackpackRoot.rotation = LookTowardsCamera.rotation;
+            SlideTimer += Time.deltaTime;
+            float xAbs = Mathf.Abs(_touchPositionDelta.x);
+            if (xAbs > Mathf.Abs(_touchPositionDelta.y))
+            {
+                bool change = false;
+#if UNITY_EDITOR
+                if (SlideTimer > SlideInterval && xAbs > SlideThreshold * 32)
+                {
+                    SlideTimer = 0;
+                    change = true;
+                }
+#elif UNITY_ANDROID
+                if (xAbs > SlideThreshold)
+                {
+                    change = true;
+                }
+#endif
+                if (change)
+                {
+                    if (BackpackHierachy1 == CurrentSelectedBackpackEntry)
+                    {
+                        BackpackHierachy1.localScale = BackpackEntryScale;
+                        BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+                        CurrentSelectedBackpackEntry = GalleryHierachy1;
+                    }
+                    else if (GalleryHierachy1 == CurrentSelectedBackpackEntry)
+                    {
+                        GalleryHierachy1.localScale = BackpackEntryScale;
+                        GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+                        CurrentSelectedBackpackEntry = BackpackHierachy1;
+                    }
+                    CurrentSelectedBackpackEntry.DOScale(BackpackEntryScale + Vector3.one * 0.015625f, 0.25f);
+                    CurrentSelectedBackpackEntry.GetComponent<Renderer>().material = SelectedMaterial;
+                }
+            }
+        }
     }
 
     public void Touch(Vector2 position)
@@ -133,17 +202,40 @@ public class VRMenuUI : MonoBehaviour
 
     public void Confirm()
     {
-		if (SelectActions.Length > _currentSelectedIndex && SelectActions[_currentSelectedIndex] != null)
+        Disable();
+        if (SelectActions.Length > _currentSelectedIndex && SelectActions[_currentSelectedIndex] != null)
         {
             Debug.Log("Confirm");
             SelectActions[_currentSelectedIndex].Invoke();
         }
-		gameObject.SetActive (false);
+    }
+
+    public void Disable()
+    {
+        SelectionsRoot.gameObject.SetActive(false);
+        BackpackRoot.gameObject.SetActive(false);
+        BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+        GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+        BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
+        OnOpenFlag = OnOpen.None;
+        Debug.Log("Disable");
     }
 
     public void OnFlashlightSelectedAction()
     {
-        Debug.Log("OnFlashlightSelected true");
-        OnFlashlightSelected = true;
+        Debug.Log("OnOpen.Flashlight");
+        OnOpenFlag = OnOpen.Flashlight;
+    }
+
+    public void OnOpenBackpack()
+    {
+        Debug.Log("OnOpen.Backpack");
+        BackpackRoot.gameObject.SetActive(true);
+        CurrentSelectedBackpackEntry = BackpackHierachy1;
+        BackpackHierachy1.GetComponent<Renderer>().material = SelectedMaterial;
+        GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+        BackpackHierachy1.DOScale(BackpackEntryScale + Vector3.one * 0.0078125f, 0.25f);
+        SlideTimer = 0;
+        OnOpenFlag = OnOpen.Backpack;
     }
 }

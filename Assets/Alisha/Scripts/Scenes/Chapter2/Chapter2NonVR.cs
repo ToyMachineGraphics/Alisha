@@ -34,14 +34,18 @@ public class Chapter2NonVR : MonoBehaviour
         _networkSyncField = FindObjectOfType<NetworkSyncField>();
         _circlePuzzleManager.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
         _networkSyncField.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
-        
-        for (int i = 0; i < 10; i++)
+
+        while (true)
         {
-            if (_denryuIrairaBo.isServer)
+            if (DenryuIrairaBoAgent.AgentCount < 1 && _denryuIrairaBo.isServer)
             {
                 _denryuIrairaBo.SpawnAgentDefault();
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
             }
-            yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
+            else
+            {
+                yield return null;
+            }
         }
     }
 

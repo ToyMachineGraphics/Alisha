@@ -148,8 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9711ac81976889344983c12b0be69089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DenryuIrairaBo: {fileID: 0}
-  _detectLength: 0.0625
+  _destination: {x: 0, y: 0, z: 0}
+  _detectLength: 0.046875
+  _targetPrefab: {fileID: 0}
   Target: {fileID: 0}
 --- !u!114 &114554658434936752
 MonoBehaviour:
@@ -195,9 +196,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _areaName: 
-  _detectLength: 0
-  _transitionSpeed: 0
-  _lerpProcess: 0
 --- !u!195 &195439197729689306
 NavMeshAgent:
   m_ObjectHideFlags: 1

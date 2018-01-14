@@ -43,6 +43,7 @@ public class Aisha : NetworkBehaviour
         Controller = VRController.Instance;
         CmdSpawnFlashlight();
         _flashlightUpdateTimer = 0;
+        Debug.Log("Aisha OnStartLocalPlayer");
     }
 
     private void Start ()
@@ -79,11 +80,14 @@ public class Aisha : NetworkBehaviour
                     Debug.Log("Aisha update, OnVRMenuUIEnable");
                     _flashlight.CmdUnuseFlashlight();
                 }
-                if (UI.OnFlashlightSelected)
+                if (UI.OnOpenFlag != VRMenuUI.OnOpen.None)
                 {
-                    UI.OnFlashlightSelected = false;
-                    Debug.Log("Aisha update, OnFlashlightSelected");
-                    _flashlight.CmdUseFlashlight();
+                    if (UI.OnOpenFlag == VRMenuUI.OnOpen.Flashlight)
+                    {
+                        Debug.Log("Aisha update, OnFlashlightSelected");
+                        _flashlight.CmdUseFlashlight();
+                        UI.OnOpenFlag = VRMenuUI.OnOpen.None;
+                    }
                 }
             }
         }
