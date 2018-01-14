@@ -126,6 +126,8 @@ public sealed class VRController : MinimalDaydream
             return;
         }
 
+        VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
+
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
 #else
@@ -147,12 +149,11 @@ public sealed class VRController : MinimalDaydream
         else if (GvrControllerInput.ClickButton)
 #endif
         {
-            VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
             switch (_state)
             {
                 case ControllerState.Normal:
                     _uiTriggerTimer += Time.deltaTime;
-                    if (_uiTriggerTimer > 1)
+                    if (vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.None && _uiTriggerTimer > 1)
                     {
 						_hand.position = MainCamera.transform.position + (MainCamera.transform.forward - Vector3.up) * 0.5f;
 						_hand.rotation = Quaternion.Euler(0, -90, 0) * MainCamera.transform.rotation;
@@ -160,7 +161,8 @@ public sealed class VRController : MinimalDaydream
 						vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, MainCamera.transform.up);
 						VRMenuUI.transform.rotation = vrMenuUI.LookTowardsCamera.rotation;
                         vrMenuUI.Touch(GvrControllerInput.TouchPosCentered);
-                        VRMenuUI.SetActive(true);
+                        vrMenuUI.OnOpenFlag = global::VRMenuUI.OnOpen.None;
+                        vrMenuUI.SelectionsRoot.gameObject.SetActive(true);
                         _state = ControllerState.MenuUI;
                     }
                     break;
@@ -174,7 +176,7 @@ public sealed class VRController : MinimalDaydream
         else if (GvrControllerInput.ClickButtonUp)
 #endif
         {
-			if (VRMenuUI.activeInHierarchy) {
+			if (vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.None && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy) {
 				_state = ControllerState.Normal;
 				_hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.25f;
 				VRMenuUI.GetComponent<VRMenuUI> ().Confirm ();

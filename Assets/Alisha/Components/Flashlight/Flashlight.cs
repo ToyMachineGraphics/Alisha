@@ -34,8 +34,11 @@ public class Flashlight : NetworkBehaviour
 			_triggerChanged = false;
 
 			_diffSet = _outerLightTriggered.Except (_innerLightTriggered);
-			foreach (DenryuIrairaBoAgent a in _diffSet) {
-                CmdSetAgentAttracted(a.gameObject, true, RayPoint);
+            foreach (DenryuIrairaBoAgent a in _diffSet) {
+                if (a)
+                {
+                    CmdSetAgentAttracted(a.gameObject, true, RayPoint);
+                }
 			}
 		}
     }

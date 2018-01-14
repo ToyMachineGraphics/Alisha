@@ -12,7 +12,13 @@ public class DenryuIrairaBo : NetworkBehaviour
     public const string DENRYU_IRAIRA_BO_DUPLICATE = "DenryuIrairaBoDuplicate";
 
     [SerializeField]
+    private Transform[] _agentSpawnPoints;
+
+    [SerializeField]
     private DenryuIrairaBoAgent _agentPrefab;
+    private Queue<Vector3> _spawnPositions = new Queue<Vector3>();
+    private float _spawnTimer = 0;
+    private float _spawnInterval = 0;
     //public int m_ObjectPoolSize = 50;
 
     //public NetworkHash128 assetId { get; set; }
@@ -34,6 +40,8 @@ public class DenryuIrairaBo : NetworkBehaviour
     private bool _rayHover;
     public Action RaycastAction;
 
+    public AgentCollector[] AgentCollectors;
+
     private void Awake()
     {
         //assetId = _agentPrefab.GetComponent<NetworkIdentity>().assetId;
@@ -43,13 +51,18 @@ public class DenryuIrairaBo : NetworkBehaviour
         //    DenryuIrairaBoAgent a = Instantiate(_agentPrefab, transform);
         //    _agentPool.Add(a);
         //}
+        DenryuIrairaBoAgent.AgentCount = 0;
 
         foreach (NavMeshSurface s in _surfaces)
         {
             s.BuildNavMesh();
+            s.GetComponent<Renderer>().enabled = false;
         }
         _rayHover = false;
         DenryuIrairaBoMask = LayerMask.GetMask("DenryuIrairaBo");
+        MazeAreaMask = (1 << NavMesh.GetAreaFromName("Maze"));
+
+        AgentCollector.DenryuIrairaBo = this;
     }
 
     private IEnumerator Start()
@@ -68,8 +81,19 @@ public class DenryuIrairaBo : NetworkBehaviour
 
     }
 
+    [Server]
     private void Update ()
     {
+        _spawnTimer += Time.deltaTime;
+        if (_spawnTimer > _spawnInterval && _spawnPositions.Count > 0)
+        {
+            _spawnTimer = 0;
+            _spawnInterval = UnityEngine.Random.Range(0.016f, 0.03125f);
+            Vector3 position = _spawnPositions.Dequeue();
+            var agent = Instantiate(_agentPrefab, position, Quaternion.identity, transform);
+            agent.gameObject.SetActive(true);
+            NetworkServer.Spawn(agent.gameObject);
+        }
         //if (!isServer)
         //{
         //    return;
@@ -119,8 +143,9 @@ public class DenryuIrairaBo : NetworkBehaviour
     [Server]
     public void SpawnAgentDefault()
     {
-        var agent = Instantiate(_agentPrefab);
-        agent.transform.position = _agentPrefab.transform.position;
+        int index = UnityEngine.Random.Range(0, _agentSpawnPoints.Length);
+        var agent = Instantiate(_agentPrefab, _agentSpawnPoints[index].position, Quaternion.identity);
+        //agent.transform.position = _agentPrefab.transform.position;
         DenryuIrairaBoAgent.DenryuIrairaBo = this;
         agent.gameObject.SetActive(true);
         NetworkServer.Spawn(agent.gameObject);
@@ -129,8 +154,7 @@ public class DenryuIrairaBo : NetworkBehaviour
     [Server]
     public void SpawnAgent(Vector3 position)
     {
-        var agent = Instantiate(_agentPrefab, position, Quaternion.identity, transform);
-        NetworkServer.Spawn(agent.gameObject);
+        _spawnPositions.Enqueue(position);
     }
 
     //[Command]
@@ -211,6 +235,7 @@ public class DenryuIrairaBo : NetworkBehaviour
     private static Ray _ray;
     private static Vector3[] _rayDirections = new Vector3[4];
     public static int DenryuIrairaBoMask;
+    public static int MazeAreaMask;
     public bool FindRandomDestinationOnNavMesh(NavMeshAgent agent, ref Vector3 destination)
     {
         _rayDirections[0] = agent.transform.forward;

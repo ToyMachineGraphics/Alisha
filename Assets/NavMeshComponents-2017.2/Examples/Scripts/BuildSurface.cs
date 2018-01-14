@@ -10,5 +10,6 @@ public class BuildSurface : MonoBehaviour
     {
         _surface = GetComponent<NavMeshSurface>();
         _surface.BuildNavMesh();
+        GetComponent<Renderer>().enabled = false;
     }
 }
