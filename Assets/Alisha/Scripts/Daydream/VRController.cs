@@ -127,6 +127,7 @@ public sealed class VRController : MinimalDaydream
         }
 
         VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
+        vrMenuUI.BackpackHierachy2.worldCamera = MainCamera;
 
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))

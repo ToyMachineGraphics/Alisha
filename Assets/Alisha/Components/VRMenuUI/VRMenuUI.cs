@@ -31,7 +31,8 @@ public class VRMenuUI : MonoBehaviour
     {
         None,
         Flashlight,
-        Backpack
+        Backpack,
+        BackpackHierachy2
     }
     public OnOpen OnOpenFlag;
     public bool OnFlashlightSelected;
@@ -45,6 +46,8 @@ public class VRMenuUI : MonoBehaviour
     public float SlideThreshold = 0.125f;
     public float SlideTimer = 0;
     public float SlideInterval; // 0.125f
+
+    public Canvas BackpackHierachy2;
 
     private void OnEnable()
 	{
@@ -104,7 +107,7 @@ public class VRMenuUI : MonoBehaviour
 
     private void Update ()
     {
-		if (GetPressed(0))
+		if (OnOpenFlag == OnOpen.None && GetPressed(0))
         {
             Vector2 position = TouchPosition();
             Touch(position);
@@ -126,6 +129,17 @@ public class VRMenuUI : MonoBehaviour
 
         if (BackpackRoot.gameObject.activeInHierarchy)
         {
+            Vector2 position = TouchPosition();
+            if (GetPressed(0))
+            {
+                BackpackRoot.gameObject.SetActive(false);
+                BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+                GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+                BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
+
+                BackpackHierachy2.gameObject.SetActive(true);
+                OnOpenFlag = OnOpen.BackpackHierachy2;
+            }
             BackpackRoot.position = LookTowardsCamera.position;
             BackpackRoot.rotation = LookTowardsCamera.rotation;
             SlideTimer += Time.deltaTime;
@@ -217,6 +231,8 @@ public class VRMenuUI : MonoBehaviour
         BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
+
+        BackpackHierachy2.gameObject.SetActive(false);
         OnOpenFlag = OnOpen.None;
         Debug.Log("Disable");
     }
