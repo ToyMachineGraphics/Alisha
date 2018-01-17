@@ -100,6 +100,7 @@ public sealed class VRController : MinimalDaydream
         _state = ControllerState.Normal;
     }
 
+    private RaycastHit[] _raycastHitBuffer = new RaycastHit[1];
 	private void Update ()
     {
         if (GvrControllerInput.Recentered)
@@ -128,6 +129,22 @@ public sealed class VRController : MinimalDaydream
 
         VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
         vrMenuUI.BackpackHierachy2.worldCamera = MainCamera;
+
+        if (!vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy &&
+            !vrMenuUI.BackpackRoot.gameObject.activeInHierarchy &&
+            !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy)
+        {
+            Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+            int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer);
+            if (count > 0)
+            {
+                ObjInfomation objInfo = _raycastHitBuffer[0].transform.GetComponent<ObjInfomation>();
+                if (objInfo)
+                {
+                    ObjInfoWindow.Instance.ShowWindow(objInfo.HintParent.transform.position, MainCamera.transform, objInfo.Info);
+                }
+            }
+        }
 
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))

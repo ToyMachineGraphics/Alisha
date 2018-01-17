@@ -5,6 +5,7 @@ using UnityEngine;
 public class ObjInfomation : MonoBehaviour
 {
     public string Info;
+    public Transform HintParent;
 
     // Use this for initialization
     private void Start()

@@ -10,6 +10,18 @@ public class ObjInfoWindow : MonoBehaviour
     public Text InfoText;
     public float ShowCD = 0.1f;
     private float _currentShowCD;
+    public Image Hint;
+    public bool Hiding;
+    private bool _hit;
+    public bool Hit
+    {
+        get { return _hit; }
+        set {
+            _lastHit = _hit;
+            _hit = value;
+        }
+    }
+    private bool _lastHit;
 
     private static ObjInfoWindow _instance = null;
 
@@ -42,22 +54,51 @@ public class ObjInfoWindow : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_currentShowCD > 0)
-        {
-            _currentShowCD -= Time.deltaTime;
-            if (_currentShowCD < 0)
-            {
-                TweenAnim.DOPlayBackwards();
-            }
-        }
+        //if (_currentShowCD > 0)
+        //{
+        //    _currentShowCD -= Time.deltaTime;
+        //    if (_currentShowCD < 0)
+        //    {
+        //        TweenAnim.DOPlayBackwards();
+        //    }
+        //}
     }
 
+    private Tweener _tweener;
     public void ShowWindow(Vector3 pos, Transform camera, string info)
     {
-        InfoText.text = info;
+        if (Hiding && _tweener != null && _tweener.IsPlaying() || TweenAnim.transform.localScale.y == 1)
+        {
+            return;
+        }
+        InfoText.text = "";
+        _tweener = InfoText.DOText(info, 12f).SetSpeedBased().SetEase(Ease.OutQuad).OnComplete(OnComplete);
+        //InfoText.text = info;
         transform.position = pos;
         transform.LookAt(camera);
         _currentShowCD = ShowCD;
         TweenAnim.DOPlayForward();
+    }
+
+    private void OnComplete()
+    {
+        Hint.gameObject.SetActive(true);
+    }
+
+    public void HideWindow()
+    {
+        if (!Hiding)
+        {
+            Hiding = true;
+            TweenAnim.DOPlayBackwards();
+        }
+    }
+
+    public void OnHidingComplete()
+    {
+        if (TweenAnim.transform.localScale.y == 0)
+        {
+            Hiding = false;
+        }
     }
 }

@@ -5,6 +5,7 @@ public class MinimalDaydream : MonoBehaviour
 {
     public GameObject Player;
     public float PlayerHeight;
+    public Vector3 PlayerOffset;
     public Camera MainCamera;
 
     #region Prefab
@@ -75,7 +76,8 @@ public class MinimalDaydream : MonoBehaviour
 
     protected virtual void Start()
     {
-        Player.transform.localPosition = Vector3.up * PlayerHeight;
+        //Player.transform.localPosition = Vector3.up * PlayerHeight;
+        Player.transform.localPosition += PlayerOffset;
 
         EventSystem = Instantiate(EventSystemPrefab, transform, false);
 
