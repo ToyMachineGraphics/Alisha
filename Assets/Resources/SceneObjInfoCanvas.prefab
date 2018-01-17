@@ -151,6 +151,7 @@ MonoBehaviour:
   InfoText: {fileID: 114960787156926772}
   ShowCD: 0.1
   Hint: {fileID: 114254316150226270}
+  Hiding: 0
 --- !u!114 &114254316150226270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -310,7 +311,7 @@ MonoBehaviour:
   hasOnPlay: 0
   hasOnUpdate: 0
   hasOnStepComplete: 0
-  hasOnComplete: 0
+  hasOnComplete: 1
   hasOnTweenCreated: 0
   hasOnRewind: 0
   onStart:
@@ -335,7 +336,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   onComplete:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114232208070563046}
+        m_MethodName: OnHidingComplete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   onTweenCreated:
