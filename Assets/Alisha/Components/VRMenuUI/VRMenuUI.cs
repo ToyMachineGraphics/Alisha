@@ -4,9 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class VRMenuUI : MonoBehaviour
 {
+    public RectTransform Hiarachy1Root;
+    public RectTransform[] Hiarachy1Sections;
+    [SerializeField]
+    private RectTransform _currentHiarachy1SectionSelected;
+    public UnityEvent[] Hiarachy1SelectActions;
+
     public Transform SelectionsRoot;
     public Transform[] Sections;
     private int _currentSelectedIndex;
@@ -56,6 +63,10 @@ public class VRMenuUI : MonoBehaviour
 		{
 			Sections[i].GetComponent<Renderer>().material = _defaultMaterial;
 		}
+        for (int i = 0; i < Hiarachy1Sections.Length; i++)
+        {
+            Hiarachy1Sections[i].transform.Find("Select").GetComponent<Image>().enabled = false;
+        }
 		_checkAngleDiffDelayTimer = 0;
         OnVRMenuUIEnable = true;
 
@@ -74,6 +85,7 @@ public class VRMenuUI : MonoBehaviour
         LookTowardsCamera = new GameObject("LookTowardsCamera").transform;
         LookTowardsCamera.position = transform.position;
         SelectionsRoot.gameObject.SetActive(false);
+        Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
         Debug.Log ("VRMenuUI Start");
     }
@@ -148,6 +160,7 @@ public class VRMenuUI : MonoBehaviour
             {
                 bool change = false;
 #if UNITY_EDITOR
+                // SlideThreshold for 3d menu: 0.125
                 if (SlideTimer > SlideInterval && xAbs > SlideThreshold * 32)
                 {
                     SlideTimer = 0;
@@ -190,7 +203,8 @@ public class VRMenuUI : MonoBehaviour
             deg += 360;
         }
         float anglePerSection = 360.0f / Sections.Length;
-        for (int i = 0; i < Sections.Length; i++)
+        anglePerSection = 360.0f / Hiarachy1Sections.Length;
+        for (int i = 0; i < Hiarachy1Sections.Length || (false && Sections.Length > 0); i++)
         {
             if (deg >= anglePerSection * i && deg < anglePerSection * (i + 1))
             {
@@ -199,6 +213,7 @@ public class VRMenuUI : MonoBehaviour
                     _lastSelectedIndex = _currentSelectedIndex;
                     _currentSelectedIndex = i;
                     _currentSelected = Sections[_currentSelectedIndex];
+                    _currentSelected = Hiarachy1Sections[_currentSelectedIndex];
                     changed = true;
                 }
                 break;
@@ -210,23 +225,37 @@ public class VRMenuUI : MonoBehaviour
             {
                 Sections[i].GetComponent<Renderer>().material = _defaultMaterial;
             }
-            _currentSelected.GetComponent<Renderer>().material = SelectedMaterial;
+            for (int i = 0; i < Hiarachy1Sections.Length; i++)
+            {
+                Hiarachy1Sections[i].transform.Find("Select").GetComponent<Image>().enabled = false;
+            }
+            if (_currentSelected.GetComponent<Renderer>() != null)
+            {
+                _currentSelected.GetComponent<Renderer>().material = SelectedMaterial;
+            }
+            _currentSelected.transform.Find("Select").GetComponent<Image>().enabled = true;
         }
     }
 
     public void Confirm()
     {
         Disable();
-        if (SelectActions.Length > _currentSelectedIndex && SelectActions[_currentSelectedIndex] != null)
+        if (false &&　SelectActions.Length > _currentSelectedIndex && SelectActions[_currentSelectedIndex] != null)
         {
             Debug.Log("Confirm");
             SelectActions[_currentSelectedIndex].Invoke();
+        }
+        if (Hiarachy1SelectActions.Length > _currentSelectedIndex && Hiarachy1SelectActions[_currentSelectedIndex] != null)
+        {
+            Debug.Log("Confirm");
+            Hiarachy1SelectActions[_currentSelectedIndex].Invoke();
         }
     }
 
     public void Disable()
     {
         SelectionsRoot.gameObject.SetActive(false);
+        Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
         BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;

@@ -129,8 +129,13 @@ public sealed class VRController : MinimalDaydream
 
         VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
         vrMenuUI.BackpackHierachy2.worldCamera = MainCamera;
+        vrMenuUI.Hiarachy1Root.GetComponent<Canvas>().worldCamera = MainCamera;
 
-        if (!vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy &&
+        if ((false && !vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy &&
+            !vrMenuUI.BackpackRoot.gameObject.activeInHierarchy &&
+            !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy) ||
+
+            !vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy &&
             !vrMenuUI.BackpackRoot.gameObject.activeInHierarchy &&
             !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy)
         {
@@ -181,6 +186,8 @@ public sealed class VRController : MinimalDaydream
                         vrMenuUI.Touch(GvrControllerInput.TouchPosCentered);
                         vrMenuUI.OnOpenFlag = global::VRMenuUI.OnOpen.None;
                         vrMenuUI.SelectionsRoot.gameObject.SetActive(true);
+                        vrMenuUI.Hiarachy1Root.gameObject.SetActive(true);
+                        vrMenuUI.OnVRMenuUIEnable = true;
                         _state = ControllerState.MenuUI;
                     }
                     break;
@@ -194,7 +201,7 @@ public sealed class VRController : MinimalDaydream
         else if (GvrControllerInput.ClickButtonUp)
 #endif
         {
-			if (vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.None && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy) {
+			if ((vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.None && vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy) || (false && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy)) {
 				_state = ControllerState.Normal;
 				_hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.25f;
 				VRMenuUI.GetComponent<VRMenuUI> ().Confirm ();
