@@ -36,6 +36,7 @@ public class RadioButton : MonoBehaviour, IPointerClickHandler, IPointerDownHand
     public void OnPointerClick(PointerEventData eventData)
     {
         RadioManager.Instance.CurrentFrequence += AdjustUnit;
+        RadioManager.Instance.Call();
     }
 
     public void OnPointerDown(PointerEventData eventData)

@@ -24,6 +24,7 @@ public class RadioManager : MonoBehaviour
         {
             _currentFrequence = Mathf.Clamp(value, MinFrequence, MaxFrequence);
             _currentFrequence = (float)System.Math.Round(_currentFrequence, 2);
+            RadioBar.Instance.Frequence = _currentFrequence;
             OnFrequenceChanged();
         }
     }
@@ -62,6 +63,7 @@ public class RadioManager : MonoBehaviour
     {
         RadioSound.Stop();
         TargetImage.sprite = _radioList.GetSprite(CurrentFrequence);
+        TargetTalk.DOKill();
         TargetTalk.text = "";
         TargetTalk.DOText(_radioList.GetTalk(CurrentFrequence), 1)
             .SetEase(Ease.Linear);

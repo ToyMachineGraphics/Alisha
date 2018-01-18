@@ -21,9 +21,19 @@ public class RobotBehavior : NetworkBehaviour
     public float FallDrag = 0.2f;
     public float TurnSpeed = 45;
     public float FlyUnit = 1.5f;
+    public float MaxUpAngle = 70;
+    public float MaxDownAngle = 40;
     public int FlySteps = 2;
     public int UnderSteps = 0;
     public GameObject[] LocalPlayerObjects;
+
+    public Vector3 RelativePosition
+    {
+        get
+        {
+            return transform.position - _initPos;
+        }
+    }
 
     private bool _flying = false;
     private bool _floaing = false;
@@ -100,12 +110,12 @@ public class RobotBehavior : NetworkBehaviour
                 break;
 
             case MoveState.Forward:
-                _controller.Move(transform.forward * Speed * Time.deltaTime);
+                _controller.Move(new Vector3(transform.forward.x, 0, transform.forward.z) * Speed * Time.deltaTime);
 
                 break;
 
             case MoveState.Back:
-                _controller.Move(transform.forward * -Speed * Time.deltaTime);
+                _controller.Move(new Vector3(transform.forward.x, 0, transform.forward.z) * -Speed * Time.deltaTime);
 
                 break;
 
@@ -132,6 +142,17 @@ public class RobotBehavior : NetworkBehaviour
             if (!_floaing)
                 _controller.Move(Physics.gravity * FallDrag * Time.deltaTime);
         }
+    }
+
+    public void UpdateEularRotation(Vector3 delta)
+    {
+        transform.localEulerAngles += Time.deltaTime * TurnSpeed * delta.x * Vector3.right;
+        transform.localEulerAngles += Time.deltaTime * TurnSpeed * delta.y * Vector3.up;
+
+        if (180 < transform.localEulerAngles.x && transform.localEulerAngles.x < 360 - MaxUpAngle)
+            transform.localEulerAngles = new Vector3(360 - MaxUpAngle, transform.localEulerAngles.y);
+        else if (transform.localEulerAngles.x > MaxDownAngle && transform.localEulerAngles.x < 180)
+            transform.localEulerAngles = new Vector3(MaxDownAngle, transform.localEulerAngles.y);
     }
 
     public void DoForward(bool active)
