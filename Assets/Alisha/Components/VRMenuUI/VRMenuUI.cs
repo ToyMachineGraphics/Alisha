@@ -19,6 +19,16 @@ public class VRMenuUI : MonoBehaviour
 	public RectTransform Hierachy2Diary;
 	public RectTransform CurrentSelectedHierachy2Entry;
 
+    public RectTransform Hierarchy3BackpackRoot;
+    public RectTransform Hierarchy3BackpackScrollRect;
+    public RectTransform Hierarchy3BackpackMainView;
+    public Sprite[] ItemIcons;
+    public Sprite[] ItemIntros;
+    public string[] ItemWithButtonTexts;
+    public Image ItemMainView;
+    public Image ItemIntro;
+    public Button ItemButton;
+
     public Transform SelectionsRoot;
     public Transform[] Sections;
     private int _currentSelectedIndex;
@@ -42,9 +52,11 @@ public class VRMenuUI : MonoBehaviour
     public enum OnOpen
     {
         None,
+        Hierarchy1Root,
         Hierachy1Flashlight,
         Hierachy1Backpack,
-        Hierachy2Backpack
+        Hierachy2Backpack,
+        Hierachy3Backpack
     }
     public OnOpen OnOpenFlag;
     public bool OnFlashlightSelected;
@@ -93,6 +105,8 @@ public class VRMenuUI : MonoBehaviour
         Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
 		Hierachy2BackpackRoot.gameObject.SetActive (false);
+
+        VRItemScrollEntry.MainUI = this;
         Debug.Log ("VRMenuUI Start");
     }
 
@@ -125,24 +139,34 @@ public class VRMenuUI : MonoBehaviour
 
     private void Update ()
     {
-		if (OnOpenFlag == OnOpen.None && GetPressed(0))
+		if (OnOpenFlag == OnOpen.Hierarchy1Root && GetPressed(0))
         {
             Vector2 position = TouchPosition();
             Touch(position);
         }
 
-        LookTowardsCamera.position = VRController.Instance.Hand.transform.position + Vector3.up * 0.25f;
-        LookTowardsCamera.LookAt(VRController.Instance.MainCamera.transform.position, VRController.Instance.MainCamera.transform.up);
-		transform.position = LookTowardsCamera.position; //Vector3.Lerp(transform.position, LookTowardsCamera.position, Time.deltaTime * 8f);
-        transform.rotation = LookTowardsCamera.rotation;
+        VRController controller = VRController.Instance;
+        //LookTowardsCamera.position = controller.Hand.transform.position + (controller.MainCamera.transform.forward + Vector3.up) * 0.25f;
+        //LookTowardsCamera.position = controller.MainCamera.transform.position + (Vector3.up + controller.MainCamera.transform.forward) * 0.25f;
+        //LookTowardsCamera.LookAt(VRController.Instance.MainCamera.transform.position, controller.MainCamera.transform.up);
+		//transform.position = LookTowardsCamera.position; //Vector3.Lerp(transform.position, LookTowardsCamera.position, Time.deltaTime * 8f);
+        //transform.rotation = LookTowardsCamera.rotation;
 
 		_checkAngleDiffDelayTimer += Time.deltaTime;
-		Vector3 camForward = VRController.Instance.MainCamera.transform.forward;
+		Vector3 camForward = controller.MainCamera.transform.forward;
 		float angle = Vector3.Angle (-transform.forward, camForward);
 		if (OnOpenFlag != OnOpen.None && _checkAngleDiffDelayTimer > _checkAngleDiffDelay && angle > 75) {
+            Debug.LogFormat("VRMenuUI Update {0} over 75 degree: {1} {2} {3}", angle, camForward, -transform.forward, OnOpenFlag);
+            if (OnOpenFlag == OnOpen.Hierarchy1Root)
+            {
+                controller.State = VRController.ControllerState.WaitForTouchPadUp;
+            }
+            else
+            {
+                controller.State = VRController.ControllerState.Normal;
+            }
             Disable();
-            Debug.LogFormat ("VRMenuUI Update {0} over 75 degree: {1} {2}", angle, camForward, -transform.forward);
-			return;
+            return;
 		}
 
 		if ((false && BackpackRoot.gameObject.activeInHierarchy) || Hierachy2BackpackRoot.gameObject.activeInHierarchy)
@@ -159,17 +183,25 @@ public class VRMenuUI : MonoBehaviour
             if (GetPressed(0))
 #endif
             {
-                BackpackRoot.gameObject.SetActive(false);
-				Hierachy2BackpackRoot.gameObject.SetActive (false);
-                BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
-				Hierachy2Backpack.Find ("Select").GetComponent<Image> ().enabled = true;
-                GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
-				Hierachy2Gallery.Find ("Select").GetComponent<Image> ().enabled = false;
-				Hierachy2Diary.Find ("Select").GetComponent<Image> ().enabled = false;
-                BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
+                #region Deprecated
+                //BackpackRoot.gameObject.SetActive(false);
+                //BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+                //GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+                //BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
 
-                BackpackHierachy2.gameObject.SetActive(true);
-                OnOpenFlag = OnOpen.Hierachy2Backpack;
+                //BackpackHierachy2.gameObject.SetActive(true);
+                //OnOpenFlag = OnOpen.Hierachy2Backpack;
+                #endregion
+
+                Hierachy2BackpackRoot.gameObject.SetActive(false);
+                Hierachy2Backpack.Find("Select").GetComponent<Image>().enabled = false;
+                Hierachy2Gallery.Find("Select").GetComponent<Image>().enabled = false;
+                Hierachy2Diary.Find("Select").GetComponent<Image>().enabled = false;
+                if (CurrentSelectedHierachy2Entry == Hierachy2Backpack)
+                {
+                    Hierarchy3BackpackRoot.gameObject.SetActive(true);
+                    OnOpenFlag = OnOpen.Hierachy3Backpack;
+                }
             }
             BackpackRoot.position = LookTowardsCamera.position;
             BackpackRoot.rotation = LookTowardsCamera.rotation;
@@ -244,6 +276,10 @@ public class VRMenuUI : MonoBehaviour
                 }
             }
         }
+        else if (Hierarchy3BackpackRoot.gameObject.activeInHierarchy)
+        {
+
+        }
 
 		if (ObjInfoWindow.Instance.Opened) {
 			if (GetPressed (0)) {
@@ -314,15 +350,18 @@ public class VRMenuUI : MonoBehaviour
     public void Disable()
     {
         SelectionsRoot.gameObject.SetActive(false);
-        Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
-		Hierachy2BackpackRoot.gameObject.SetActive (false);
         BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
-
         BackpackHierachy2.gameObject.SetActive(false);
+
+        Hiarachy1Root.gameObject.SetActive(false);
+		Hierachy2BackpackRoot.gameObject.SetActive (false);
+        Hierarchy3BackpackRoot.gameObject.SetActive(false);
+
         OnOpenFlag = OnOpen.None;
+        VRController.Instance.ResetHand();
         Debug.Log("Disable");
     }
 

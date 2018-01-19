@@ -71,11 +71,15 @@ public sealed class VRController : MinimalDaydream
 
     public Action<float> OnPlayerHeightChanged;
 
-    private enum ControllerState
+    public enum ControllerState
     {
-        Normal, MenuUI
+        Normal, MenuUI, WaitForTouchPadUp
     }
     private ControllerState _state;
+    public ControllerState State
+    {
+        set { _state = value; }
+    }
     private float _uiTriggerTimer;
     public GameObject VRMenuUI;
     public Flashlight Flashlight;
@@ -109,7 +113,7 @@ public sealed class VRController : MinimalDaydream
             _hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.09375f;
 			_defaultControllerModelForward = ControllerModel.transform.forward;
         }
-		if (_state == ControllerState.Normal)
+		if (_state == ControllerState.Normal || _state == ControllerState.WaitForTouchPadUp)
 		{
 			_hand.rotation = ControllerModel.transform.rotation;
 		}
@@ -146,7 +150,7 @@ public sealed class VRController : MinimalDaydream
                 bool casted = false;
                 for (int i = 0; i < count; i++)
                 {
-                    Debug.Log(_raycastHitBuffer[i].transform.name);
+                    //Debug.Log(_raycastHitBuffer[i].transform.name);
                     ObjInfomation objInfo = _raycastHitBuffer[i].transform.GetComponent<ObjInfomation>();
                     if (objInfo)
                     {
@@ -216,20 +220,19 @@ public sealed class VRController : MinimalDaydream
                     _uiTriggerTimer += Time.deltaTime;
                     if (vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.None && _uiTriggerTimer > 1)
                     {
-						_hand.position = MainCamera.transform.position + (MainCamera.transform.forward - Vector3.up) * 0.5f;
-						_hand.rotation = Quaternion.Euler(0, -90, 0) * MainCamera.transform.rotation;
-                        VRMenuUI.transform.position = vrMenuUI.LookTowardsCamera.position = _hand.position + Vector3.up * 0.75f;
-						vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, MainCamera.transform.up);
+                        Vector3 reference = MainCamera.transform.position + (MainCamera.transform.forward - Vector3.up) * 0.5f;
+                        _hand.position = reference;
+                        _hand.rotation = Quaternion.Euler(0, -90, 0) * MainCamera.transform.rotation;
+                        VRMenuUI.transform.position = vrMenuUI.LookTowardsCamera.position = MainCamera.transform.position + MainCamera.transform.forward * 0.5f;
+						vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, Vector3.up);
 						VRMenuUI.transform.rotation = vrMenuUI.LookTowardsCamera.rotation;
                         vrMenuUI.Touch(GvrControllerInput.TouchPosCentered);
-                        vrMenuUI.OnOpenFlag = global::VRMenuUI.OnOpen.None;
+                        vrMenuUI.OnOpenFlag = global::VRMenuUI.OnOpen.Hierarchy1Root;
                         vrMenuUI.SelectionsRoot.gameObject.SetActive(true);
                         vrMenuUI.Hiarachy1Root.gameObject.SetActive(true);
                         vrMenuUI.OnVRMenuUIEnable = true;
                         _state = ControllerState.MenuUI;
                     }
-                    break;
-                case ControllerState.MenuUI:
                     break;
             }
         }
@@ -239,11 +242,23 @@ public sealed class VRController : MinimalDaydream
         else if (GvrControllerInput.ClickButtonUp)
 #endif
         {
-			if ((vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.None && vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy) || (false && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy)) {
+			if ((vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.Hierarchy1Root && vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy) || (false && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy)) {
 				_state = ControllerState.Normal;
-				_hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.25f;
-				VRMenuUI.GetComponent<VRMenuUI> ().Confirm ();
+                ResetHand();
+
+                VRMenuUI.GetComponent<VRMenuUI> ().Confirm ();
 			}
+            if (_state == ControllerState.WaitForTouchPadUp)
+            {
+                Debug.Log("WaitForTouchPadUp to Normal");
+                _state = ControllerState.Normal;
+            }
         }
+    }
+
+    public void ResetHand()
+    {
+        _hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.09375f;
+        _hand.rotation = ControllerModel.transform.rotation;
     }
 }
