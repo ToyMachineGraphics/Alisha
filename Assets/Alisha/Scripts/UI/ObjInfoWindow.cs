@@ -22,6 +22,11 @@ public class ObjInfoWindow : MonoBehaviour
         }
     }
     private bool _lastHit;
+	private bool _opened;
+	public bool Opened
+	{
+		get { return _opened; }
+	}
 
     private static ObjInfoWindow _instance = null;
 
@@ -67,7 +72,8 @@ public class ObjInfoWindow : MonoBehaviour
     private Tweener _tweener;
     public void ShowWindow(Vector3 pos, Transform camera, string info)
     {
-        if (Hiding && _tweener != null && _tweener.IsPlaying() || TweenAnim.transform.localScale.y == 1)
+        if (Hiding || _tweener != null && _tweener.IsPlaying() || TweenAnim.transform.localScale.y == 1 ||
+			_lastHit == Hit)
         {
             return;
         }
@@ -83,6 +89,7 @@ public class ObjInfoWindow : MonoBehaviour
     private void OnComplete()
     {
         Hint.gameObject.SetActive(true);
+		_opened = true;
     }
 
     public void HideWindow()
@@ -99,6 +106,7 @@ public class ObjInfoWindow : MonoBehaviour
         if (TweenAnim.transform.localScale.y == 0)
         {
             Hiding = false;
+			_opened = false;
         }
     }
 }

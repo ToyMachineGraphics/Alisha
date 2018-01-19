@@ -6,7 +6,11 @@ public class CameraAimInfo : MonoBehaviour
 {
     private Vector3 _forward;
     private RaycastHit _hit;
-    // Use this for initialization
+	private ObjInfomation _objInfoSelect;
+	public ObjInfomation ObjInfoSelect
+	{
+		get { return _objInfoSelect; }
+	}
 
     private void Start()
     {
@@ -17,13 +21,16 @@ public class CameraAimInfo : MonoBehaviour
     {
         _forward = transform.TransformDirection(Vector3.forward);
 
-        if (Physics.Raycast(transform.position, _forward, out _hit))
+		bool hit = Physics.Raycast (transform.position, _forward, out _hit);
+		ObjInfoWindow.Instance.Hit = hit;
+		if (hit)
         {
-            ObjInfomation _objInfo = _hit.collider.GetComponent<ObjInfomation>();
-            if (_objInfo)
-            {
-                ObjInfoWindow.Instance.ShowWindow(_objInfo.transform.position, transform, _objInfo.Info);
-            }
-        }
+            ObjInfomation objInfo = _hit.collider.GetComponent<ObjInfomation>();
+			_objInfoSelect = objInfo;
+			ObjInfoWindow.Instance.Hit = (objInfo != null);
+			if (objInfo) {
+				ObjInfoWindow.Instance.ShowWindow (objInfo.transform.position, transform, objInfo.Info);
+			}
+		}
     }
 }

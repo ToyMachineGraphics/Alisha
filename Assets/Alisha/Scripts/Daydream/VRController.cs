@@ -101,6 +101,7 @@ public sealed class VRController : MinimalDaydream
     }
 
     private RaycastHit[] _raycastHitBuffer = new RaycastHit[1];
+	private ObjInfomation _objInfoSelected;
 	private void Update ()
     {
         if (GvrControllerInput.Recentered)
@@ -141,14 +142,24 @@ public sealed class VRController : MinimalDaydream
         {
             Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
             int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer);
-            if (count > 0)
-            {
-                ObjInfomation objInfo = _raycastHitBuffer[0].transform.GetComponent<ObjInfomation>();
-                if (objInfo)
-                {
-                    ObjInfoWindow.Instance.ShowWindow(objInfo.HintParent.transform.position, MainCamera.transform, objInfo.Info);
-                }
-            }
+			if (count > 0) {
+				ObjInfomation objInfo = _raycastHitBuffer [0].transform.GetComponent<ObjInfomation> ();
+				if (objInfo) {
+					_objInfoSelected = objInfo;
+					ObjInfoWindow.Instance.Hit = objInfo.Hit = true;
+					ObjInfoWindow.Instance.ShowWindow (objInfo.HintParent.transform.position, MainCamera.transform, objInfo.Info);
+				} else {
+					if (_objInfoSelected) {
+						_objInfoSelected.Hit = false;
+					}
+					ObjInfoWindow.Instance.Hit = false;
+				}
+			} else {
+				ObjInfoWindow.Instance.Hit = false;
+				if (_objInfoSelected) {
+					_objInfoSelected.Hit = false;
+				}
+			}
         }
 
 #if UNITY_EDITOR

@@ -191,6 +191,12 @@ public class VRMenuUI : MonoBehaviour
                 }
             }
         }
+
+		if (ObjInfoWindow.Instance.Opened) {
+			if (GetPressed (0)) {
+				ObjInfoWindow.Instance.HideWindow ();
+			}
+		}
     }
 
     public void Touch(Vector2 position)
