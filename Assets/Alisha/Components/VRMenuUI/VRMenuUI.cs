@@ -17,7 +17,7 @@ public class VRMenuUI : MonoBehaviour
 	public RectTransform Hierachy2Backpack;
 	public RectTransform Hierachy2Gallery;
 	public RectTransform Hierachy2Diary;
-	public RectTransform CurrentSelectedHierachy2Entry; 
+	public RectTransform CurrentSelectedHierachy2Entry;
 
     public Transform SelectionsRoot;
     public Transform[] Sections;
@@ -80,7 +80,7 @@ public class VRMenuUI : MonoBehaviour
 
     private void Start ()
     {
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
         GetPressed = Input.GetMouseButton;
         TouchPosition = MousePositionCentered;
 #elif UNITY_ANDROID
@@ -147,8 +147,13 @@ public class VRMenuUI : MonoBehaviour
 
 		if ((false && BackpackRoot.gameObject.activeInHierarchy) || Hierachy2BackpackRoot.gameObject.activeInHierarchy)
         {
+            if (GvrControllerInput.TouchDown)
+            {
+                // Clear touch delta on first touch
+                TouchPosition();
+            }
             TouchPosition();
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
 			if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftAlt) && GetPressed(0))
 #else
             if (GetPressed(0))
@@ -175,7 +180,7 @@ public class VRMenuUI : MonoBehaviour
             if (xAbs > Mathf.Abs(_touchPositionDelta.y))
             {
                 bool change = false;
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
                 // SlideThreshold for 3d menu: 0.125
                 if (SlideTimer > SlideInterval && xAbs > SlideThreshold * 32)
                 {
@@ -183,8 +188,9 @@ public class VRMenuUI : MonoBehaviour
                     change = true;
                 }
 #elif UNITY_ANDROID
-                if (xAbs > SlideThreshold)
+                if (SlideTimer > SlideInterval && xAbs > SlideThreshold)
                 {
+                    SlideTimer = 0;
                     change = true;
                 }
 #endif

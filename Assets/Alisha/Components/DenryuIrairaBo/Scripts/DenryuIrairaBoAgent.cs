@@ -64,6 +64,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
         renderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
+        renderer.enabled = false;
         if (DenryuIrairaBo == null)
         {
             DenryuIrairaBo = FindObjectOfType<DenryuIrairaBo>();

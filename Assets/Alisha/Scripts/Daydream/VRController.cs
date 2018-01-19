@@ -88,19 +88,19 @@ public sealed class VRController : MinimalDaydream
             OnPlayerHeightChanged(Player.transform.position.y);
         }
 
-        _laserPointer = ControllerPointer.transform.GetChild(1).GetComponent<GvrLaserPointer>();
-        _laserPointer.raycastMode = GvrBasePointer.RaycastMode.Direct;
-        _laserPointer.overrideCameraRayIntersectionDistance = 0f;
-        _laserVisual = _laserPointer.GetComponent<GvrLaserVisual>();
-        _laserVisual.shrinkLaser = false;
-        _laserVisual.maxLaserDistance = 20f;
+        //_laserPointer = ControllerPointer.transform.GetChild(1).GetComponent<GvrLaserPointer>();
+        //_laserPointer.raycastMode = GvrBasePointer.RaycastMode.Direct;
+        //_laserPointer.overrideCameraRayIntersectionDistance = 0f;
+        //_laserVisual = _laserPointer.GetComponent<GvrLaserVisual>();
+        //_laserVisual.shrinkLaser = false;
+        //_laserVisual.maxLaserDistance = 20f;
 
         _hand = Instantiate(_handPrefab, ControllerModel.position, ControllerModel.rotation, transform).transform;
 
         _state = ControllerState.Normal;
     }
 
-    private RaycastHit[] _raycastHitBuffer = new RaycastHit[1];
+    private RaycastHit[] _raycastHitBuffer = new RaycastHit[4];
 	private ObjInfomation _objInfoSelected;
 	private void Update ()
     {
@@ -141,20 +141,47 @@ public sealed class VRController : MinimalDaydream
 			!vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy)
         {
             Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-            int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer);
-			if (count > 0) {
-				ObjInfomation objInfo = _raycastHitBuffer [0].transform.GetComponent<ObjInfomation> ();
-				if (objInfo) {
-					_objInfoSelected = objInfo;
-					ObjInfoWindow.Instance.Hit = objInfo.Hit = true;
-					ObjInfoWindow.Instance.ShowWindow (objInfo.HintParent.transform.position, MainCamera.transform, objInfo.Info);
-				} else {
-					if (_objInfoSelected) {
-						_objInfoSelected.Hit = false;
-					}
-					ObjInfoWindow.Instance.Hit = false;
-				}
-			} else {
+            int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer, 100, LayerMask.GetMask("Default"));
+            if (count > 0) {
+                bool casted = false;
+                for (int i = 0; i < count; i++)
+                {
+                    Debug.Log(_raycastHitBuffer[i].transform.name);
+                    ObjInfomation objInfo = _raycastHitBuffer[i].transform.GetComponent<ObjInfomation>();
+                    if (objInfo)
+                    {
+                        _objInfoSelected = objInfo;
+                        ObjInfoWindow.Instance.Hit = objInfo.Hit = true;
+                        ObjInfoWindow.Instance.ShowWindow(objInfo.HintParent.transform.position, MainCamera.transform, objInfo.Info);
+                        casted = true;
+                        break;
+                    }
+                }
+                if (!casted)
+                {
+                    if (_objInfoSelected)
+                    {
+                        _objInfoSelected.Hit = false;
+                    }
+                    ObjInfoWindow.Instance.Hit = false;
+                }
+                //Debug.Log(hit.transform.name);
+                //ObjInfomation objInfo = hit.transform.GetComponent<ObjInfomation>();
+                //if (objInfo)
+                //{
+                //    _objInfoSelected = objInfo;
+                //    ObjInfoWindow.Instance.Hit = objInfo.Hit = true;
+                //    ObjInfoWindow.Instance.ShowWindow(objInfo.HintParent.transform.position, MainCamera.transform, objInfo.Info);
+                //}
+                //else
+                //{
+                //    if (_objInfoSelected)
+                //    {
+                //        _objInfoSelected.Hit = false;
+                //    }
+                //    ObjInfoWindow.Instance.Hit = false;
+                //}
+            } else {
 				ObjInfoWindow.Instance.Hit = false;
 				if (_objInfoSelected) {
 					_objInfoSelected.Hit = false;
@@ -162,7 +189,7 @@ public sealed class VRController : MinimalDaydream
 			}
         }
 
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
 #else
         if (GvrControllerInput.ClickButtonDown)
@@ -177,7 +204,7 @@ public sealed class VRController : MinimalDaydream
                     break;
             }
         }
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
 		else if (Input.GetMouseButton(0))
 #else
         else if (GvrControllerInput.ClickButton)
@@ -206,7 +233,7 @@ public sealed class VRController : MinimalDaydream
                     break;
             }
         }
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
 		else if (Input.GetMouseButtonUp(0))
 #else
         else if (GvrControllerInput.ClickButtonUp)

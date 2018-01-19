@@ -17,7 +17,7 @@ public class Inspectable : MonoBehaviour
     {
         VRSceneObjectManager.Instance.InspectableObjects.Add(this);
 
-        _originalMaterial = _renderer.material;
+        //_originalMaterial = _renderer.material;
         _outlineMaterial = new Material(_outlineMaterial);
         _outlineMaterial.SetFloat("_OutlineWidth", OutlineWidth);
         _outlineMaterial.SetFloat("_ApicesCompensation", ApicesCompensation);
@@ -39,6 +39,7 @@ public class Inspectable : MonoBehaviour
 
     public void OnPointerEnter(BaseEventData eventData)
     {
+        _originalMaterial = _renderer.material;
         _renderer.material = _outlineMaterial;
     }
 

@@ -29,14 +29,18 @@ public class Chapter2VR : MonoBehaviour
             yield return null;
         }
 
-        //if (_denryuIrairaBo.isServer)
-        //{
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        _denryuIrairaBo.CmdSpawnAgentDefault();
-        //        yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
-        //    }
-        //}
+        while (true)
+        {
+            if (DenryuIrairaBoAgent.AgentCount < 50 && _denryuIrairaBo.isServer)
+            {
+                _denryuIrairaBo.SpawnAgentDefault();
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
+            }
+            else
+            {
+                yield return null;
+            }
+        }
     }
 
     private void Update ()
