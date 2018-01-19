@@ -13,6 +13,11 @@ public class VRMenuUI : MonoBehaviour
     [SerializeField]
     private RectTransform _currentHiarachy1SectionSelected;
     public UnityEvent[] Hiarachy1SelectActions;
+	public RectTransform Hierachy2BackpackRoot;
+	public RectTransform Hierachy2Backpack;
+	public RectTransform Hierachy2Gallery;
+	public RectTransform Hierachy2Diary;
+	public RectTransform CurrentSelectedHierachy2Entry; 
 
     public Transform SelectionsRoot;
     public Transform[] Sections;
@@ -37,9 +42,9 @@ public class VRMenuUI : MonoBehaviour
     public enum OnOpen
     {
         None,
-        Flashlight,
-        Backpack,
-        BackpackHierachy2
+        Hierachy1Flashlight,
+        Hierachy1Backpack,
+        Hierachy2Backpack
     }
     public OnOpen OnOpenFlag;
     public bool OnFlashlightSelected;
@@ -87,6 +92,7 @@ public class VRMenuUI : MonoBehaviour
         SelectionsRoot.gameObject.SetActive(false);
         Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
+		Hierachy2BackpackRoot.gameObject.SetActive (false);
         Debug.Log ("VRMenuUI Start");
     }
 
@@ -139,21 +145,31 @@ public class VRMenuUI : MonoBehaviour
 			return;
 		}
 
-        if (BackpackRoot.gameObject.activeInHierarchy)
+		if ((false && BackpackRoot.gameObject.activeInHierarchy) || Hierachy2BackpackRoot.gameObject.activeInHierarchy)
         {
-            Vector2 position = TouchPosition();
+            TouchPosition();
+#if UNITY_EDITOR
+			if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftAlt) && GetPressed(0))
+#else
             if (GetPressed(0))
+#endif
             {
                 BackpackRoot.gameObject.SetActive(false);
+				Hierachy2BackpackRoot.gameObject.SetActive (false);
                 BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+				Hierachy2Backpack.Find ("Select").GetComponent<Image> ().enabled = true;
                 GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+				Hierachy2Gallery.Find ("Select").GetComponent<Image> ().enabled = false;
+				Hierachy2Diary.Find ("Select").GetComponent<Image> ().enabled = false;
                 BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
 
                 BackpackHierachy2.gameObject.SetActive(true);
-                OnOpenFlag = OnOpen.BackpackHierachy2;
+                OnOpenFlag = OnOpen.Hierachy2Backpack;
             }
             BackpackRoot.position = LookTowardsCamera.position;
             BackpackRoot.rotation = LookTowardsCamera.rotation;
+			Hierachy2BackpackRoot.position = LookTowardsCamera.position;
+			Hierachy2BackpackRoot.rotation = LookTowardsCamera.rotation;
             SlideTimer += Time.deltaTime;
             float xAbs = Mathf.Abs(_touchPositionDelta.x);
             if (xAbs > Mathf.Abs(_touchPositionDelta.y))
@@ -174,20 +190,51 @@ public class VRMenuUI : MonoBehaviour
 #endif
                 if (change)
                 {
-                    if (BackpackHierachy1 == CurrentSelectedBackpackEntry)
-                    {
-                        BackpackHierachy1.localScale = BackpackEntryScale;
-                        BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
-                        CurrentSelectedBackpackEntry = GalleryHierachy1;
-                    }
-                    else if (GalleryHierachy1 == CurrentSelectedBackpackEntry)
-                    {
-                        GalleryHierachy1.localScale = BackpackEntryScale;
-                        GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
-                        CurrentSelectedBackpackEntry = BackpackHierachy1;
-                    }
-                    CurrentSelectedBackpackEntry.DOScale(BackpackEntryScale + Vector3.one * 0.015625f, 0.25f);
-                    CurrentSelectedBackpackEntry.GetComponent<Renderer>().material = SelectedMaterial;
+					#region Deprecated
+//					if (BackpackHierachy1 == CurrentSelectedBackpackEntry)
+//                    {
+//                        BackpackHierachy1.localScale = BackpackEntryScale;
+//                        BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+//                        CurrentSelectedBackpackEntry = GalleryHierachy1;
+//                    }
+//					else if (GalleryHierachy1 == CurrentSelectedBackpackEntry)
+//                    {
+//                        GalleryHierachy1.localScale = BackpackEntryScale;
+//                        GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+//                        CurrentSelectedBackpackEntry = BackpackHierachy1;
+//                    }
+//                    CurrentSelectedBackpackEntry.DOScale(BackpackEntryScale + Vector3.one * 0.015625f, 0.25f);
+//                    CurrentSelectedBackpackEntry.GetComponent<Renderer>().material = SelectedMaterial;
+					#endregion
+
+					if (Hierachy2Backpack == CurrentSelectedHierachy2Entry) {
+						Hierachy2Backpack.Find ("Select").GetComponent<Image>().enabled = false;
+						if (_touchPositionDelta.x > 0) {
+							Hierachy2Gallery.Find ("Select").GetComponent<Image> ().enabled = true;
+							CurrentSelectedHierachy2Entry = Hierachy2Gallery;
+						} else {
+							Hierachy2Diary.Find ("Select").GetComponent<Image> ().enabled = true;
+							CurrentSelectedHierachy2Entry = Hierachy2Diary;
+						}
+					} else if (Hierachy2Gallery == CurrentSelectedHierachy2Entry) {
+						Hierachy2Gallery.Find ("Select").GetComponent<Image>().enabled = false;
+						if (_touchPositionDelta.x > 0) {
+							Hierachy2Diary.Find ("Select").GetComponent<Image> ().enabled = true;
+							CurrentSelectedHierachy2Entry = Hierachy2Diary;
+						} else {
+							Hierachy2Backpack.Find ("Select").GetComponent<Image> ().enabled = true;
+							CurrentSelectedHierachy2Entry = Hierachy2Backpack;
+						}
+					} else if (Hierachy2Diary == CurrentSelectedHierachy2Entry) {
+						Hierachy2Diary.Find ("Select").GetComponent<Image>().enabled = false;
+						if (_touchPositionDelta.x > 0) {
+							Hierachy2Backpack.Find ("Select").GetComponent<Image> ().enabled = true;
+							CurrentSelectedHierachy2Entry = Hierachy2Backpack;
+						} else {
+							Hierachy2Gallery.Find ("Select").GetComponent<Image> ().enabled = true;
+							CurrentSelectedHierachy2Entry = Hierachy2Gallery;
+						}
+					}
                 }
             }
         }
@@ -263,6 +310,7 @@ public class VRMenuUI : MonoBehaviour
         SelectionsRoot.gameObject.SetActive(false);
         Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
+		Hierachy2BackpackRoot.gameObject.SetActive (false);
         BackpackHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
         BackpackHierachy1.localScale = GalleryHierachy1.localScale = AishaState.localScale = BackpackEntryScale;
@@ -275,18 +323,23 @@ public class VRMenuUI : MonoBehaviour
     public void OnFlashlightSelectedAction()
     {
         Debug.Log("OnOpen.Flashlight");
-        OnOpenFlag = OnOpen.Flashlight;
+        OnOpenFlag = OnOpen.Hierachy1Flashlight;
     }
 
     public void OnOpenBackpack()
     {
         Debug.Log("OnOpen.Backpack");
         BackpackRoot.gameObject.SetActive(true);
+		Hierachy2BackpackRoot.gameObject.SetActive (true);
         CurrentSelectedBackpackEntry = BackpackHierachy1;
+		CurrentSelectedHierachy2Entry = Hierachy2Backpack;
         BackpackHierachy1.GetComponent<Renderer>().material = SelectedMaterial;
-        GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+		Hierachy2Backpack.Find ("Select").GetComponent<Image> ().enabled = true;
+		GalleryHierachy1.GetComponent<Renderer>().material = _defaultMaterial;
+		Hierachy2Gallery.Find ("Select").GetComponent<Image> ().enabled = false;
+		Hierachy2Diary.Find ("Select").GetComponent<Image> ().enabled = false;
         BackpackHierachy1.DOScale(BackpackEntryScale + Vector3.one * 0.0078125f, 0.25f);
         SlideTimer = 0;
-        OnOpenFlag = OnOpen.Backpack;
+        OnOpenFlag = OnOpen.Hierachy1Backpack;
     }
 }

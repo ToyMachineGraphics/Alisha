@@ -82,7 +82,7 @@ public class Aisha : NetworkBehaviour
                 }
                 if (UI.OnOpenFlag != VRMenuUI.OnOpen.None)
                 {
-                    if (UI.OnOpenFlag == VRMenuUI.OnOpen.Flashlight)
+                    if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight)
                     {
                         Debug.Log("Aisha update, OnFlashlightSelected");
                         _flashlight.CmdUseFlashlight();

@@ -137,8 +137,8 @@ public sealed class VRController : MinimalDaydream
             !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy) ||
 
             !vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy &&
-            !vrMenuUI.BackpackRoot.gameObject.activeInHierarchy &&
-            !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy)
+			!vrMenuUI.Hierachy2BackpackRoot.gameObject.activeInHierarchy &&
+			!vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy)
         {
             Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
             int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer);
