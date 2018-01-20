@@ -52,44 +52,52 @@ public class Aisha : NetworkBehaviour
 
 	private void Update ()
     {
-        if (localPlayerAuthority && Controller && _flashlight)
+        if (localPlayerAuthority && Controller)
         {
-            if (_flashlight.gameObject.activeInHierarchy)
+            if (_flashlight)
             {
-                _flashlight.transform.position = Controller.ControllerModel.transform.position;
-                _flashlight.transform.rotation = Controller.ControllerModel.transform.rotation;
-                _flashlightUpdateTimer += Time.deltaTime;
-                if (_flashlightUpdateTimer > _flashlightUpdateInterval)
+                if (_flashlight.gameObject.activeInHierarchy)
                 {
-                    _flashlightUpdateTimer = 0;
-                    _ray.origin = _flashlight.transform.position;
-                    _ray.direction = _flashlight.transform.forward;
-                    if (_flashlight.hasAuthority && Physics.RaycastNonAlloc(_ray, _raycastHitBuffer, 8, _denryuIrairaBoMask) > 0)
+                    _flashlight.transform.position = Controller.ControllerModel.transform.position;
+                    _flashlight.transform.rotation = Controller.ControllerModel.transform.rotation;
+                    _flashlightUpdateTimer += Time.deltaTime;
+                    if (_flashlightUpdateTimer > _flashlightUpdateInterval)
                     {
-                        RaycastHit hit = _raycastHitBuffer[0];
-                        CmdSetFlashlightParam(hit.point, Controller.MainCamera.transform.position);
+                        _flashlightUpdateTimer = 0;
+                        _ray.origin = _flashlight.transform.position;
+                        _ray.direction = _flashlight.transform.forward;
+                        if (_flashlight.hasAuthority && Physics.RaycastNonAlloc(_ray, _raycastHitBuffer, 8, _denryuIrairaBoMask) > 0)
+                        {
+                            RaycastHit hit = _raycastHitBuffer[0];
+                            CmdSetFlashlightParam(hit.point, Controller.MainCamera.transform.position);
+                        }
+                    }
+                }
+
+                if (UI)
+                {
+                    if (UI.OnVRMenuUIEnable)
+                    {
+                        UI.OnVRMenuUIEnable = false;
+                        Debug.Log("Aisha update, OnVRMenuUIEnable");
+                        _flashlight.CmdUnuseFlashlight();
+                    }
+                    if (UI.OnOpenFlag != VRMenuUI.OnOpen.None)
+                    {
+                        if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight)
+                        {
+                            Debug.Log("Aisha update, OnFlashlightSelected");
+                            _flashlight.CmdUseFlashlight();
+                            UI.OnOpenFlag = VRMenuUI.OnOpen.None;
+                        }
                     }
                 }
             }
 
-            if (UI)
-            {
-                if (UI.OnVRMenuUIEnable)
-                {
-                    UI.OnVRMenuUIEnable = false;
-                    Debug.Log("Aisha update, OnVRMenuUIEnable");
-                    _flashlight.CmdUnuseFlashlight();
-                }
-                if (UI.OnOpenFlag != VRMenuUI.OnOpen.None)
-                {
-                    if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight)
-                    {
-                        Debug.Log("Aisha update, OnFlashlightSelected");
-                        _flashlight.CmdUseFlashlight();
-                        UI.OnOpenFlag = VRMenuUI.OnOpen.None;
-                    }
-                }
-            }
+            Vector3 forward = Controller.MainCamera.transform.forward;
+            Vector3 forwardProjected = forward - Vector3.Dot(forward, Vector3.up) * Vector3.up;
+            transform.position = Controller.MainCamera.transform.position - forwardProjected * 0.5f + Vector3.down * Controller.PlayerOffset.y;
+            transform.LookAt(transform.position + forwardProjected, Vector3.up);
         }
     }
 
