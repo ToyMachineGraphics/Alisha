@@ -6,6 +6,10 @@ using DG.Tweening;
 
 public class RobotActionManager : MonoBehaviour
 {
+    public AudioClip FlyClip;
+    public AudioClip LandingClip;
+    public AudioClip StretchHandClip;
+    public AudioClip XrayClip;
     private bool _xrayMode = false;
 
     private void Start()
@@ -15,29 +19,39 @@ public class RobotActionManager : MonoBehaviour
     public void StretchHand()
     {
         HandBehavior.Instance.Stretch();
-        NonVR_UIManager.Instance.CostEnergy(0.5f);
+        //NonVR_UIManager.Instance.CostEnergy(0.5f);
+        SEManager.Instance.PlaySEClip(StretchHandClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     public void Fly()
     {
+        NonVR_UIManager.Instance.CostEnergy(0.2f);
         RobotBehavior.Instance.Fly();
-        NonVR_UIManager.Instance.CostEnergy(0.5f);
+        SEManager.Instance.PlaySEClip(FlyClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     public void Landing()
     {
         RobotBehavior.Instance.Landing();
-        NonVR_UIManager.Instance.CostEnergy(0.5f);
+        NonVR_UIManager.Instance.CostEnergy(0.2f);
+        SEManager.Instance.PlaySEClip(LandingClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     public void Xray()
+    {
+        _xray();
+        NonVR_UIManager.Instance.CostEnergy(0.4f);
+        SEManager.Instance.PlaySEClip(XrayClip, SEChannels.PlayerTrigger, true, false, false);
+        Invoke("_xray", 2f);
+    }
+
+    private void _xray()
     {
         _xrayMode = !_xrayMode;
         foreach (BoxXray target in FindObjectsOfType<BoxXray>())
         {
             target.SwitchXrayMode(_xrayMode);
         }
-        NonVR_UIManager.Instance.CostEnergy(0.5f);
     }
 
     public void Sonar()

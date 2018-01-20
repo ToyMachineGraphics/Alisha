@@ -29,7 +29,7 @@ public class RadioList : MonoBehaviour
                 return TalkingContent[i];
         }
 
-        return "no singal";
+        return "沒有訊號。";
     }
 
     public AudioClip GetClip(float frequence)
@@ -37,9 +37,13 @@ public class RadioList : MonoBehaviour
         for (int i = 0; i < TargetFrequence.Length; i++)
         {
             if (frequence == TargetFrequence[i])
+            {
+                BgmManager.Instance.VolumeFadeout(TargetClip[i].length, BgmChannels.Defult);
                 return TargetClip[i];
+            }
         }
 
+        BgmManager.Instance.VolumeFadein(BgmChannels.Defult);
         return null;
     }
 

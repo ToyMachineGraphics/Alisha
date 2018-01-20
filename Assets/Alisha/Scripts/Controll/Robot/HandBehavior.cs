@@ -6,6 +6,7 @@ using DG.Tweening;
 public class HandBehavior : MonoBehaviour
 {
     private Vector3 _initLocalPos;
+    public Animator Anim;
 
     public static HandBehavior Instance = null;
 
@@ -34,12 +35,19 @@ public class HandBehavior : MonoBehaviour
         transform.DOKill();
         transform.DOLocalMove(Vector3.forward * 3, 0.5f)
             .SetRelative(true)
-            .OnComplete(() => { Back(); });
+            .OnComplete(() =>
+            {
+                Anim.SetTrigger("get");
+                Back();
+            });
     }
 
     public void Back()
     {
-        transform.DOLocalMove(_initLocalPos, 0.2f);
+        transform.DOLocalMove(_initLocalPos, 0.2f).OnComplete(() =>
+        {
+            Anim.SetTrigger("open");
+        });
     }
 
     private void OnTriggerEnter(Collider other)

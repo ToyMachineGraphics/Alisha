@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    public AudioClip AdjustClip;
     public float MaxFreq;
     public float MinFreq;
     public float UnitFreq;
@@ -54,7 +55,6 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     // Update is called once per frame
     private void Update()
     {
-        Debug.Log(Frequence);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -64,6 +64,7 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
 
     public void OnDrag(PointerEventData eventData)
     {
+        SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
         Vector3 delta = Input.mousePosition - lastTouchPos;
         transform.localPosition += Vector3.right * delta.x;
         if (Frequence > MaxFreq || Frequence < MinFreq)

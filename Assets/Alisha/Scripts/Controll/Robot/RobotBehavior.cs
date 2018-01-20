@@ -26,6 +26,7 @@ public class RobotBehavior : NetworkBehaviour
     public int FlySteps = 2;
     public int UnderSteps = 0;
     public GameObject[] LocalPlayerObjects;
+    public AudioClip ForwardClip;
 
     public Vector3 RelativePosition
     {
@@ -158,7 +159,10 @@ public class RobotBehavior : NetworkBehaviour
     public void DoForward(bool active)
     {
         if (active)
+        {
             Cmd_ChangeState(MoveState.Forward);
+            SEManager.Instance.PlaySEClip(ForwardClip, SEChannels.PlayerTrigger, true, false, false);
+        }
         else
             Cmd_ChangeState(MoveState.Idel);
     }
@@ -166,7 +170,10 @@ public class RobotBehavior : NetworkBehaviour
     public void DoBackward(bool active)
     {
         if (active)
+        {
+            SEManager.Instance.PlaySEClip(ForwardClip, SEChannels.PlayerTrigger, true, false, false);
             Cmd_ChangeState(MoveState.Back);
+        }
         else
             Cmd_ChangeState(MoveState.Idel);
     }

@@ -46,7 +46,7 @@ public class RadioManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameObject.FindGameObjectWithTag("RadioCam").GetComponent<Camera>().enabled = true;
+        //GameObject.FindGameObjectWithTag("RadioCam").GetComponent<Camera>().enabled = true;
     }
 
     private void OnFrequenceChanged()
@@ -63,6 +63,7 @@ public class RadioManager : MonoBehaviour
     {
         RadioSound.Stop();
         TargetImage.sprite = _radioList.GetSprite(CurrentFrequence);
+        TargetImage.SetNativeSize();
         TargetTalk.DOKill();
         TargetTalk.text = "";
         TargetTalk.DOText(_radioList.GetTalk(CurrentFrequence), 1)
@@ -73,6 +74,6 @@ public class RadioManager : MonoBehaviour
 
     private void OnDisable()
     {
-        GameObject.FindGameObjectWithTag("RadioCam").GetComponent<Camera>().enabled = false;
+        //GameObject.FindGameObjectWithTag("RadioCam").GetComponent<Camera>().enabled = false;
     }
 }
