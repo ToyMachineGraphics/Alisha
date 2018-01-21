@@ -27,7 +27,7 @@ public class WorldRadioButton : MonoBehaviour, IPointerClickHandler, IPointerDow
             }
             else
             {
-                RadioManager.Instance.CurrentFrequence += AdjustUnit;
+                WorldRadioManager.Instance.CurrentFrequence += AdjustUnit;
             }
         }
     }

@@ -31,12 +31,13 @@ public class BGMPlayer : MonoBehaviour, IPointerClickHandler
 
 	private void OnMouseUpAsButton(){
 		if (
-			#if UNITY_EDITOR
-			! EventSystem.current.IsPointerOverGameObject()		
-			#elif UNITY_IOS
+#if UNITY_EDITOR
+			! EventSystem.current.IsPointerOverGameObject()
+#elif UNITY_IOS || UNITY_ANDROID
 			! EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)
-			#endif
-		){
+#endif
+        )
+        {
 			if (PlayOnClick) {
 				PlayBGMSound();
 			}

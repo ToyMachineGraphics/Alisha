@@ -76,14 +76,14 @@ public class WorldRadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         transform.localPosition += Vector3.right * delta.x;
         if (Frequence > MaxFreq || Frequence < MinFreq)
             transform.localPosition -= Vector3.right * delta.x;
-        RadioManager.Instance.CurrentFrequence = Frequence;
-        RadioManager.Instance.Call();
+        WorldRadioManager.Instance.CurrentFrequence = Frequence;
+        WorldRadioManager.Instance.Call();
         lastTouchPos = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Frequence = frequence;
-        RadioManager.Instance.Call();
+        WorldRadioManager.Instance.Call();
     }
 }
