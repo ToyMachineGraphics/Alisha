@@ -27,6 +27,8 @@ public class RobotBehavior : NetworkBehaviour
     public int UnderSteps = 0;
     public GameObject[] LocalPlayerObjects;
     public AudioClip ForwardClip;
+    public AudioClip FlyClip;
+    public AudioClip LandingClip;
 
     public Vector3 RelativePosition
     {
@@ -212,29 +214,29 @@ public class RobotBehavior : NetworkBehaviour
     {
         if (_flying || _falling)
             return;
+
         if (PosDelta_Y % FlyUnit == 0)
             _targetHeight = FlyUnit * ((PosDelta_Y / FlyUnit) + 1);
         else
             _targetHeight = FlyUnit * Mathf.CeilToInt(PosDelta_Y / FlyUnit);
+
         _targetHeight = Mathf.Clamp(_targetHeight, -(UnderSteps * FlyUnit), FlySteps * FlyUnit);
         _floaing = _flying = true;
+        SEManager.Instance.PlaySEClip(FlyClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     public void Landing()
     {
         if (_flying || _falling)
             return;
-        if (PosDelta_Y >= FlySteps)
-        {
-            if (PosDelta_Y % FlyUnit == 0)
-                _targetHeight = FlyUnit * ((PosDelta_Y / FlyUnit) - 1);
-            else
-                _targetHeight = FlyUnit * Mathf.FloorToInt(PosDelta_Y / FlyUnit);
-        }
+
+        if (PosDelta_Y % FlyUnit == 0)
+            _targetHeight = FlyUnit * ((PosDelta_Y / FlyUnit) - 1);
         else
-            _targetHeight = 0;
+            _targetHeight = FlyUnit * Mathf.FloorToInt(PosDelta_Y / FlyUnit);
 
         _falling = true;
+        SEManager.Instance.PlaySEClip(LandingClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
