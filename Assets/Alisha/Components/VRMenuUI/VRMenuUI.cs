@@ -29,6 +29,8 @@ public class VRMenuUI : MonoBehaviour
     public Image ItemIntro;
     public Button ItemButton;
 
+    public RectTransform Hierarchy2RadioRoot;
+
     public Transform SelectionsRoot;
     public Transform[] Sections;
     private int _currentSelectedIndex;
@@ -56,7 +58,8 @@ public class VRMenuUI : MonoBehaviour
         Hierachy1Flashlight,
         Hierachy1Backpack,
         Hierachy2Backpack,
-        Hierachy3Backpack
+        Hierachy3Backpack,
+        Hierachy2Radio,
     }
     public OnOpen OnOpenFlag;
     public bool OnFlashlightSelected;
@@ -105,6 +108,7 @@ public class VRMenuUI : MonoBehaviour
         Hiarachy1Root.gameObject.SetActive(false);
         BackpackRoot.gameObject.SetActive(false);
 		Hierachy2BackpackRoot.gameObject.SetActive (false);
+        Hierarchy2RadioRoot.gameObject.SetActive(false);
 
         VRItemScrollEntry.MainUI = this;
         Debug.Log ("VRMenuUI Start");
@@ -201,6 +205,10 @@ public class VRMenuUI : MonoBehaviour
                 {
                     Hierarchy3BackpackRoot.gameObject.SetActive(true);
                     OnOpenFlag = OnOpen.Hierachy3Backpack;
+                }
+                else
+                {
+                    Disable();
                 }
             }
             BackpackRoot.position = LookTowardsCamera.position;
@@ -359,6 +367,7 @@ public class VRMenuUI : MonoBehaviour
         Hiarachy1Root.gameObject.SetActive(false);
 		Hierachy2BackpackRoot.gameObject.SetActive (false);
         Hierarchy3BackpackRoot.gameObject.SetActive(false);
+        Hierarchy2RadioRoot.gameObject.SetActive(false);
 
         OnOpenFlag = OnOpen.None;
         VRController.Instance.ResetHand();
@@ -386,5 +395,11 @@ public class VRMenuUI : MonoBehaviour
         BackpackHierachy1.DOScale(BackpackEntryScale + Vector3.one * 0.0078125f, 0.25f);
         SlideTimer = 0;
         OnOpenFlag = OnOpen.Hierachy1Backpack;
+    }
+
+    public void OnOpenRadio()
+    {
+        Hierarchy2RadioRoot.gameObject.SetActive(true);
+        OnOpenFlag = OnOpen.Hierachy2Radio;
     }
 }

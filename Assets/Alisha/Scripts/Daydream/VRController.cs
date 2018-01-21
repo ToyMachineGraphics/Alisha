@@ -135,6 +135,9 @@ public sealed class VRController : MinimalDaydream
         VRMenuUI vrMenuUI = VRMenuUI.GetComponent<VRMenuUI>();
         vrMenuUI.BackpackHierachy2.worldCamera = MainCamera;
         vrMenuUI.Hiarachy1Root.GetComponent<Canvas>().worldCamera = MainCamera;
+        vrMenuUI.Hierachy2BackpackRoot.GetComponent<Canvas>().worldCamera = MainCamera;
+        vrMenuUI.Hierarchy3BackpackRoot.GetComponent<Canvas>().worldCamera = MainCamera;
+        vrMenuUI.Hierarchy2RadioRoot.GetComponent<Canvas>().worldCamera = MainCamera;
 
         if ((false && !vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy &&
             !vrMenuUI.BackpackRoot.gameObject.activeInHierarchy &&
@@ -142,10 +145,14 @@ public sealed class VRController : MinimalDaydream
 
             !vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy &&
 			!vrMenuUI.Hierachy2BackpackRoot.gameObject.activeInHierarchy &&
-			!vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy)
+			!vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy &&
+            !vrMenuUI.Hierarchy2RadioRoot.gameObject.activeInHierarchy)
         {
             Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
             int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer, 100, LayerMask.GetMask("Default"));
+#if UNITY_EDITOR
+            Debug.DrawRay(ray.origin, ray.direction, Color.green);
+#endif
             if (count > 0) {
                 bool casted = false;
                 for (int i = 0; i < count; i++)
