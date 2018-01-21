@@ -44,9 +44,13 @@ public sealed class WaitPool : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
-        _isQuitting = true;
+        if (_instance == this)
+        {
+            _instance = null;
+            _isQuitting = true;
+        }
     }
     #endregion
 
