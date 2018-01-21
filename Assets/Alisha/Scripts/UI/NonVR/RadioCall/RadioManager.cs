@@ -11,11 +11,24 @@ public class RadioManager : MonoBehaviour
     public float MinFrequence;
     public Text FrequencceText;
     public Image TargetImage;
+    public Sprite[] TargetSprite;
     public Text TargetTalk;
     public AudioSource RadioSound;
+    public AudioClip TalkClip;
+    public AudioClip[] RadioClips;
 
     private RadioList _radioList;
     private float _currentFrequence = 140;
+    private List<string> imgNames = new List<string>();
+    private List<string> audios = new List<string>();
+    private List<string> talks = new List<string>();
+    private AudioSource _talkSource;
+    private bool Waiting = false;
+
+    public float TalkDuration = 2f;
+    private float _talkDuration;
+    private int _sentenceAmount = 0;
+    private int _sentenceID = 0;
 
     public float CurrentFrequence
     {
@@ -42,11 +55,19 @@ public class RadioManager : MonoBehaviour
     private void Start()
     {
         _radioList = GetComponent<RadioList>();
+        _talkDuration = TalkDuration;
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        //GameObject.FindGameObjectWithTag("RadioCam").GetComponent<Camera>().enabled = true;
+        if (Waiting)
+        {
+            _talkDuration -= Time.deltaTime;
+            if (_talkDuration < 0)
+            {
+                NextTalk();
+            }
+        }
     }
 
     private void OnFrequenceChanged()
@@ -61,19 +82,104 @@ public class RadioManager : MonoBehaviour
 
     public void Call()
     {
+        if (!RadioData.instance.CheckChennal(CurrentFrequence, RobotBehavior.Instance.isLocalPlayer ? 0 : 1))
+        {
+            imgNames = new List<string>();
+            audios = new List<string>();
+            talks = new List<string>();
+            imgNames.Add("雜訊");
+            audios.Add("");
+            talks.Add("");
+        }
+        else
+        {
+            audios = RadioData.instance.GetAduioName(CurrentFrequence, RobotBehavior.Instance.isLocalPlayer ? 0 : 1);
+            imgNames = RadioData.instance.GetImageID(CurrentFrequence, RobotBehavior.Instance.isLocalPlayer ? 0 : 1);
+            talks = RadioData.instance.GetTalk(CurrentFrequence, RobotBehavior.Instance.isLocalPlayer ? 0 : 1);
+        }
+
+        _sentenceAmount = talks.Count;
         RadioSound.Stop();
-        TargetImage.sprite = _radioList.GetSprite(CurrentFrequence);
-        TargetImage.SetNativeSize();
-        TargetTalk.DOKill();
-        TargetTalk.text = "";
-        TargetTalk.DOText(_radioList.GetTalk(CurrentFrequence), 1)
-            .SetEase(Ease.Linear);
-        RadioSound.clip = _radioList.GetClip(CurrentFrequence);
-        RadioSound.Play();
+        RadioSound.clip = TalkClip;
+        BgmManager.Instance.VolumeFadein(BgmChannels.Defult);
+        _sentenceID = 0;
+        NextTalk();
     }
 
-    private void OnDisable()
+    public void NextTalk()
     {
-        //GameObject.FindGameObjectWithTag("RadioCam").GetComponent<Camera>().enabled = false;
+        Waiting = false;
+        if (_sentenceID >= _sentenceAmount)
+        {
+            _talkDuration = TalkDuration;
+            _sentenceID = 0;
+            imgNames = new List<string>();
+            audios = new List<string>();
+            talks = new List<string>();
+        }
+        else
+        {
+            if (audios[_sentenceID] == "" && RadioSound.clip == TalkClip)
+            {
+                _talkSource = RadioSound;
+                PlayTalkSound();
+            }
+            else
+            {
+                _talkSource = SEManager.Instance.GetSESource(SEChannels.GameEvent);
+                PlayTalkSound();
+                foreach (var item in RadioClips)
+                {
+                    if (item.name == audios[_sentenceID])
+                    {
+                        BgmManager.Instance.VolumeFadeout(item.length, BgmChannels.Defult);
+                        RadioSound.clip = item;
+                        RadioSound.Play();
+                    }
+                }
+            }
+
+            //set info
+            foreach (var item in TargetSprite)
+            {
+                if (item.name == imgNames[_sentenceID])
+                {
+                    TargetImage.sprite = item;
+                    TargetImage.SetNativeSize();
+                }
+            }
+
+            TargetTalk.DOKill();
+            TargetTalk.text = "";
+            TargetTalk.DOText(talks[_sentenceID], talks[_sentenceID].Length / 5)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    _talkDuration = TalkDuration;
+                    Waiting = true;
+                    StopTalkSound();
+                });
+
+            //talking control
+            _sentenceID++;
+
+            //RadioSound.clip = _radioList.GetClip(CurrentFrequence);
+            //RadioSound.Play();
+        }
+    }
+
+    private void PlayTalkSound()
+    {
+        _talkSource.clip = TalkClip;
+        _talkSource.pitch = 1.5f;
+        _talkSource.loop = true;
+        _talkSource.Play();
+    }
+
+    private void StopTalkSound()
+    {
+        _talkSource.Stop();
+        _talkSource.loop = false;
+        _talkSource.pitch = 1f;
     }
 }

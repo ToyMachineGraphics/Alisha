@@ -7,6 +7,7 @@ public class HandBehavior : MonoBehaviour
 {
     private Vector3 _initLocalPos;
     public Animator Anim;
+    private Transform TakeTarget;
 
     public static HandBehavior Instance = null;
 
@@ -33,7 +34,7 @@ public class HandBehavior : MonoBehaviour
     {
         transform.DORewind();
         transform.DOKill();
-        transform.DOLocalMove(Vector3.forward * 3, 0.5f)
+        transform.DOLocalMove(Vector3.forward * 5, 0.5f)
             .SetRelative(true)
             .OnComplete(() =>
             {
@@ -47,6 +48,8 @@ public class HandBehavior : MonoBehaviour
         transform.DOLocalMove(_initLocalPos, 0.2f).OnComplete(() =>
         {
             Anim.SetTrigger("open");
+            if (TakeTarget)
+                Destroy(TakeTarget.gameObject);
         });
     }
 
@@ -54,6 +57,15 @@ public class HandBehavior : MonoBehaviour
     {
         if (!RobotBehavior.Instance.isLocalPlayer)
             return;
+
+        if (!TakeTarget && other.GetComponent<ItemObjectInfomation>())
+        {
+            TakeTarget = other.transform;
+            TakeTarget.DOLocalMove(Vector3.zero, 0.1f);
+            TakeTarget.DOScale(0, 0.2f)
+                .SetDelay(0.2f);
+            TakeTarget.parent = transform;
+        }
         if (other.tag == "CircleTrigger")
         {
             transform.DOPause();

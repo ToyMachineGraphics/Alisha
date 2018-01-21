@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    public Transform Bar;
     public AudioClip AdjustClip;
     public float MaxFreq;
     public float MinFreq;
@@ -17,13 +18,13 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     {
         get
         {
-            frequence = MinFreq + (Mathf.CeilToInt(-transform.localPosition.x / lenth * deltaFreq / UnitFreq) * UnitFreq);
+            frequence = MinFreq + (Mathf.CeilToInt(-Bar.localPosition.x / lenth * deltaFreq / UnitFreq) * UnitFreq);
             return frequence;
         }
         set
         {
             frequence = value;
-            transform.localPosition = new Vector3(-(frequence - MinFreq) * lenth / deltaFreq, transform.localPosition.y);
+            Bar.localPosition = new Vector3(-(frequence - MinFreq) * lenth / deltaFreq, Bar.localPosition.y);
         }
     }
 
@@ -47,9 +48,10 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     private void Start()
     {
         deltaFreq = MaxFreq - MinFreq;
-        initLocalPos = transform.localPosition;
-        lenth = ((RectTransform)transform).sizeDelta.x;
+        initLocalPos = Bar.localPosition;
+        lenth = ((RectTransform)Bar).sizeDelta.x;
         Frequence = (MaxFreq + MinFreq) / 2;
+        RadioManager.Instance.CurrentFrequence = Frequence;
     }
 
     // Update is called once per frame
@@ -60,22 +62,28 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         lastTouchPos = Input.mousePosition;
+        SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 0.5f;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
+        float lastFreq = Frequence;
         Vector3 delta = Input.mousePosition - lastTouchPos;
-        transform.localPosition += Vector3.right * delta.x;
+        Bar.localPosition += Vector3.right * delta.x;
         if (Frequence > MaxFreq || Frequence < MinFreq)
-            transform.localPosition -= Vector3.right * delta.x;
-        RadioManager.Instance.CurrentFrequence = Frequence;
-        RadioManager.Instance.Call();
+            Bar.localPosition -= Vector3.right * delta.x;
+        if (lastFreq != Frequence)
+        {
+            SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
+            RadioManager.Instance.CurrentFrequence = Frequence;
+            RadioManager.Instance.Call();
+        }
         lastTouchPos = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 1f;
         Frequence = frequence;
         RadioManager.Instance.Call();
     }

@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class RobotActionManager : MonoBehaviour
 {
-    public AudioClip FlyClip;
-    public AudioClip LandingClip;
     public AudioClip StretchHandClip;
     public AudioClip XrayClip;
     private bool _xrayMode = false;
@@ -27,14 +25,12 @@ public class RobotActionManager : MonoBehaviour
     {
         NonVR_UIManager.Instance.CostEnergy(0.2f);
         RobotBehavior.Instance.Fly();
-        SEManager.Instance.PlaySEClip(FlyClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     public void Landing()
     {
         RobotBehavior.Instance.Landing();
         NonVR_UIManager.Instance.CostEnergy(0.2f);
-        SEManager.Instance.PlaySEClip(LandingClip, SEChannels.PlayerTrigger, true, false, false);
     }
 
     public void Xray()
