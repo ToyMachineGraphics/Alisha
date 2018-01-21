@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public Transform Bar;
     public AudioClip AdjustClip;
     public float MaxFreq;
     public float MinFreq;
@@ -17,7 +18,7 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         get
         {
-            //frequence = MinFreq + (Mathf.CeilToInt(-transform.localPosition.x / lenth * deltaFreq / UnitFreq) * UnitFreq);
+            //frequence = MinFreq + (Mathf.CeilToInt(-Bar.localPosition.x / lenth * deltaFreq / UnitFreq) * UnitFreq);
             float frequenceOffset = (initLocalPos.x - transform.localPosition.x) / lenth * deltaFreq;
             frequence = MinFreq + frequenceOffset;
             float roundedFrequence = Mathf.CeilToInt(frequence / UnitFreq) * UnitFreq;
@@ -29,7 +30,7 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             frequence = value;
             float frequenceDelta = value - MinFreq;
             transform.localPosition = initLocalPos + Vector3.left * (frequenceDelta * lenth / deltaFreq);
-            //transform.localPosition = new Vector3(-(frequence - MinFreq) * lenth / deltaFreq, transform.localPosition.y);
+            //Bar.localPosition = new Vector3(-(frequence - MinFreq) * lenth / deltaFreq, Bar.localPosition.y);
         }
     }
 
@@ -60,6 +61,8 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         deltaFreq = MaxFreq - MinFreq;
         initLocalPos = transform.localPosition;
         lenth = ((RectTransform)transform).sizeDelta.x;
+        //initLocalPos = Bar.localPosition;
+        //lenth = ((RectTransform)Bar).sizeDelta.x;
         Frequence = (CurrentMinFreq + CurrentMaxFreq) / 2;
         Debug.Log(Frequence);
     }
@@ -67,18 +70,18 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
-        //PointerEventData pointerEventData = eventData as PointerEventData;
 #if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
         lastTouchPos = Input.mousePosition;
 #elif UNITY_ANDROID
         lastTouchPos = eventData.pointerCurrentRaycast.screenPosition;
 #endif
+        SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 0.5f;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         Debug.Log("OnDrag");
-        SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
+        float lastFreq = Frequence;
         Vector3 delta;
 #if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
         delta = Input.mousePosition - lastTouchPos;
@@ -90,13 +93,18 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.localPosition += Vector3.right * delta.x;
         if (Frequence > CurrentMaxFreq || Frequence < CurrentMinFreq)
             transform.localPosition -= Vector3.right * delta.x;
-        WorldRadioManager.Instance.CurrentFrequence = Frequence;
-        WorldRadioManager.Instance.Call();
+        if (lastFreq != Frequence)
+        {
+            SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
+            WorldRadioManager.Instance.CurrentFrequence = Frequence;
+            WorldRadioManager.Instance.Call();
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
+        SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 1f;
         Frequence = frequence;
         WorldRadioManager.Instance.Call();
     }

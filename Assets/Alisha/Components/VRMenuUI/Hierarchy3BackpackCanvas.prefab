@@ -4487,6 +4487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc787617e95c143488460e4281a76dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Bar: {fileID: 0}
   AdjustClip: {fileID: 0}
   MaxFreq: 145
   MinFreq: 140
@@ -6251,8 +6252,18 @@ MonoBehaviour:
   MinFrequence: 140
   FrequencceText: {fileID: 114785137661038990}
   TargetImage: {fileID: 114712430086229398}
+  TargetSprite:
+  - {fileID: 21300000, guid: 005043fad36c72a4a8166febf845e3d6, type: 3}
+  - {fileID: 21300000, guid: fd2b8e3c626aaff439b80f11e5fd8aa9, type: 3}
+  - {fileID: 21300000, guid: ad453b8a96151034aa31d71aa0a66061, type: 3}
   TargetTalk: {fileID: 114257672995623716}
   RadioSound: {fileID: 82644169642887078}
+  TalkClip: {fileID: 8300000, guid: 8bc6cee695861dd4c889ffbcf874e8d6, type: 3}
+  RadioClips:
+  - {fileID: 8300000, guid: 8514567913842854e81b80a7fd6b8096, type: 3}
+  - {fileID: 8300000, guid: 39edbbac74b49f04887f0c31138b42d3, type: 3}
+  - {fileID: 8300000, guid: e2caa70967082c443a1bfb90acac2384, type: 3}
+  TalkDuration: 2
   radioBar: {fileID: 114915349165512974}
 --- !u!114 &114794752249726034
 MonoBehaviour:
@@ -6280,21 +6291,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetFrequence:
-  - 140.1
-  - 140.3
   - 141
+  - 142
+  - 144
   TalkingContent:
-  - "\u5230\u8655\u90FD\u662F\u87F2\u5B50\u3002\u641E\u4E0D\u61C2\u88FD\u4F5C\u5718\u968A\u5728\u60F3\u4EC0\u9EBC"
-  - "\u96B1\u7D04\u807D\u5230\u6709\u985E\u4F3C\u96FB\u6D41\u901A\u904E\u7684\u8072\u97F3\u3002"
+  - "Lisha\u4F60\u770B!\u5230\u8655\u90FD\u662F\u87F2\u5B50"
+  - "\u597D\u50CF\u53EA\u662F\u7121\u804A\u7684\u653F\u8AD6\u983B\u9053\u3002\u3002"
   - "(\u64A5\u653E\u8457\u4E0D\u660E\u7684\u97F3\u6A02)"
   TargetSprite:
-  - {fileID: 21300000, guid: cb307e636a6cd8440b4efbebc7bd368d, type: 3}
   - {fileID: 21300000, guid: 005043fad36c72a4a8166febf845e3d6, type: 3}
-  - {fileID: 21300000, guid: 005043fad36c72a4a8166febf845e3d6, type: 3}
+  - {fileID: 21300000, guid: fd2b8e3c626aaff439b80f11e5fd8aa9, type: 3}
+  - {fileID: 21300000, guid: ad453b8a96151034aa31d71aa0a66061, type: 3}
   TargetClip:
   - {fileID: 8300000, guid: fc058f8bfd689e64487875a4f5a2daf0, type: 3}
-  - {fileID: 8300000, guid: 34adf560b1cf0074786db5cbaf854e84, type: 3}
-  - {fileID: 8300000, guid: 8d68dfa7825db6a40aa57e62471eba48, type: 3}
+  - {fileID: 8300000, guid: f264256887b0f5e4cb2414737ea57815, type: 3}
+  - {fileID: 8300000, guid: 8514567913842854e81b80a7fd6b8096, type: 3}
   ConnectFailedSprite: {fileID: 21300000, guid: fd2b8e3c626aaff439b80f11e5fd8aa9,
     type: 3}
 --- !u!114 &114804558128736106
@@ -7012,8 +7023,12 @@ MonoBehaviour:
   MinFrequence: 140
   FrequencceText: {fileID: 114785137661038990}
   TargetImage: {fileID: 114712430086229398}
+  TargetSprite: []
   TargetTalk: {fileID: 114257672995623716}
   RadioSound: {fileID: 82644169642887078}
+  TalkClip: {fileID: 0}
+  RadioClips: []
+  TalkDuration: 2
 --- !u!114 &114915349165512974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7025,7 +7040,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de0562cfe9ee8146ad911bb7148206e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AdjustClip: {fileID: 0}
+  Bar: {fileID: 224145862808049438}
+  AdjustClip: {fileID: 8300000, guid: 8bc6cee695861dd4c889ffbcf874e8d6, type: 3}
   MaxFreq: 151.66667
   MinFreq: 141.24074
   CurrentMinFreq: 0
