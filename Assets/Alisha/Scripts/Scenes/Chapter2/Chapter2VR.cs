@@ -29,18 +29,18 @@ public class Chapter2VR : MonoBehaviour
             yield return null;
         }
 
-        while (true)
-        {
-            if (DenryuIrairaBoAgent.AgentCount < 50 && _denryuIrairaBo.isServer)
-            {
-                _denryuIrairaBo.SpawnAgentDefault();
-                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
-            }
-            else
-            {
-                yield return null;
-            }
-        }
+        //while (true)
+        //{
+        //    if (DenryuIrairaBoAgent.AgentCount < 50 && _denryuIrairaBo.isServer)
+        //    {
+        //        _denryuIrairaBo.SpawnAgentDefault();
+        //        yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
+        //    }
+        //    else
+        //    {
+        //        yield return null;
+        //    }
+        //}
     }
 
     private void Update ()
@@ -56,7 +56,7 @@ public class Chapter2VR : MonoBehaviour
 
     public void OnPlayerHeightChanged(float height)
     {
-        _networkUI.transform.position = new Vector3(_networkUI.transform.position.x, height, _networkUI.transform.position.z);
+        //_networkUI.transform.position = new Vector3(_networkUI.transform.position.x, height, _networkUI.transform.position.z);
         _networkUI.worldCamera = _controller.MainCamera;
         _networkUI.gameObject.SetActive(true);
     }

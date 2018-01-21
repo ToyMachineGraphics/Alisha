@@ -37,7 +37,7 @@ public class Chapter2NonVR : MonoBehaviour
 
         while (true)
         {
-            if (DenryuIrairaBoAgent.AgentCount < 1 && _denryuIrairaBo.isServer)
+            if (DenryuIrairaBoAgent.AgentCount < 50 && _denryuIrairaBo.isServer)
             {
                 _denryuIrairaBo.SpawnAgentDefault();
                 yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));

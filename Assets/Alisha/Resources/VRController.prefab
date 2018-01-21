@@ -108,7 +108,7 @@ Camera:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1711974017646508}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
@@ -157,6 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 1799083718245458}
   PlayerHeight: 1
+  PlayerOffset: {x: 0, y: 0, z: 0}
   MainCamera: {fileID: 20458025144166522}
   EventSystemPrefab: {fileID: 761381335, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
   ReticlePointerPrefab: {fileID: 171526, guid: 60270cf52a5e94998a5a335989159738, type: 2}
@@ -178,6 +179,7 @@ MonoBehaviour:
   _handScale: {x: 1, y: 1, z: 1}
   _hand: {fileID: 0}
   VRMenuUI: {fileID: 0}
+  Flashlight: {fileID: 0}
 --- !u!114 &114689275998557956
 MonoBehaviour:
   m_ObjectHideFlags: 1
