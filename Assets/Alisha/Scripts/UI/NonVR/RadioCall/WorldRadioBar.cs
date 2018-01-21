@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class WorldRadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public AudioClip AdjustClip;
     public float MaxFreq;
@@ -66,23 +66,37 @@ public class WorldRadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Debug.Log("OnBeginDrag");
+        //PointerEventData pointerEventData = eventData as PointerEventData;
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
         lastTouchPos = Input.mousePosition;
+#elif UNITY_ANDROID
+        lastTouchPos = eventData.pointerCurrentRaycast.screenPosition;
+#endif
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        Debug.Log("OnDrag");
         SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
-        Vector3 delta = Input.mousePosition - lastTouchPos;
+        Vector3 delta;
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
+        delta = Input.mousePosition - lastTouchPos;
+        lastTouchPos = Input.mousePosition;
+#elif UNITY_ANDROID
+        delta = eventData.pointerCurrentRaycast.screenPosition - new Vector2(lastTouchPos.x, lastTouchPos.y);
+        lastTouchPos = eventData.pointerCurrentRaycast.screenPosition;
+#endif
         transform.localPosition += Vector3.right * delta.x;
-        if (Frequence > MaxFreq || Frequence < MinFreq)
+        if (Frequence > CurrentMaxFreq || Frequence < CurrentMinFreq)
             transform.localPosition -= Vector3.right * delta.x;
         WorldRadioManager.Instance.CurrentFrequence = Frequence;
         WorldRadioManager.Instance.Call();
-        lastTouchPos = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Debug.Log("OnEndDrag");
         Frequence = frequence;
         WorldRadioManager.Instance.Call();
     }

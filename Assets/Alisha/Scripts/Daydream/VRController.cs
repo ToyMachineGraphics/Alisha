@@ -193,9 +193,9 @@ public sealed class VRController : MinimalDaydream
 			}
         }
 
-#if !UNITY_EDITOR
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
         if (Input.GetMouseButtonDown(0))
-#else
+#elif UNITY_ANDROID
         if (GvrControllerInput.ClickButtonDown)
 #endif
         {
@@ -208,9 +208,9 @@ public sealed class VRController : MinimalDaydream
                     break;
             }
         }
-#if !UNITY_EDITOR
-		else if (Input.GetMouseButton(0))
-#else
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
+        else if (Input.GetMouseButton(0))
+#elif UNITY_ANDROID
         else if (GvrControllerInput.ClickButton)
 #endif
         {
@@ -236,9 +236,9 @@ public sealed class VRController : MinimalDaydream
                     break;
             }
         }
-#if !UNITY_EDITOR
-		else if (Input.GetMouseButtonUp(0))
-#else
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
+        else if (Input.GetMouseButtonUp(0))
+#elif UNITY_ANDROID
         else if (GvrControllerInput.ClickButtonUp)
 #endif
         {

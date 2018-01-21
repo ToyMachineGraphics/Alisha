@@ -92,7 +92,7 @@ public class VRMenuUI : MonoBehaviour
 
     private void Start ()
     {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
         GetPressed = Input.GetMouseButton;
         TouchPosition = MousePositionCentered;
 #elif UNITY_ANDROID
@@ -177,9 +177,9 @@ public class VRMenuUI : MonoBehaviour
                 TouchPosition();
             }
             TouchPosition();
-#if !UNITY_EDITOR
-			if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftAlt) && GetPressed(0))
-#else
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
+            if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftAlt) && GetPressed(0))
+#elif UNITY_ANDROID
             if (GetPressed(0))
 #endif
             {
@@ -212,7 +212,7 @@ public class VRMenuUI : MonoBehaviour
             if (xAbs > Mathf.Abs(_touchPositionDelta.y))
             {
                 bool change = false;
-#if !UNITY_EDITOR
+#if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
                 // SlideThreshold for 3d menu: 0.125
                 if (SlideTimer > SlideInterval && xAbs > SlideThreshold * 32)
                 {
