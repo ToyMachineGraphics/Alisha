@@ -32,9 +32,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/AndroidBluetoothMultiplayer/Demos/UNet/BluetoothMultiplayerDemo.unity
     guid: e45614ac4da622849b314ef4c5157795
-  - enabled: 0
+  - enabled: 1
     path: Assets/Alisha/Scenes/3_Chapter2/3_Chapter2.unity
     guid: 79c8614e51d159441b99ac1a4e448f0b
   - enabled: 0
     path: Assets/Alisha/Scenes/3_NonVR/NonVR.unity
     guid: 16754243602d40c41b381059d12a95f2
+  - enabled: 1
+    path: Assets/Alisha/Scenes/2_VRMainMenu/VRMainMenu.unity
+    guid: b16d25f61c2b39945992fab51276d7cd
