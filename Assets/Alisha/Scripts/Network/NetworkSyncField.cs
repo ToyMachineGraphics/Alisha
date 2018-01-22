@@ -6,20 +6,14 @@ using UnityEngine;
 
 public enum SyncFields
 {
-    float_ClearTime,
-    boolArray5_Puzzel_Triggers,
-    boolArray3_DoorState
+    boolArray2_Puzzel_Triggers,
 }
 
 public class NetworkSyncField : NetworkBehaviour
 {
     #region SyncFields
 
-    [SyncVar(hook = "ClearTimeUpdate")]
-    public float float_ClearTime = 99f;
-
-    public SyncListBool intArray5_Puzzel_Triggers = new SyncListBool();
-    public SyncListBool boolArray3_DoorState = new SyncListBool();
+    public SyncListBool boolArray2_Puzzel_Triggers = new SyncListBool();
 
     #endregion SyncFields
 
@@ -42,8 +36,6 @@ public class NetworkSyncField : NetworkBehaviour
     #region Callbacks
 
     public SyncListBoolChanged OnPuzzel_TriggersChanged;
-    public SyncListBoolChanged OnDoorStateChanged;
-    public FloatChanged OnClearTimeChanged;
 
     #endregion Callbacks
 
@@ -70,18 +62,14 @@ public class NetworkSyncField : NetworkBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < 5; i++)
+        if (!isServer)
+            return;
+        for (int i = 0; i < 2; i++)
         {
-            intArray5_Puzzel_Triggers.Add(false);
+            boolArray2_Puzzel_Triggers.Add(false);
         }
 
-        for (int i = 0; i < 3; i++)
-        {
-            boolArray3_DoorState.Add(false);
-        }
-
-        intArray5_Puzzel_Triggers.Callback += PlzzleUpdate;
-        boolArray3_DoorState.Callback += DoorStateUpdate;
+        boolArray2_Puzzel_Triggers.Callback += PlzzleUpdate;
 
         //// Examples
         //Setvalue(SyncFields.boolArray3_DoorState, new bool[3] { true, true, false });
@@ -100,15 +88,7 @@ public class NetworkSyncField : NetworkBehaviour
         SyncFieldStruct field = new SyncFieldStruct();
         switch (variableName)
         {
-            case SyncFields.float_ClearTime:
-                field = new SyncFieldStruct(SyncFieldType.Float, value);
-                break;
-
-            case SyncFields.boolArray5_Puzzel_Triggers:
-                field = new SyncFieldStruct(SyncFieldType.BoolArray, value);
-                break;
-
-            case SyncFields.boolArray3_DoorState:
+            case SyncFields.boolArray2_Puzzel_Triggers:
                 field = new SyncFieldStruct(SyncFieldType.BoolArray, value);
                 break;
 
@@ -136,23 +116,11 @@ public class NetworkSyncField : NetworkBehaviour
 
         switch (variableEnum)
         {
-            case SyncFields.float_ClearTime:
-                float_ClearTime = (float)_value.GetValue();
-                break;
-
-            case SyncFields.boolArray5_Puzzel_Triggers:
+            case SyncFields.boolArray2_Puzzel_Triggers:
                 bool[] tempInt = (bool[])_value.GetValue();
-                for (int i = 0; i < intArray5_Puzzel_Triggers.Count; i++)
+                for (int i = 0; i < boolArray2_Puzzel_Triggers.Count; i++)
                 {
-                    intArray5_Puzzel_Triggers[i] = tempInt[i];
-                }
-                break;
-
-            case SyncFields.boolArray3_DoorState:
-                bool[] tempBool = (bool[])_value.GetValue();
-                for (int i = 0; i < boolArray3_DoorState.Count; i++)
-                {
-                    boolArray3_DoorState[i] = tempBool[i];
+                    boolArray2_Puzzel_Triggers[i] = tempInt[i];
                 }
                 break;
 
@@ -161,21 +129,9 @@ public class NetworkSyncField : NetworkBehaviour
         }
     }
 
-    private void DoorStateUpdate(SyncListBool.Operation op, int index)
-    {
-        Debug.Log("On element " + index + " of DoorState Updated, new Value: " + boolArray3_DoorState[index]);
-        OnDoorStateChanged(boolArray3_DoorState);
-    }
-
     private void PlzzleUpdate(SyncListBool.Operation op, int index)
     {
-        Debug.Log("On element " + index + " of Plzzle Updated, new Value: " + intArray5_Puzzel_Triggers[index]);
-        OnPuzzel_TriggersChanged(intArray5_Puzzel_Triggers);
-    }
-
-    private void ClearTimeUpdate(float time)
-    {
-        Debug.Log("On ClearTime Updated, new Value: " + time);
-        OnClearTimeChanged(time);
+        Debug.Log("On element " + index + " of Plzzle Updated, new Value: " + boolArray2_Puzzel_Triggers[index]);
+        OnPuzzel_TriggersChanged(boolArray2_Puzzel_Triggers);
     }
 }

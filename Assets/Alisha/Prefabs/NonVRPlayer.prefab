@@ -3176,6 +3176,7 @@ GameObject:
   - component: {fileID: 114232192247557626}
   - component: {fileID: 114497090181246868}
   - component: {fileID: 114451697016461338}
+  - component: {fileID: 114267884685030732}
   m_Layer: 0
   m_Name: NonVRPlayer
   m_TagString: Untagged
@@ -6213,6 +6214,19 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114267884685030732
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1993563098849974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27da056e82aed094da2492402cd8beec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncFieldPrefab: {fileID: 1322418560952028, guid: 564ec003a6ebc464ca45b4932b740a72,
+    type: 2}
 --- !u!114 &114269448399750618
 MonoBehaviour:
   m_ObjectHideFlags: 1
