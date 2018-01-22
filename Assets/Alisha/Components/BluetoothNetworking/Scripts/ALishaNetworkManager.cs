@@ -71,6 +71,12 @@ public class ALishaNetworkManager : AndroidBluetoothNetworkManager
         {
             ClientScene.AddPlayer(conn, 0, new PlayerTypeMessgage() { IsVR = this.IsVR });
         }
+
+        ALishaNetworkMain networkMain = FindObjectOfType<ALishaNetworkMain>();
+        if (networkMain)
+        {
+            networkMain.UIPanelGameObject.SetActive(false);
+        }
     }
 
     #region Server - Request From Client Handler

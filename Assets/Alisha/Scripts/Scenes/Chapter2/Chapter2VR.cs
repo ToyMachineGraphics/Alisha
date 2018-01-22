@@ -18,6 +18,7 @@ public class Chapter2VR : MonoBehaviour
         do
         {
             _controller = VRController.Instance;
+            yield return null;
         } while (!_controller);
         _controller.OnPlayerHeightChanged = OnPlayerHeightChanged;
         _controller.VRMenuUI = _vrMenuUI;
