@@ -72,7 +72,7 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         Bar.localPosition += Vector3.right * delta.x;
         if (Frequence > MaxFreq || Frequence < MinFreq)
             Bar.localPosition -= Vector3.right * delta.x;
-        if (lastFreq != Frequence)
+        if ((lastFreq - Frequence) != 0)
         {
             SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
             RadioManager.Instance.CurrentFrequence = Frequence;

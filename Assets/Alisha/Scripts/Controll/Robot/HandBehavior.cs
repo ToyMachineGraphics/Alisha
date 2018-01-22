@@ -65,6 +65,7 @@ public class HandBehavior : MonoBehaviour
             TakeTarget.DOScale(0, 0.2f)
                 .SetDelay(0.2f);
             TakeTarget.parent = transform;
+            ItemManager.Instance.ItemOpen(other.GetComponent<ItemObjectInfomation>().ID);
         }
         if (other.tag == "CircleTrigger")
         {

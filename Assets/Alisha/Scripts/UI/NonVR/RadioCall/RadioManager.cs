@@ -171,7 +171,6 @@ public class RadioManager : MonoBehaviour
     private void PlayTalkSound()
     {
         _talkSource.clip = TalkClip;
-        _talkSource.pitch = 1.5f;
         _talkSource.loop = true;
         _talkSource.Play();
     }
@@ -180,6 +179,5 @@ public class RadioManager : MonoBehaviour
     {
         _talkSource.Stop();
         _talkSource.loop = false;
-        _talkSource.pitch = 1f;
     }
 }

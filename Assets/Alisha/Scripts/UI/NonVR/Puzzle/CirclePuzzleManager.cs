@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 
-public class CirclePuzzleManager : MonoBehaviour
+public class CirclePuzzleManager : NetworkBehaviour
 {
+    public int LockID;
     public GameObject UnlockImg;
     public GameObject Cue;
 
@@ -13,22 +14,26 @@ public class CirclePuzzleManager : MonoBehaviour
     private CirclePuzzleBehavior[] Puzzles;
 
     // Use this for initialization
-    private void Start()
+    private IEnumerator Start()
     {
-        Puzzles = GameObject.FindObjectsOfType<CirclePuzzleBehavior>();
+        yield return new WaitForSeconds(0.5f);
+        Puzzles = FindObjectsOfType<CirclePuzzleBehavior>();
         NetworkSyncField.Instance.OnPuzzel_TriggersChanged += UnlockUpdate;
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (!SyncFieldCommand.Instance)
+        {
+            return;
+        }
         for (int i = 0; i < Puzzles.Length; i++)
         {
             if (Puzzles[i].CurrentSplits == 0 && i == Puzzles.Length - 1)
-                Unlock(true);
+                SyncFieldCommand.Instance.Cmd_SetPuzzleUnlock(LockID);
             else if (Puzzles[i].CurrentSplits != 0)
             {
-                Unlock(false);
                 break;
             }
         }
@@ -53,7 +58,14 @@ public class CirclePuzzleManager : MonoBehaviour
 
     private void Unlock(bool isUnlock)
     {
-        NetworkSyncField.Instance.Setvalue(SyncFields.boolArray5_Puzzel_Triggers, new bool[5] { isUnlock, false, false, false, false });
+        bool[] temp = new bool[2];
+        for (int i = 0; i < 2; i++)
+        {
+            temp[i] = NetworkSyncField.Instance.boolArray2_Puzzel_Triggers[i];
+        }
+        temp[LockID] = true;
+        NetworkSyncField.Instance.Setvalue(SyncFields.boolArray2_Puzzel_Triggers, temp);
+
         //if (isServer)
         //    _isUnlock = isUnlock;
         //else
@@ -68,6 +80,6 @@ public class CirclePuzzleManager : MonoBehaviour
 
     private void UnlockUpdate(SyncListBool isUnlock)
     {
-        UnlockImg.SetActive(isUnlock[0]);
+        UnlockImg.SetActive(isUnlock[LockID]);
     }
 }
