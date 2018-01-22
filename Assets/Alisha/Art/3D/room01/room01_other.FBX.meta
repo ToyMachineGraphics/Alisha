@@ -1,0 +1,243 @@
+fileFormatVersion: 2
+guid: 389780080fd2715489b1555cbf807d46
+timeCreated: 1516652534
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: ball
+    100002: ball001
+    100004: bowl01
+    100006: bowl02
+    100008: Box003
+    100010: door01
+    100012: door02
+    100014: gogo
+    100016: gogo001
+    100018: lock_bottom
+    100020: lock_bottom001
+    100022: lock_top
+    100024: lock_top001
+    100026: myth
+    100028: myth001
+    100030: myth_wall
+    100032: myth_wall001
+    100034: mythdoor
+    100036: mythdoor001
+    100038: mythland
+    100040: mythland004
+    100042: mythland005
+    100044: mythland006
+    100046: mythland02
+    100048: mythland03
+    100050: mythro_003
+    100052: mythro_004
+    100054: mythro_01
+    100056: mythro_02
+    100058: //RootNode
+    400000: ball
+    400002: ball001
+    400004: bowl01
+    400006: bowl02
+    400008: Box003
+    400010: door01
+    400012: door02
+    400014: gogo
+    400016: gogo001
+    400018: lock_bottom
+    400020: lock_bottom001
+    400022: lock_top
+    400024: lock_top001
+    400026: myth
+    400028: myth001
+    400030: myth_wall
+    400032: myth_wall001
+    400034: mythdoor
+    400036: mythdoor001
+    400038: mythland
+    400040: mythland004
+    400042: mythland005
+    400044: mythland006
+    400046: mythland02
+    400048: mythland03
+    400050: mythro_003
+    400052: mythro_004
+    400054: mythro_01
+    400056: mythro_02
+    400058: //RootNode
+    2300000: ball
+    2300002: ball001
+    2300004: bowl01
+    2300006: bowl02
+    2300008: Box003
+    2300010: door01
+    2300012: door02
+    2300014: gogo
+    2300016: gogo001
+    2300018: lock_bottom
+    2300020: lock_bottom001
+    2300022: lock_top
+    2300024: lock_top001
+    2300026: myth
+    2300028: myth001
+    2300030: myth_wall
+    2300032: myth_wall001
+    2300034: mythdoor
+    2300036: mythdoor001
+    2300038: mythland
+    2300040: mythland004
+    2300042: mythland005
+    2300044: mythland006
+    2300046: mythland02
+    2300048: mythland03
+    2300050: mythro_003
+    2300052: mythro_004
+    2300054: mythro_01
+    2300056: mythro_02
+    3300000: ball
+    3300002: ball001
+    3300004: bowl01
+    3300006: bowl02
+    3300008: Box003
+    3300010: door01
+    3300012: door02
+    3300014: gogo
+    3300016: gogo001
+    3300018: lock_bottom
+    3300020: lock_bottom001
+    3300022: lock_top
+    3300024: lock_top001
+    3300026: myth
+    3300028: myth001
+    3300030: myth_wall
+    3300032: myth_wall001
+    3300034: mythdoor
+    3300036: mythdoor001
+    3300038: mythland
+    3300040: mythland004
+    3300042: mythland005
+    3300044: mythland006
+    3300046: mythland02
+    3300048: mythland03
+    3300050: mythro_003
+    3300052: mythro_004
+    3300054: mythro_01
+    3300056: mythro_02
+    4300000: myth
+    4300002: myth_wall
+    4300004: mythdoor
+    4300006: mythland
+    4300008: mythland02
+    4300010: mythland03
+    4300012: mythro_01
+    4300014: mythro_02
+    4300016: gogo
+    4300018: lock_top
+    4300020: lock_bottom
+    4300022: Box003
+    4300024: door01
+    4300026: bowl02
+    4300028: bowl01
+    4300030: door02
+    4300032: gogo001
+    4300034: lock_bottom001
+    4300036: lock_top001
+    4300038: ball
+    4300040: ball001
+    4300042: myth001
+    4300044: mythro_004
+    4300046: mythro_003
+    4300048: mythland006
+    4300050: mythland005
+    4300052: mythland004
+    4300054: mythdoor001
+    4300056: myth_wall001
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 03 - Default
+    second: {fileID: 2100000, guid: eeaa2bfcc1427574ab3e4615b40b4d51, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SimpleTempleMaterial
+    second: {fileID: 2100000, guid: bcc336b768490714e826de4eedd3b02c, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
