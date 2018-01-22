@@ -59,8 +59,8 @@ public class ALishaNetworkMain : MonoBehaviour
         bool togglesInteractable = currentMode == BluetoothMultiplayerMode.None;
         bool togglesActive = currentMode != BluetoothMultiplayerMode.Client;
 
-        UseCustomDeviceBrowserUIToggle.interactable = togglesInteractable;
-        UseCustomDeviceBrowserUIToggle.gameObject.SetActive(togglesActive);
+        //UseCustomDeviceBrowserUIToggle.interactable = togglesInteractable;
+        //UseCustomDeviceBrowserUIToggle.gameObject.SetActive(togglesActive);
     }
 
     #region UI Handlers
@@ -71,7 +71,8 @@ public class ALishaNetworkMain : MonoBehaviour
 
     public void OnConnectToServerButton()
     {
-        AndroidBluetoothNetworkManagerHelper.SetCustomDeviceBrowser(UseCustomDeviceBrowserUIToggle.isOn ? CustomDeviceBrowser : null);
+        //AndroidBluetoothNetworkManagerHelper.SetCustomDeviceBrowser(UseCustomDeviceBrowserUIToggle.isOn ? CustomDeviceBrowser : null);
+        AndroidBluetoothNetworkManagerHelper.SetCustomDeviceBrowser(CustomDeviceBrowser);
         AndroidBluetoothNetworkManagerHelper.StartClient();
     }
 
