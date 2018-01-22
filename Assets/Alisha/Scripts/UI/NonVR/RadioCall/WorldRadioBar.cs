@@ -40,14 +40,16 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private Vector3 lastTouchPos;
     private float lenth;
 
-    public static WorldRadioBar Instance = null;
+    public WorldRadioManager radioManager;
+
+    //public static WorldRadioBar Instance = null;
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(gameObject);
+        //if (Instance == null)
+        //    Instance = this;
+        //else if (Instance != this)
+        //    Destroy(gameObject);
     }
 
     // Use this for initialization
@@ -96,8 +98,8 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (lastFreq != Frequence)
         {
             SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
-            WorldRadioManager.Instance.CurrentFrequence = Frequence;
-            WorldRadioManager.Instance.Call();
+            radioManager.CurrentFrequence = Frequence;
+            radioManager.Call();
         }
     }
 
@@ -106,6 +108,6 @@ public class WorldRadioBar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         Debug.Log("OnEndDrag");
         SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 1f;
         Frequence = frequence;
-        WorldRadioManager.Instance.Call();
+        radioManager.Call();
     }
 }

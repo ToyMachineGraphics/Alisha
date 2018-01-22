@@ -10,6 +10,8 @@ public class WorldRadioButton : MonoBehaviour, IPointerClickHandler, IPointerDow
     private float _currentPressDelay;
     private bool _pressing = false;
 
+    public WorldRadioManager radioManager;
+
     // Use this for initialization
     private void Start()
     {
@@ -27,15 +29,15 @@ public class WorldRadioButton : MonoBehaviour, IPointerClickHandler, IPointerDow
             }
             else
             {
-                WorldRadioManager.Instance.CurrentFrequence += AdjustUnit;
+                radioManager.CurrentFrequence += AdjustUnit;
             }
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        WorldRadioManager.Instance.CurrentFrequence += AdjustUnit;
-        WorldRadioManager.Instance.Call();
+        radioManager.CurrentFrequence += AdjustUnit;
+        radioManager.Call();
     }
 
     public void OnPointerDown(PointerEventData eventData)

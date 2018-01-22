@@ -551,7 +551,6 @@ GameObject:
   - component: {fileID: 224145862808049438}
   - component: {fileID: 222101343577787854}
   - component: {fileID: 114463627196238170}
-  - component: {fileID: 114445905207621650}
   - component: {fileID: 114915349165512974}
   m_Layer: 5
   m_Name: RadioBar
@@ -802,7 +801,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224207746733861240}
-  - component: {fileID: 114912715137951726}
   - component: {fileID: 114796524508083360}
   - component: {fileID: 114794123182744662}
   m_Layer: 5
@@ -4476,22 +4474,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114445905207621650
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1379562581656376}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc787617e95c143488460e4281a76dd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Bar: {fileID: 0}
-  AdjustClip: {fileID: 0}
-  MaxFreq: 145
-  MinFreq: 140
-  UnitFreq: 0.05
 --- !u!114 &114451656163757654
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5184,6 +5166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AdjustUnit: -0.05
   PressDelay: 1
+  radioManager: {fileID: 114794123182744662}
 --- !u!114 &114579301044295972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5197,6 +5180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AdjustUnit: 0.05
   PressDelay: 1
+  radioManager: {fileID: 114794123182744662}
 --- !u!114 &114598727986832792
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7008,27 +6992,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114912715137951726
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1490592844286102}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cee72ab0f8866742bacd26622e825f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxFrequence: 145
-  MinFrequence: 140
-  FrequencceText: {fileID: 114785137661038990}
-  TargetImage: {fileID: 114712430086229398}
-  TargetSprite: []
-  TargetTalk: {fileID: 114257672995623716}
-  RadioSound: {fileID: 82644169642887078}
-  TalkClip: {fileID: 0}
-  RadioClips: []
-  TalkDuration: 2
 --- !u!114 &114915349165512974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7047,6 +7010,7 @@ MonoBehaviour:
   CurrentMinFreq: 0
   CurrentMaxFreq: 0
   UnitFreq: 0.05
+  radioManager: {fileID: 114794123182744662}
 --- !u!114 &114927657465826910
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -30,28 +30,28 @@ public class WorldRadioManager : MonoBehaviour
     private int _sentenceAmount = 0;
     private int _sentenceID = 0;
 
-        public float CurrentFrequence
+    public float CurrentFrequence
     {
         get { return _currentFrequence; }
         set
         {
             _currentFrequence = Mathf.Clamp(value, MinFrequence, MaxFrequence);
             _currentFrequence = (float)System.Math.Round(_currentFrequence, 2);
-            WorldRadioBar.Instance.Frequence = _currentFrequence;
+            radioBar.Frequence = _currentFrequence;
             OnFrequenceChanged();
         }
     }
 
     public WorldRadioBar radioBar;
 
-    public static WorldRadioManager Instance = null;
+    //public static WorldRadioManager Instance = null;
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(gameObject);
+        //if (Instance == null)
+        //    Instance = this;
+        //else if (Instance != this)
+        //    Destroy(gameObject);
     }
 
     private void Start()
@@ -156,7 +156,7 @@ public class WorldRadioManager : MonoBehaviour
                 if (item.name == imgNames[_sentenceID])
                 {
                     TargetImage.sprite = item;
-                    TargetImage.SetNativeSize();
+                    //TargetImage.SetNativeSize();
                 }
             }
 
