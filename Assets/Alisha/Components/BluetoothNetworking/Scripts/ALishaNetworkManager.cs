@@ -1,4 +1,5 @@
 ﻿using LostPolygon.AndroidBluetoothMultiplayer;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -12,6 +13,7 @@ public class ALishaNetworkManager : AndroidBluetoothNetworkManager
 
     public GameObject NonVRPlayerPrefab;
     public GameObjectEvent NonVROnOnServerAddPlayer;
+
     [SerializeField]
     private short MaxPlayers = 2;
 
@@ -64,6 +66,8 @@ public class ALishaNetworkManager : AndroidBluetoothNetworkManager
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
     }
 
+    public Action OnClientConnectAction;
+
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
@@ -72,14 +76,19 @@ public class ALishaNetworkManager : AndroidBluetoothNetworkManager
             ClientScene.AddPlayer(conn, 0, new PlayerTypeMessgage() { IsVR = this.IsVR });
         }
 
-        ALishaNetworkMain networkMain = FindObjectOfType<ALishaNetworkMain>();
-        if (networkMain)
+        //ALishaNetworkMain networkMain = FindObjectOfType<ALishaNetworkMain>();
+        //if (networkMain)
+        //{
+        //    networkMain.UIPanelGameObject.SetActive(false);
+        //}
+        if (OnClientConnectAction != null)
         {
-            networkMain.UIPanelGameObject.SetActive(false);
+            OnClientConnectAction();
         }
     }
 
     #region Server - Request From Client Handler
+
     private void OnSendScreenshotRequest(NetworkMessage netMsg)
     {
         SendScreenshotMessage sendScreenshot = netMsg.ReadMessage<SendScreenshotMessage>();
@@ -92,16 +101,19 @@ public class ALishaNetworkManager : AndroidBluetoothNetworkManager
             connection.Send((short)OperationMessageType.SendScreenshot, sendScreenshot);
         }
     }
-    #endregion
+
+    #endregion Server - Request From Client Handler
 
     #region Client - Response From Server Handler
+
     private void OnSendScreenshotResponse(NetworkMessage netMsg)
     {
         SendScreenshotMessage sendScreenshot = netMsg.ReadMessage<SendScreenshotMessage>();
         Texture2D texture = new Texture2D(sendScreenshot.width, sendScreenshot.height, TextureFormat.RGBA32, true);
-        bool succeess =texture.LoadImage(sendScreenshot.ImageBytes);
+        bool succeess = texture.LoadImage(sendScreenshot.ImageBytes);
     }
-    #endregion
+
+    #endregion Client - Response From Server Handler
 }
 
 public class GameObjectEvent : UnityEvent<GameObject>

@@ -2180,7 +2180,7 @@ Prefab:
     - target: {fileID: 224546630986746324, guid: 7eea8b34cb7156e49826fe76992293bb,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -164.25
       objectReference: {fileID: 0}
     - target: {fileID: 224546630986746324, guid: 7eea8b34cb7156e49826fe76992293bb,
         type: 2}
@@ -2190,7 +2190,7 @@ Prefab:
     - target: {fileID: 224546630986746324, guid: 7eea8b34cb7156e49826fe76992293bb,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 328.5
       objectReference: {fileID: 0}
     - target: {fileID: 114849114088059442, guid: 7eea8b34cb7156e49826fe76992293bb,
         type: 2}
@@ -10680,6 +10680,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1692210711}
+  - component: {fileID: 1692210712}
   m_Layer: 0
   m_Name: VRDev
   m_TagString: Untagged
@@ -10702,6 +10703,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1692210712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1692210710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06be6e875868def4d9074b000f49ca73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &1695224636 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20458025144166522, guid: f664e0aca72b22245a678bc1e2e55d23,

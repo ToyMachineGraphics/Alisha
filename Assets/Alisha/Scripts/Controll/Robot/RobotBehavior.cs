@@ -29,6 +29,7 @@ public class RobotBehavior : NetworkBehaviour
     public AudioClip ForwardClip;
     public AudioClip FlyClip;
     public AudioClip LandingClip;
+    public SyncFieldCommand SyncCmd;
 
     public Vector3 RelativePosition
     {
@@ -54,8 +55,8 @@ public class RobotBehavior : NetworkBehaviour
     [SyncVar]
     private MoveState _state = MoveState.Idel;
 
-	public Flashlight FlashlightPrefab;
-	public Flashlight FlashlightInstance;
+    public Flashlight FlashlightPrefab;
+    public Flashlight FlashlightInstance;
 
     public static RobotBehavior Instance = null;
 
@@ -78,9 +79,9 @@ public class RobotBehavior : NetworkBehaviour
             {
                 _gameObjects.SetActive(true);
             }
-            SyncFieldCommand.Instance.OnStageClear += GameClear;
+            SyncCmd.OnStageClear += GameClear;
         }
-		//CmdSpawnFlashlight ();
+        //CmdSpawnFlashlight ();
     }
 
     // Update is called once per frame
@@ -268,17 +269,17 @@ public class RobotBehavior : NetworkBehaviour
         _flying = false;
     }
 
-	[Command]
-	void CmdSpawnFlashlight()
-	{
-		FlashlightInstance = Instantiate (FlashlightPrefab);
-		NetworkServer.SpawnWithClientAuthority (FlashlightInstance.gameObject, gameObject);
-		RpcSpawnFlashlight (FlashlightInstance.gameObject);
-	}
+    [Command]
+    private void CmdSpawnFlashlight()
+    {
+        FlashlightInstance = Instantiate(FlashlightPrefab);
+        NetworkServer.SpawnWithClientAuthority(FlashlightInstance.gameObject, gameObject);
+        RpcSpawnFlashlight(FlashlightInstance.gameObject);
+    }
 
-	[ClientRpc]
-	void RpcSpawnFlashlight(GameObject flashlight)
-	{
-		FlashlightInstance = flashlight.GetComponent<Flashlight> ();
-	}
+    [ClientRpc]
+    private void RpcSpawnFlashlight(GameObject flashlight)
+    {
+        FlashlightInstance = flashlight.GetComponent<Flashlight>();
+    }
 }

@@ -32,10 +32,12 @@ public class ALishaNetworkMain : MonoBehaviour
             ErrorUIPanelGameObject.SetActive(true);
         }
 #else
+
     private void Awake()
     {
         // Enabling verbose logging. See logcat!
         AndroidBluetoothMultiplayer.SetVerboseLog(true);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()
@@ -64,6 +66,7 @@ public class ALishaNetworkMain : MonoBehaviour
     }
 
     #region UI Handlers
+
     public void OnStartServerButton()
     {
         AndroidBluetoothNetworkManagerHelper.StartHost();
@@ -89,6 +92,8 @@ public class ALishaNetworkMain : MonoBehaviour
         AndroidBluetoothMultiplayer.Stop();
         BluetoothMultiplayerDemoNetworkManager.StopClient();
     }
-    #endregion
+
+    #endregion UI Handlers
+
 #endif
 }

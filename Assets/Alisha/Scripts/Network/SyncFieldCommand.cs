@@ -7,17 +7,8 @@ using UnityEngine.Networking;
 public class SyncFieldCommand : NetworkBehaviour
 {
     public GameObject SyncFieldPrefab;
-    public Action OnStageClear = null;
 
-    public static SyncFieldCommand Instance = null;
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
-            Destroy(gameObject);
-    }
+    public event Action OnStageClear = null;
 
     // Use this for initialization
     private void Start()
@@ -51,6 +42,20 @@ public class SyncFieldCommand : NetworkBehaviour
             Debug.Log("Clear");
             if (OnStageClear != null)
                 OnStageClear();
+            Rpc_OnStageClear();
         }
+    }
+
+    [Command]
+    private void Cmd_OnStageClear()
+    {
+        Rpc_OnStageClear();
+    }
+
+    [ClientRpc]
+    private void Rpc_OnStageClear()
+    {
+        if (Aisha.Instance.isLocalPlayer)
+            Aisha.Instance.GameClear();
     }
 }

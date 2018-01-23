@@ -4,8 +4,10 @@ using UnityEngine;
 public sealed class VRController : MinimalDaydream
 {
     #region Prefab Singleton
+
     private static bool _isQuitting;
     private static VRController _instance;
+
     public static VRController Instance
     {
         get
@@ -45,29 +47,38 @@ public sealed class VRController : MinimalDaydream
 
     private void OnDestroy()
     {
-        _instance = null;
-        _isQuitting = true;
+        if (_instance == this)
+        {
+            _instance = null;
+            _isQuitting = true;
+        }
     }
 
     private void OnApplicationQuit()
     {
         _isQuitting = true;
     }
-    #endregion
+
+    #endregion Prefab Singleton
 
     private GvrLaserPointer _laserPointer;
     private GvrLaserVisual _laserVisual;
+
     [SerializeField]
     private GameObject _handPrefab;
+
     [SerializeField]
     private Vector3 _handScale;
+
     [SerializeField]
     private Transform _hand;
+
     public Transform Hand
     {
         get { return _hand; }
     }
-	private Vector3 _defaultControllerModelForward = Vector3.forward;
+
+    private Vector3 _defaultControllerModelForward = Vector3.forward;
 
     public Action<float> OnPlayerHeightChanged;
 
@@ -75,16 +86,19 @@ public sealed class VRController : MinimalDaydream
     {
         Normal, MenuUI, WaitForTouchPadUp
     }
+
     private ControllerState _state;
+
     public ControllerState State
     {
         set { _state = value; }
     }
+
     private float _uiTriggerTimer;
     public GameObject VRMenuUI;
     public Flashlight Flashlight;
 
-    protected override void Start ()
+    protected override void Start()
     {
         base.Start();
         if (OnPlayerHeightChanged != null)
@@ -105,18 +119,19 @@ public sealed class VRController : MinimalDaydream
     }
 
     private RaycastHit[] _raycastHitBuffer = new RaycastHit[4];
-	private ObjInfomation _objInfoSelected;
-	private void Update ()
+    private ObjInfomation _objInfoSelected;
+
+    private void Update()
     {
         if (GvrControllerInput.Recentered)
         {
             _hand.position = ControllerModel.transform.position + (ControllerModel.transform.forward + ControllerModel.transform.up) * 0.09375f;
-			_defaultControllerModelForward = ControllerModel.transform.forward;
+            _defaultControllerModelForward = ControllerModel.transform.forward;
         }
-		if (_state == ControllerState.Normal || _state == ControllerState.WaitForTouchPadUp)
-		{
-			_hand.rotation = ControllerModel.transform.rotation;
-		}
+        if (_state == ControllerState.Normal || _state == ControllerState.WaitForTouchPadUp)
+        {
+            _hand.rotation = ControllerModel.transform.rotation;
+        }
 
         if (GvrPointerInputModule.CurrentRaycastResult.isValid)
         {
@@ -144,8 +159,8 @@ public sealed class VRController : MinimalDaydream
             !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy) ||
 
             !vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy &&
-			!vrMenuUI.Hierachy2BackpackRoot.gameObject.activeInHierarchy &&
-			!vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy &&
+            !vrMenuUI.Hierachy2BackpackRoot.gameObject.activeInHierarchy &&
+            !vrMenuUI.BackpackHierachy2.gameObject.activeInHierarchy &&
             !vrMenuUI.Hierarchy2RadioRoot.gameObject.activeInHierarchy)
         {
             Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
@@ -153,7 +168,8 @@ public sealed class VRController : MinimalDaydream
 #if UNITY_EDITOR
             Debug.DrawRay(ray.origin, ray.direction, Color.green);
 #endif
-            if (count > 0) {
+            if (count > 0)
+            {
                 bool casted = false;
                 for (int i = 0; i < count; i++)
                 {
@@ -192,12 +208,15 @@ public sealed class VRController : MinimalDaydream
                 //    }
                 //    ObjInfoWindow.Instance.Hit = false;
                 //}
-            } else {
-				ObjInfoWindow.Instance.Hit = false;
-				if (_objInfoSelected) {
-					_objInfoSelected.Hit = false;
-				}
-			}
+            }
+            else
+            {
+                ObjInfoWindow.Instance.Hit = false;
+                if (_objInfoSelected)
+                {
+                    _objInfoSelected.Hit = false;
+                }
+            }
         }
 
 #if UNITY_EDITOR && !USE_DAYDREAM_CONTROLLER
@@ -211,6 +230,7 @@ public sealed class VRController : MinimalDaydream
                 case ControllerState.Normal:
                     _uiTriggerTimer = 0;
                     break;
+
                 case ControllerState.MenuUI:
                     break;
             }
@@ -231,8 +251,8 @@ public sealed class VRController : MinimalDaydream
                         _hand.position = reference;
                         _hand.rotation = Quaternion.Euler(0, -90, 0) * MainCamera.transform.rotation;
                         VRMenuUI.transform.position = vrMenuUI.LookTowardsCamera.position = MainCamera.transform.position + MainCamera.transform.forward * 0.5f;
-						vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, Vector3.up);
-						VRMenuUI.transform.rotation = vrMenuUI.LookTowardsCamera.rotation;
+                        vrMenuUI.LookTowardsCamera.LookAt(MainCamera.transform.position, Vector3.up);
+                        VRMenuUI.transform.rotation = vrMenuUI.LookTowardsCamera.rotation;
                         vrMenuUI.Touch(GvrControllerInput.TouchPosCentered);
                         vrMenuUI.OnOpenFlag = global::VRMenuUI.OnOpen.Hierarchy1Root;
                         vrMenuUI.SelectionsRoot.gameObject.SetActive(true);
@@ -249,12 +269,13 @@ public sealed class VRController : MinimalDaydream
         else if (GvrControllerInput.ClickButtonUp)
 #endif
         {
-			if ((vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.Hierarchy1Root && vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy) || (false && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy)) {
-				_state = ControllerState.Normal;
+            if ((vrMenuUI.OnOpenFlag == global::VRMenuUI.OnOpen.Hierarchy1Root && vrMenuUI.Hiarachy1Root.gameObject.activeInHierarchy) || (false && vrMenuUI.SelectionsRoot.gameObject.activeInHierarchy))
+            {
+                _state = ControllerState.Normal;
                 ResetHand();
 
-                VRMenuUI.GetComponent<VRMenuUI> ().Confirm ();
-			}
+                VRMenuUI.GetComponent<VRMenuUI>().Confirm();
+            }
             if (_state == ControllerState.WaitForTouchPadUp)
             {
                 Debug.Log("WaitForTouchPadUp to Normal");

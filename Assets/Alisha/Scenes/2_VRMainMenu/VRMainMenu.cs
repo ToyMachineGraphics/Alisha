@@ -8,8 +8,13 @@ public class VRMainMenu : MonoBehaviour
 {
     public string NextScene;
     private VRController _controller;
+
     [SerializeField]
     private Canvas _networkUI;
+
+    [SerializeField]
+    private Canvas _networkUI1;
+
     [SerializeField]
     private GameObject _vrMenuUI;
 
@@ -19,16 +24,19 @@ public class VRMainMenu : MonoBehaviour
     [SerializeField]
     private ALishaNetworkMain _networkMain;
 
+    public Transform Environment;
+
     private IEnumerator Start()
     {
-        do
-        {
-            _controller = VRController.Instance;
-            yield return null;
-        } while (!_controller);
-        _controller.OnPlayerHeightChanged = OnPlayerHeightChanged;
-        _controller.VRMenuUI = _vrMenuUI;
-        _controller.MainCamera.enabled = true;
+        //do
+        //{
+        //    _controller = VRController.Instance;
+        //    yield return null;
+        //} while (!_controller);
+        //_controller.OnPlayerHeightChanged = OnPlayerHeightChanged;
+        //_controller.VRMenuUI = _vrMenuUI;
+        //_controller.MainCamera.enabled = true;
+        yield return null;
     }
 
     private void Update()
@@ -54,6 +62,7 @@ public class VRMainMenu : MonoBehaviour
     }
 
     private bool _isFadeOutReady = true;
+
     public void Fadeout()
     {
         if (_isFadeOutReady)

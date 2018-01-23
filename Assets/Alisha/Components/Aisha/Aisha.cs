@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,10 +9,13 @@ public class Aisha : NetworkBehaviour
     public VRController Controller;
     public VRMenuUI UI;
     private NetworkIdentity _networkId;
+
     [SerializeField]
     private Flashlight _flashlightPrefab;
+
     [SerializeField]
     private Flashlight _flashlight;
+
     private Light _spotlight;
     public static Aisha Instance = null;
 
@@ -21,11 +25,16 @@ public class Aisha : NetworkBehaviour
     private float _flashlightUpdateInterval = 0.125f;
     private float _flashlightUpdateTimer;
 
+    public Camera Camera;
+
+    public SyncFieldCommand SyncCmd;
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
@@ -46,11 +55,17 @@ public class Aisha : NetworkBehaviour
         Debug.Log("Aisha OnStartLocalPlayer");
     }
 
-    private void Start ()
+    private void Start()
     {
+        if (true || isLocalPlayer)
+        {
+            //SyncFieldCommand.Instance.OnStageClear -= GameClear;
+            SyncCmd.OnStageClear += GameClear;
+            WorldText.Instance.text.text = "SyncFieldCommand.Instance.OnStageClear += GameClear";
+        }
     }
 
-	private void Update ()
+    private void Update()
     {
         if (localPlayerAuthority && Controller)
         {
@@ -94,6 +109,10 @@ public class Aisha : NetworkBehaviour
                 }
             }
 
+            if (Camera == null)
+            {
+                Camera = Controller.MainCamera;
+            }
             Vector3 forward = Controller.MainCamera.transform.forward;
             Vector3 forwardProjected = forward - Vector3.Dot(forward, Vector3.up) * Vector3.up;
             transform.position = Controller.MainCamera.transform.position - forwardProjected * 0.5f + Vector3.down * Controller.PlayerOffset.y;
@@ -123,5 +142,25 @@ public class Aisha : NetworkBehaviour
     {
         _flashlight.RayPoint = point;
         _flashlight.LightLength = Vector3.Distance(point, cameraPosition);
+    }
+
+    public void GameClear()
+    {
+        WorldText.Instance.text.text = "GameClear";
+        Debug.Log("IN");
+        foreach (var item in GameObject.FindGameObjectsWithTag("FinishGroup"))
+        {
+            Debug.Log(item);
+            for (int i = 0; i < item.transform.childCount; i++)
+            {
+                item.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            item.gameObject.SetActive(true);
+        }
+        foreach (var item in GameObject.FindGameObjectsWithTag("FinishTween"))
+        {
+            Debug.Log(item);
+            item.GetComponent<DOTweenAnimation>().DOPlay();
+        }
     }
 }

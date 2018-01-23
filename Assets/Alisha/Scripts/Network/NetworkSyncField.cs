@@ -131,6 +131,7 @@ public class NetworkSyncField : NetworkBehaviour
 
     private void PlzzleUpdate(SyncListBool.Operation op, int index)
     {
+        WorldText.Instance.text.text = "On element " + index + " of Plzzle Updated, new Value: " + boolArray2_Puzzel_Triggers[index];
         Debug.Log("On element " + index + " of Plzzle Updated, new Value: " + boolArray2_Puzzel_Triggers[index]);
         OnPuzzel_TriggersChanged(boolArray2_Puzzel_Triggers);
     }

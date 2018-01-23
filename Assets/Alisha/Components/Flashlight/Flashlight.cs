@@ -7,18 +7,29 @@ using System.Linq;
 public class Flashlight : NetworkBehaviour
 {
     public GameObject Model;
+
     [SerializeField]
     private Light _innerSpotlight;
-	[SyncVar]
-	public float LightLength = 1;
+
+    [SyncVar]
+    public float LightLength = 1;
+
     [SyncVar]
     public Vector3 RayPoint;
+
     public SphereCollider InnerCollider;
+
     [SerializeField]
     private Light _outerSpotlight;
+
     public SphereCollider OuterCollider;
 
     public NetworkIdentity NetId;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Update()
     {
@@ -30,17 +41,19 @@ public class Flashlight : NetworkBehaviour
         OuterCollider.radius = outerRadius;
         OuterCollider.transform.position = _outerSpotlight.transform.position + _outerSpotlight.transform.forward * LightLength;
 
-		if (_triggerChanged) {
-			_triggerChanged = false;
+        if (_triggerChanged)
+        {
+            _triggerChanged = false;
 
-			_diffSet = _outerLightTriggered.Except (_innerLightTriggered);
-            foreach (DenryuIrairaBoAgent a in _diffSet) {
+            _diffSet = _outerLightTriggered.Except(_innerLightTriggered);
+            foreach (DenryuIrairaBoAgent a in _diffSet)
+            {
                 if (a)
                 {
                     CmdSetAgentAttracted(a.gameObject, true, RayPoint);
                 }
-			}
-		}
+            }
+        }
     }
 
     [Command]
@@ -61,48 +74,54 @@ public class Flashlight : NetworkBehaviour
     }
 
     #region Trigger
+
     private HashSet<DenryuIrairaBoAgent> _outerLightTriggered = new HashSet<DenryuIrairaBoAgent>();
-	private HashSet<DenryuIrairaBoAgent> _innerLightTriggered = new HashSet<DenryuIrairaBoAgent>();
-	private IEnumerable<DenryuIrairaBoAgent> _diffSet;
-	private bool _triggerChanged;
+    private HashSet<DenryuIrairaBoAgent> _innerLightTriggered = new HashSet<DenryuIrairaBoAgent>();
+    private IEnumerable<DenryuIrairaBoAgent> _diffSet;
+    private bool _triggerChanged;
 
-	public void OnOuterLightTriggerBugEnter(Collider other)
-	{
-		if (hasAuthority) {
-			_triggerChanged = true;
-			DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent> ();
-			_outerLightTriggered.Add (agent);
-		}
-	}
+    public void OnOuterLightTriggerBugEnter(Collider other)
+    {
+        if (hasAuthority)
+        {
+            _triggerChanged = true;
+            DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent>();
+            _outerLightTriggered.Add(agent);
+        }
+    }
 
-	public void OnOuterLightTriggerBugExit(Collider other)
-	{
-		if (hasAuthority) {
-			_triggerChanged = true;
-			DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent> ();
-			_outerLightTriggered.Remove (agent);
+    public void OnOuterLightTriggerBugExit(Collider other)
+    {
+        if (hasAuthority)
+        {
+            _triggerChanged = true;
+            DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent>();
+            _outerLightTriggered.Remove(agent);
             CmdSetAgentAttracted(agent.gameObject, false, Vector3.zero);
         }
-	}
+    }
 
-	public void OnInnerLightTriggerBugEnter(Collider other)
-	{
-		if (hasAuthority) {
-			_triggerChanged = true;
-			DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent> ();
-			_innerLightTriggered.Add (agent);
-		}
-	}
+    public void OnInnerLightTriggerBugEnter(Collider other)
+    {
+        if (hasAuthority)
+        {
+            _triggerChanged = true;
+            DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent>();
+            _innerLightTriggered.Add(agent);
+        }
+    }
 
-	public void OnInnerLightTriggerBugExit(Collider other)
-	{
-		if (hasAuthority) {
-			_triggerChanged = true;
-			DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent> ();
-			_innerLightTriggered.Remove (agent);
-		}
-	}
-    #endregion
+    public void OnInnerLightTriggerBugExit(Collider other)
+    {
+        if (hasAuthority)
+        {
+            _triggerChanged = true;
+            DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent>();
+            _innerLightTriggered.Remove(agent);
+        }
+    }
+
+    #endregion Trigger
 
     [Command]
     public void CmdUseFlashlight()
