@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114113901793000264}
   - component: {fileID: 114232208070563046}
   m_Layer: 0
-  m_Name: TempNonVRSceneObjInfoCanvas
+  m_Name: TempNonVR_SceneObjInfoCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +152,6 @@ MonoBehaviour:
   ShowCD: 0.1
   Hint: {fileID: 114254316150226270}
   Hiding: 0
-  _opened: 0
 --- !u!114 &114254316150226270
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -32,12 +32,11 @@ public class RadioManager : MonoBehaviour
 
     public float CurrentFrequence
     {
-        get { return _currentFrequence; }
+        get { return RadioBar.Instance.Frequence; }
         set
         {
-            _currentFrequence = Mathf.Clamp(value, MinFrequence, MaxFrequence);
-            _currentFrequence = (float)System.Math.Round(_currentFrequence, 2);
-            RadioBar.Instance.Frequence = _currentFrequence;
+            //_currentFrequence = Mathf.Clamp(value, MinFrequence, MaxFrequence);
+            //_currentFrequence = (float)System.Math.Round(_currentFrequence, 2);
             OnFrequenceChanged();
         }
     }
@@ -87,7 +86,7 @@ public class RadioManager : MonoBehaviour
             imgNames = new List<string>();
             audios = new List<string>();
             talks = new List<string>();
-            imgNames.Add("雜訊");
+            imgNames.Add("bg_none");
             audios.Add("");
             talks.Add("");
         }

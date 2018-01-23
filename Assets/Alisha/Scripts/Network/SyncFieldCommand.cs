@@ -48,6 +48,7 @@ public class SyncFieldCommand : NetworkBehaviour
     {
         if (isUnlock[0] && isUnlock[1])
         {
+            Debug.Log("Clear");
             if (OnStageClear != null)
                 OnStageClear();
         }

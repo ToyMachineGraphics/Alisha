@@ -9,6 +9,8 @@ TagManager:
   - DenryuIrairaBoDuplicate
   - CircleTrigger
   - RadioCam
+  - FinishGroup
+  - FinishTween
   layers:
   - Default
   - TransparentFX

@@ -19,11 +19,15 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         get
         {
             frequence = MinFreq + (Mathf.CeilToInt(-Bar.localPosition.x / lenth * deltaFreq / UnitFreq) * UnitFreq);
+            frequence = Mathf.Clamp(frequence, MinFreq, MaxFreq);
+            frequence = (float)System.Math.Round(frequence, 2);
             return frequence;
         }
         set
         {
             frequence = value;
+            frequence = Mathf.Clamp(frequence, MinFreq, MaxFreq);
+            frequence = (float)System.Math.Round(frequence, 2);
             Bar.localPosition = new Vector3(-(frequence - MinFreq) * lenth / deltaFreq, Bar.localPosition.y);
         }
     }
@@ -32,6 +36,7 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
 
     private Vector3 initLocalPos;
     private Vector3 lastTouchPos;
+    private float lastFreq;
     private float lenth;
 
     public static RadioBar Instance = null;
@@ -61,24 +66,28 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        lastFreq = Frequence;
         lastTouchPos = Input.mousePosition;
         SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 0.5f;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        float lastFreq = Frequence;
         Vector3 delta = Input.mousePosition - lastTouchPos;
         Bar.localPosition += Vector3.right * delta.x;
         if (Frequence > MaxFreq || Frequence < MinFreq)
             Bar.localPosition -= Vector3.right * delta.x;
+
         if ((lastFreq - Frequence) != 0)
         {
             SEManager.Instance.PlaySEClip(AdjustClip, SEChannels.PlayerTrigger, false, false, false);
+
             RadioManager.Instance.CurrentFrequence = Frequence;
             RadioManager.Instance.Call();
         }
+
         lastTouchPos = Input.mousePosition;
+        lastFreq = Frequence;
     }
 
     public void OnEndDrag(PointerEventData eventData)

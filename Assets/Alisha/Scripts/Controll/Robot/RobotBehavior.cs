@@ -75,6 +75,7 @@ public class RobotBehavior : NetworkBehaviour
             {
                 _gameObjects.SetActive(true);
             }
+            SyncFieldCommand.Instance.OnStageClear += GameClear;
         }
     }
 
@@ -237,6 +238,21 @@ public class RobotBehavior : NetworkBehaviour
 
         _falling = true;
         SEManager.Instance.PlaySEClip(LandingClip, SEChannels.PlayerTrigger, true, false, false);
+    }
+
+    private void GameClear()
+    {
+        Debug.Log("IN");
+        foreach (var item in GameObject.FindGameObjectsWithTag("FinishGroup"))
+        {
+            Debug.Log(item);
+            item.gameObject.SetActive(true);
+        }
+        foreach (var item in GameObject.FindGameObjectsWithTag("FinishTween"))
+        {
+            Debug.Log(item);
+            item.GetComponent<DOTweenAnimation>().DOPlay();
+        }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

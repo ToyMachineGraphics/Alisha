@@ -7,11 +7,12 @@ using DG.Tweening;
 
 public class VirtualStick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    private Vector3 _initPos;
-    private Vector3 dir;
+    private Vector2 _initPos;
+    private Vector2 dir;
     private bool startRotating;
+    private int fingerID;
 
-    public Vector3 TouchValue
+    public Vector2 TouchValue
     {
         get
         {
@@ -30,18 +31,27 @@ public class VirtualStick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private void Update()
     {
         if (startRotating)
-            RobotBehavior.Instance.UpdateEularRotation(new Vector3(-TouchValue.y, TouchValue.x));
+            RobotBehavior.Instance.UpdateEularRotation(new Vector2(-TouchValue.y, TouchValue.x));
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         _initPos = transform.position;
         startRotating = true;
+        fingerID = Input.touchCount - 1;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        dir = (Input.mousePosition - _initPos);
+#if UNITY_EDITOR
+
+        dir = (new Vector2(Input.mousePosition.x, Input.mousePosition.y) - _initPos);
+#else
+        if (fingerID < 0)
+            return;
+        dir = (Input.GetTouch(fingerID).position - _initPos);
+#endif
+
         if (dir.magnitude > Radius)
             dir = dir.normalized * Radius;
         transform.position = _initPos + dir;
@@ -51,6 +61,6 @@ public class VirtualStick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         startRotating = false;
         transform.DOMove(_initPos, 0.2f);
-        dir = Vector3.zero;
+        dir = Vector2.zero;
     }
 }

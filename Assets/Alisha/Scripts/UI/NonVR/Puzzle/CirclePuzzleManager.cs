@@ -11,13 +11,12 @@ public class CirclePuzzleManager : NetworkBehaviour
 
     private bool _isUnlock;
 
-    private CirclePuzzleBehavior[] Puzzles;
+    public CirclePuzzleBehavior[] Puzzles;
 
     // Use this for initialization
     private IEnumerator Start()
     {
         yield return new WaitForSeconds(0.5f);
-        Puzzles = FindObjectsOfType<CirclePuzzleBehavior>();
         NetworkSyncField.Instance.OnPuzzel_TriggersChanged += UnlockUpdate;
     }
 
