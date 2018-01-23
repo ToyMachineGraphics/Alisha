@@ -34,7 +34,7 @@ public class HandBehavior : MonoBehaviour
     {
         transform.DORewind();
         transform.DOKill();
-        transform.DOLocalMove(Vector3.forward * 5, 0.5f)
+		transform.DOLocalMove(Vector3.forward * 3 + Vector3.down*0.1f+ Vector3.left*0.1f, 0.5f)
             .SetRelative(true)
             .OnComplete(() =>
             {
@@ -45,7 +45,9 @@ public class HandBehavior : MonoBehaviour
 
     public void Back()
     {
-        transform.DOLocalMove(_initLocalPos, 0.2f).OnComplete(() =>
+        transform.DOLocalMove(_initLocalPos, 0.5f)
+			.SetDelay(.2f)
+			.OnComplete(() =>
         {
 			RobotBehavior.Instance.FlashlightInstance.gameObject.SetActive (true);
             Anim.SetTrigger("open");
