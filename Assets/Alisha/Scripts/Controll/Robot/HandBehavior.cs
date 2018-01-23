@@ -47,6 +47,7 @@ public class HandBehavior : MonoBehaviour
     {
         transform.DOLocalMove(_initLocalPos, 0.2f).OnComplete(() =>
         {
+			RobotBehavior.Instance.FlashlightInstance.gameObject.SetActive (true);
             Anim.SetTrigger("open");
             if (TakeTarget)
                 Destroy(TakeTarget.gameObject);
@@ -72,6 +73,7 @@ public class HandBehavior : MonoBehaviour
             transform.DOPause();
             transform.DOKill();
             other.transform.parent.GetComponent<CirclePuzzleManager>().PuzzleTrigger(true);
+			RobotBehavior.Instance.FlashlightInstance.gameObject.SetActive (false);
         }
     }
 }

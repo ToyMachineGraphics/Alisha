@@ -54,6 +54,9 @@ public class RobotBehavior : NetworkBehaviour
     [SyncVar]
     private MoveState _state = MoveState.Idel;
 
+	public Flashlight FlashlightPrefab;
+	public Flashlight FlashlightInstance;
+
     public static RobotBehavior Instance = null;
 
     private void Awake()
@@ -77,6 +80,7 @@ public class RobotBehavior : NetworkBehaviour
             }
             SyncFieldCommand.Instance.OnStageClear += GameClear;
         }
+		//CmdSpawnFlashlight ();
     }
 
     // Update is called once per frame
@@ -263,4 +267,18 @@ public class RobotBehavior : NetworkBehaviour
     {
         _flying = false;
     }
+
+	[Command]
+	void CmdSpawnFlashlight()
+	{
+		FlashlightInstance = Instantiate (FlashlightPrefab);
+		NetworkServer.SpawnWithClientAuthority (FlashlightInstance.gameObject, gameObject);
+		RpcSpawnFlashlight (FlashlightInstance.gameObject);
+	}
+
+	[ClientRpc]
+	void RpcSpawnFlashlight(GameObject flashlight)
+	{
+		FlashlightInstance = flashlight.GetComponent<Flashlight> ();
+	}
 }
