@@ -20,7 +20,7 @@ public class CirclePuzzleBehavior : MonoBehaviour
     {
         Random.InitState(System.DateTime.Now.Millisecond);
         CurrentSplits = Random.Range(1, CircleSplits);
-		transform.localEulerAngles += Vector3.up * (360 / CircleSplits) * CurrentSplits;
+        transform.localEulerAngles += Vector3.up * (360 / CircleSplits) * CurrentSplits;
     }
 
     // Update is called once per frame
@@ -28,7 +28,12 @@ public class CirclePuzzleBehavior : MonoBehaviour
     {
     }
 
-	public void OnMouseUpAsButton()
+    public void OnMouseUpAsButton()
+    {
+        TriggerRotate();
+    }
+
+    public void TriggerRotate()
     {
         if (!IsActive)
         {
@@ -37,6 +42,6 @@ public class CirclePuzzleBehavior : MonoBehaviour
         CurrentSplits++;
         CurrentSplits = CurrentSplits == CircleSplits ? 0 : CurrentSplits;
 
-		transform.DOLocalRotate(Vector3.up * 90, 0.2f).SetRelative(true);
+        transform.DOLocalRotate(Vector3.up * 90, 0.2f).SetRelative(true);
     }
 }

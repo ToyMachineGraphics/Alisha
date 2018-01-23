@@ -6192,6 +6192,7 @@ MonoBehaviour:
   ForwardClip: {fileID: 8300000, guid: 34adf560b1cf0074786db5cbaf854e84, type: 3}
   FlyClip: {fileID: 8300000, guid: 96e2652ddf60c6743b1b06b114a6a2da, type: 3}
   LandingClip: {fileID: 8300000, guid: 0d11adeb3c2b0fa44bb37f02dfc6b3ff, type: 3}
+  SyncCmd: {fileID: 0}
   FlashlightPrefab: {fileID: 114415184884895290, guid: f072191026551494a922dfa22922f708,
     type: 2}
   FlashlightInstance: {fileID: 114302970830227916}
@@ -9059,8 +9060,9 @@ MonoBehaviour:
   TalkClip: {fileID: 8300000, guid: 8389f33eb8509194c8ceff7fe4b6700b, type: 3}
   RadioClips:
   - {fileID: 8300000, guid: 8514567913842854e81b80a7fd6b8096, type: 3}
-  - {fileID: 8300000, guid: 39edbbac74b49f04887f0c31138b42d3, type: 3}
+  - {fileID: 8300000, guid: d871ab0db5f0dca4d927e032c07d5157, type: 3}
   - {fileID: 8300000, guid: e2caa70967082c443a1bfb90acac2384, type: 3}
+  - {fileID: 8300000, guid: 8bac66aecd345e146bd5a433f6f2ccf4, type: 3}
   TalkDuration: 2
 --- !u!114 &114431603325129836
 MonoBehaviour:
