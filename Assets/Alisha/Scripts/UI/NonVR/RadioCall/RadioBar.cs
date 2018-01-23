@@ -92,8 +92,8 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 1f;
-        Frequence = frequence;
-        RadioManager.Instance.Call();
+        //SEManager.Instance.GetSESource(SEChannels.PlayerTrigger).volume = 1f;
+        //Frequence = frequence;
+        //RadioManager.Instance.Call();
     }
 }

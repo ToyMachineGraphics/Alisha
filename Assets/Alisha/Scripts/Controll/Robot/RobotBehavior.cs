@@ -246,6 +246,10 @@ public class RobotBehavior : NetworkBehaviour
         foreach (var item in GameObject.FindGameObjectsWithTag("FinishGroup"))
         {
             Debug.Log(item);
+            for (int i = 0; i < item.transform.childCount; i++)
+            {
+                item.transform.GetChild(i).gameObject.SetActive(true);
+            }
             item.gameObject.SetActive(true);
         }
         foreach (var item in GameObject.FindGameObjectsWithTag("FinishTween"))

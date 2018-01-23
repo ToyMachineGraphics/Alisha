@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 223877436734125898}
   - component: {fileID: 114227306825542980}
   - component: {fileID: 114113901793000264}
-  - component: {fileID: 114232208070563046}
+  - component: {fileID: 114166832937707510}
   m_Layer: 0
   m_Name: TempNonVR_SceneObjInfoCanvas
   m_TagString: Untagged
@@ -115,6 +115,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114166832937707510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1490562630533506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8a10aaeb1dc844d9aea1f45d59b4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TweenAnim: {fileID: 114566080124724222}
+  InfoText: {fileID: 114960787156926772}
+  ShowCD: 0.1
+  Hint: {fileID: 114254316150226270}
+  Hiding: 0
+  _opened: 0
 --- !u!114 &114227306825542980
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -136,22 +153,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114232208070563046
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1490562630533506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb54f5c7ad5509246a190dfb1c442a55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TweenAnim: {fileID: 114566080124724222}
-  InfoText: {fileID: 114960787156926772}
-  ShowCD: 0.1
-  Hint: {fileID: 114254316150226270}
-  Hiding: 0
 --- !u!114 &114254316150226270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -337,7 +338,7 @@ MonoBehaviour:
   onComplete:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114232208070563046}
+      - m_Target: {fileID: 0}
         m_MethodName: OnHidingComplete
         m_Mode: 1
         m_Arguments:
@@ -358,7 +359,7 @@ MonoBehaviour:
   onRewind:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114232208070563046}
+      - m_Target: {fileID: 0}
         m_MethodName: OnHidingComplete
         m_Mode: 1
         m_Arguments:

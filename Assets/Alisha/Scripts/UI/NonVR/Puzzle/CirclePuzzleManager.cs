@@ -79,6 +79,7 @@ public class CirclePuzzleManager : NetworkBehaviour
 
     private void UnlockUpdate(SyncListBool isUnlock)
     {
+        PuzzleTrigger(false);
         UnlockImg.SetActive(isUnlock[LockID]);
     }
 }

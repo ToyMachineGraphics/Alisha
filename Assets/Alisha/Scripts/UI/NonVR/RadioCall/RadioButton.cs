@@ -28,14 +28,16 @@ public class RadioButton : MonoBehaviour, IPointerClickHandler, IPointerDownHand
             }
             else
             {
-                RadioManager.Instance.CurrentFrequence += AdjustUnit;
+                RadioBar.Instance.Frequence += AdjustUnit;
+                RadioManager.Instance.CurrentFrequence = RadioBar.Instance.Frequence;
             }
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        RadioManager.Instance.CurrentFrequence += AdjustUnit;
+        RadioBar.Instance.Frequence += AdjustUnit;
+        RadioManager.Instance.CurrentFrequence = RadioBar.Instance.Frequence;
         RadioManager.Instance.Call();
     }
 
