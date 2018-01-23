@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class CirclePuzzleBehavior : MonoBehaviour, IPointerClickHandler
+public class CirclePuzzleBehavior : MonoBehaviour
 {
     public int CircleSplits = 4;
 
@@ -21,7 +20,7 @@ public class CirclePuzzleBehavior : MonoBehaviour, IPointerClickHandler
     {
         Random.InitState(System.DateTime.Now.Millisecond);
         CurrentSplits = Random.Range(1, CircleSplits);
-        transform.localEulerAngles = Vector3.forward * (360 / CircleSplits) * CurrentSplits;
+		transform.localEulerAngles += Vector3.up * (360 / CircleSplits) * CurrentSplits;
     }
 
     // Update is called once per frame
@@ -29,7 +28,7 @@ public class CirclePuzzleBehavior : MonoBehaviour, IPointerClickHandler
     {
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+	public void OnMouseUpAsButton()
     {
         if (!IsActive)
         {
@@ -38,6 +37,6 @@ public class CirclePuzzleBehavior : MonoBehaviour, IPointerClickHandler
         CurrentSplits++;
         CurrentSplits = CurrentSplits == CircleSplits ? 0 : CurrentSplits;
 
-        transform.DOLocalRotate(Vector3.forward * (360 / CircleSplits) * CurrentSplits, 0.2f);
+		transform.DOLocalRotate(Vector3.up * 90, 0.2f).SetRelative(true);
     }
 }

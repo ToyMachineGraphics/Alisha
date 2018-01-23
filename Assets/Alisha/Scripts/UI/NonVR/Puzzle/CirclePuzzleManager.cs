@@ -6,7 +6,7 @@ using UnityEngine;
 public class CirclePuzzleManager : NetworkBehaviour
 {
     public int LockID;
-    public GameObject UnlockImg;
+    //public GameObject UnlockFx;
     public GameObject Cue;
 
     private bool _isUnlock;
@@ -80,6 +80,6 @@ public class CirclePuzzleManager : NetworkBehaviour
     private void UnlockUpdate(SyncListBool isUnlock)
     {
         PuzzleTrigger(false);
-        UnlockImg.SetActive(isUnlock[LockID]);
+        //UnlockFx.SetActive(isUnlock[LockID]);
     }
 }
