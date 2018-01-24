@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using DG.Tweening;
 
 public class SyncFieldCommand : NetworkBehaviour
 {
+
+	public Material BallMat;
     public GameObject SyncFieldPrefab;
 
     public event Action OnStageClear = null;
@@ -37,6 +40,13 @@ public class SyncFieldCommand : NetworkBehaviour
 
     private void UnlockUpdate(SyncListBool isUnlock)
     {
+		int temp = 0;
+		for (int i = 0; i < 2; i++) {
+			if (isUnlock[i]) {
+				temp++;
+			}
+		}
+		Cmd_UpdateBallState (temp);
         if (isUnlock[0] && isUnlock[1])
         {
             Debug.Log("Clear");
@@ -46,16 +56,30 @@ public class SyncFieldCommand : NetworkBehaviour
         }
     }
 
-    [Command]
-    private void Cmd_OnStageClear()
-    {
-        Rpc_OnStageClear();
-    }
+	[Command]
+	private void Cmd_OnStageClear()
+	{
+		Rpc_OnStageClear();
+	}
 
-    [ClientRpc]
-    private void Rpc_OnStageClear()
-    {
-        if (Aisha.Instance.isLocalPlayer)
-            Aisha.Instance.GameClear();
-    }
+	[ClientRpc]
+	private void Rpc_OnStageClear()
+	{
+		if (Aisha.Instance.isLocalPlayer)
+			Aisha.Instance.GameClear();
+	}
+	[Command]
+	private void Cmd_UpdateBallState(int stage)
+	{
+		Rpc_UpdateBallState(stage);
+	}
+
+	[ClientRpc]
+	private void Rpc_UpdateBallState(int stage)
+	{
+		BallMat.DORewind ();
+		BallMat.DOKill ();
+		BallMat.DOColor (new Color (0.33f * stage, 0.33f * stage, 0.33f * stage), "_EmissionColor", 1)
+			.SetLoops (-1, LoopType.Yoyo);
+	}
 }
