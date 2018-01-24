@@ -50,7 +50,10 @@ public class CirclePuzzleManager : NetworkBehaviour
         }
         if (!Active)
         {
-            HandBehavior.Instance.Back();
+            if (HandBehavior.Instance)
+            {
+                HandBehavior.Instance.Back();
+            }
             Cue.SetActive(false);
         }
         else

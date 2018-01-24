@@ -37,7 +37,7 @@ public class ALishaNetworkMain : MonoBehaviour
     {
         // Enabling verbose logging. See logcat!
         AndroidBluetoothMultiplayer.SetVerboseLog(true);
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Update()

@@ -16,6 +16,7 @@ public class DenryuIrairaBo : NetworkBehaviour
 
     [SerializeField]
     private DenryuIrairaBoAgent _agentPrefab;
+
     private Queue<Vector3> _spawnPositions = new Queue<Vector3>();
     private float _spawnTimer = 0;
     private float _spawnInterval = 0;
@@ -28,9 +29,11 @@ public class DenryuIrairaBo : NetworkBehaviour
 
     [SerializeField]
     private List<DenryuIrairaBoAgent> _agentPool = new List<DenryuIrairaBoAgent>();
+
     private List<DenryuIrairaBoAgent> _activeAgent = new List<DenryuIrairaBoAgent>();
 
     public Transform Target;
+
     [SerializeField]
     private Transform _destination;
 
@@ -41,6 +44,7 @@ public class DenryuIrairaBo : NetworkBehaviour
     public Action RaycastAction;
 
     public AgentCollector[] AgentCollectors;
+    public int TotalAgent = 1;
 
     private void Awake()
     {
@@ -58,6 +62,7 @@ public class DenryuIrairaBo : NetworkBehaviour
             s.BuildNavMesh();
             s.GetComponent<Renderer>().enabled = false;
         }
+        Debug.Log("DenryuIrairaBo build navmesh");
         _rayHover = false;
         DenryuIrairaBoMask = LayerMask.GetMask("DenryuIrairaBo");
         MazeAreaMask = (1 << NavMesh.GetAreaFromName("Maze"));
@@ -74,58 +79,69 @@ public class DenryuIrairaBo : NetworkBehaviour
         //    SpawnAgent(out agent);
         //    yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
         //}
+        //while (true)
+        //{
+        //    if (DenryuIrairaBoAgent.AgentCount < TotalAgent && isServer)
+        //    {
+        //        SpawnAgentDefault();
+        //        yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
+        //    }
+        //    else
+        //    {
+        //        yield return null;
+        //    }
+        //}
     }
 
     private void Reset()
     {
-
     }
 
-    [Server]
-    private void Update ()
-    {
-        _spawnTimer += Time.deltaTime;
-        if (_spawnTimer > _spawnInterval && _spawnPositions.Count > 0)
-        {
-            _spawnTimer = 0;
-            _spawnInterval = UnityEngine.Random.Range(0.016f, 0.03125f);
-            Vector3 position = _spawnPositions.Dequeue();
-            var agent = Instantiate(_agentPrefab, position, Quaternion.identity, transform);
-            agent.gameObject.SetActive(true);
-            NetworkServer.Spawn(agent.gameObject);
-        }
-        //if (!isServer)
-        //{
-        //    return;
-        //}
+    //[Server]
+    //private void Update()
+    //{
+    //    _spawnTimer += Time.deltaTime;
+    //    if (_spawnTimer > _spawnInterval && _spawnPositions.Count > 0)
+    //    {
+    //        _spawnTimer = 0;
+    //        _spawnInterval = UnityEngine.Random.Range(0.016f, 0.03125f);
+    //        Vector3 position = _spawnPositions.Dequeue();
+    //        var agent = Instantiate(_agentPrefab, position, Quaternion.identity, transform);
+    //        agent.gameObject.SetActive(true);
+    //        NetworkServer.Spawn(agent.gameObject);
+    //    }
+    //    //if (!isServer)
+    //    //{
+    //    //    return;
+    //    //}
 
-        //if (Target == null)
-        //{
-        //    return;
-        //}
+    //    //if (Target == null)
+    //    //{
+    //    //    return;
+    //    //}
 
-        //foreach (DenryuIrairaBoAgent a in _activeAgent)
-        //      {
-        //          a.Agent.SetDestination(Target.position);
-        //      }
+    //    //foreach (DenryuIrairaBoAgent a in _activeAgent)
+    //    //      {
+    //    //          a.Agent.SetDestination(Target.position);
+    //    //      }
 
-        //        if (_rayHover && RaycastAction != null)
-        //        {
-        //            RaycastAction();
-        //        }
-        //#if UNITY_EDITOR
-        //        if (Input.GetKeyDown(KeyCode.Space))
-        //        {
-        //            DenryuIrairaBoAgent agent;
-        //            if (SpawnAgent(out agent))
-        //            {
-
-        //            }
-        //        }
-        //#endif
-    }
+    //    //        if (_rayHover && RaycastAction != null)
+    //    //        {
+    //    //            RaycastAction();
+    //    //        }
+    //    //#if UNITY_EDITOR
+    //    //        if (Input.GetKeyDown(KeyCode.Space))
+    //    //        {
+    //    //            DenryuIrairaBoAgent agent;
+    //    //            if (SpawnAgent(out agent))
+    //    //            {
+    //    //            }
+    //    //        }
+    //    //#endif
+    //}
 
     #region Event Trigger
+
     public void OnPointerEnter(BaseEventData data)
     {
         _rayHover = true;
@@ -138,7 +154,7 @@ public class DenryuIrairaBo : NetworkBehaviour
         _rayHover = false;
     }
 
-    #endregion
+    #endregion Event Trigger
 
     [Server]
     public void SpawnAgentDefault()
@@ -236,6 +252,7 @@ public class DenryuIrairaBo : NetworkBehaviour
     private static Vector3[] _rayDirections = new Vector3[4];
     public static int DenryuIrairaBoMask;
     public static int MazeAreaMask;
+
     public bool FindRandomDestinationOnNavMesh(NavMeshAgent agent, ref Vector3 destination)
     {
         _rayDirections[0] = agent.transform.forward;

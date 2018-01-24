@@ -16,6 +16,9 @@ public class Aisha : NetworkBehaviour
     [SerializeField]
     private Flashlight _flashlight;
 
+    public Transform FlashlightParent;
+    public Transform FlashlightParent2;
+
     private Light _spotlight;
     public static Aisha Instance = null;
 
@@ -81,7 +84,7 @@ public class Aisha : NetworkBehaviour
                         _flashlightUpdateTimer = 0;
                         _ray.origin = _flashlight.transform.position;
                         _ray.direction = _flashlight.transform.forward;
-                        if (_flashlight.hasAuthority && Physics.RaycastNonAlloc(_ray, _raycastHitBuffer, 8, _denryuIrairaBoMask) > 0)
+                        if (_flashlight.hasAuthority && Physics.RaycastNonAlloc(_ray, _raycastHitBuffer, 64, _denryuIrairaBoMask) > 0)
                         {
                             RaycastHit hit = _raycastHitBuffer[0];
                             CmdSetFlashlightParam(hit.point, Controller.MainCamera.transform.position);
@@ -89,35 +92,49 @@ public class Aisha : NetworkBehaviour
                     }
                 }
 
-				if (UI) {
-					if (UI.OnVRMenuUIEnable) {
-						UI.OnVRMenuUIEnable = false;
-						Debug.Log ("Aisha update, OnVRMenuUIEnable");
-						_flashlight.CmdUnuseFlashlight ();
-					}
-					if (UI.OnOpenFlag != VRMenuUI.OnOpen.None) {
-						if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight) {
-							Debug.Log ("Aisha update, OnFlashlightSelected");
-							_flashlight.CmdUseFlashlight ();
-							UI.OnOpenFlag = VRMenuUI.OnOpen.None;
-						}
-					} else {
-						Ray ray = new Ray(Controller.ControllerModel.position, Controller.ControllerModel.forward);
-						int count = Physics.RaycastNonAlloc (ray, _raycastHitBuffer, 100);
-						if (count > 0) {
-							for (int i = 0; i < count; i++) {
-								RaycastHit hit = _raycastHitBuffer [i];
-								CirclePuzzleBehavior c = hit.transform.GetComponent<CirclePuzzleBehavior> ();
-								if (c) {
-									c.TriggerRotate ();
-									break;
-								}
-							}
-						}
-					}
-				} else {
-					
-				}
+                if (UI)
+                {
+                    if (UI.OnVRMenuUIEnable)
+                    {
+                        UI.OnVRMenuUIEnable = false;
+                        Debug.Log("Aisha update, OnVRMenuUIEnable");
+                        _flashlight.CmdUnuseFlashlight();
+                    }
+                    if (UI.OnOpenFlag != VRMenuUI.OnOpen.None)
+                    {
+                        if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight)
+                        {
+                            Debug.Log("Aisha update, OnFlashlightSelected");
+                            _flashlight.CmdUseFlashlight();
+                            UI.OnOpenFlag = VRMenuUI.OnOpen.None;
+                        }
+                    }
+                    else
+                    {
+                        //Ray ray = new Ray(Controller.ControllerModel.position, Controller.ControllerModel.forward);
+                        //Debug.DrawRay(ray.origin, ray.direction, Color.blue);
+                        //int count = Physics.RaycastNonAlloc(ray, _raycastHitBuffer, 100);
+                        //if (count > 0)
+                        //{
+                        //    Vector3 dir = (_raycastHitBuffer[0].point - ray.origin);
+                        //    //Debug.DrawLine(ray.origin, ray.origin + dir, Color.blue);
+                        //    //Controller.Reticle.position = ray.origin + ray.direction;
+                        //    for (int i = 0; i < count; i++)
+                        //    {
+                        //        RaycastHit hit = _raycastHitBuffer[i];
+                        //        CirclePuzzleBehavior c = hit.transform.GetComponent<CirclePuzzleBehavior>();
+                        //        if (c)
+                        //        {
+                        //            c.TriggerRotate();
+                        //            break;
+                        //        }
+                        //    }
+                        //}
+                    }
+                }
+                else
+                {
+                }
             }
 
             if (Camera == null)

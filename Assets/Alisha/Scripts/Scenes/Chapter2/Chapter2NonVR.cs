@@ -37,16 +37,16 @@ public class Chapter2NonVR : MonoBehaviour
             _networkUI.gameObject.SetActive(false);
         };
 
-        while (!_denryuIrairaBo.gameObject.activeInHierarchy || !RobotBehavior.Instance)
+        while (!_denryuIrairaBo.gameObject.activeInHierarchy || !RobotBehavior.Instance || !NetworkSyncField.Instance)
         {
             yield return null;
         }
 
         _circlePuzzleManager = FindObjectOfType<CirclePuzzleManager>();
-        _networkSyncField = FindObjectOfType<NetworkSyncField>();
+        _networkSyncField = NetworkSyncField.Instance;
         NetworkIdentity net = _circlePuzzleManager.GetComponent<NetworkIdentity>();
         _circlePuzzleManager.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
-        _networkSyncField.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
+        //_networkSyncField.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
 
         while (true)
         {

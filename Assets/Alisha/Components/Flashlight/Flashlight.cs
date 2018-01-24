@@ -43,10 +43,10 @@ public class Flashlight : NetworkBehaviour
 
         if (_triggerChanged)
         {
-            _triggerChanged = false;
+            //_triggerChanged = false;
 
             _diffSet = _outerLightTriggered.Except(_innerLightTriggered);
-            foreach (DenryuIrairaBoAgent a in _diffSet)
+            foreach (DenryuIrairaBoAgent a in _outerLightTriggered)
             {
                 if (a)
                 {
@@ -96,8 +96,11 @@ public class Flashlight : NetworkBehaviour
         {
             _triggerChanged = true;
             DenryuIrairaBoAgent agent = other.GetComponent<DenryuIrairaBoAgent>();
-            _outerLightTriggered.Remove(agent);
-            CmdSetAgentAttracted(agent.gameObject, false, Vector3.zero);
+            if (agent)
+            {
+                _outerLightTriggered.Remove(agent);
+                CmdSetAgentAttracted(agent.gameObject, false, Vector3.zero);
+            }
         }
     }
 

@@ -9,25 +9,30 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
 {
     public static int AgentCount = 0;
     private NavMeshAgent _agent;
+
     public NavMeshAgent Agent
     {
         get { return _agent; }
     }
+
     public static DenryuIrairaBo DenryuIrairaBo;
 
     private Vector3 _lastPosition;
     private Vector3 _motion;
 
     #region Navigation
+
     private int stage = 0;
     public Vector3 _destination;
 
     [SerializeField]
     private float _detectLength;
+
     private NavMeshHit _navHit;
     private int _currentAreaMask;
 
     private bool _attracted;
+
     public bool Attracted
     {
         set
@@ -45,11 +50,14 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
             _setDestinationAction();
         }
     }
+
     private Action _setDestinationAction;
-    #endregion
+
+    #endregion Navigation
 
     [SerializeField]
     private GameObject _targetPrefab;
+
     public Transform Target;
 
     private void Awake()
@@ -64,7 +72,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
         renderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
-        renderer.enabled = false;
+        //renderer.enabled = false;
         if (DenryuIrairaBo == null)
         {
             DenryuIrairaBo = FindObjectOfType<DenryuIrairaBo>();
@@ -83,35 +91,36 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
     //    _agent.enabled = true;
     //}
 
-    private void Start ()
+    private void Start()
     {
         _setDestinationAction = FindNextDestination;
     }
 
-	[Command]
-	public void CmdSetAttracted(bool attracted, Vector3 destination)
-	{
-		RpcSetAttracted (attracted, destination);
-	}
+    [Command]
+    public void CmdSetAttracted(bool attracted, Vector3 destination)
+    {
+        RpcSetAttracted(attracted, destination);
+    }
 
-	[ClientRpc]
-	public void RpcSetAttracted(bool attracted, Vector3 destination)
-	{
-		_attracted = attracted;
-		stage = -1;
-		if (!attracted)
-		{
-			_setDestinationAction = FindNextDestination;
-		}
-		else
-		{
+    [ClientRpc]
+    public void RpcSetAttracted(bool attracted, Vector3 destination)
+    {
+        _attracted = attracted;
+        stage = -1;
+        if (!attracted)
+        {
+            _setDestinationAction = FindNextDestination;
+        }
+        else
+        {
             _destination = destination;
             _setDestinationAction = GetDestinationFromFlashlight;
             GetDestinationFromFlashlight();
         }
-	}
+    }
 
     private Coroutine _waitForMoveRoutine;
+
     private void FindNextDestination()
     {
         if (isServer)
@@ -159,14 +168,16 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
     private void GetDestinationFromFlashlight()
     {
         stage = -1;
-		_agent.destination = DenryuIrairaBo.Target.position = _destination;
-
+        if (_agent.isOnNavMesh)
+        {
+            _agent.destination = DenryuIrairaBo.Target.position = _destination;
+        }
         stage = 0;
     }
 
-    private void Update ()
+    private void Update()
     {
-        if (_agent.SamplePathPosition(NavMesh.AllAreas, _detectLength, out _navHit))
+        if (_agent.isOnNavMesh && _agent.SamplePathPosition(NavMesh.AllAreas, _detectLength, out _navHit))
         {
             _currentAreaMask = _navHit.mask;
             //Debug.LogFormat("_currentAreaMask: {0} {1}", _currentAreaMask, DenryuIrairaBo.MazeAreaMask);
@@ -198,6 +209,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
     }
 
     #region Surface Transition
+
     private RaycastHit[] _raycastHitBuffer = new RaycastHit[1];
     private Ray[] _detectRay = new Ray[4];
     private NavMeshLinkInstance _linkInstance;
@@ -219,15 +231,15 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
             if (Physics.RaycastNonAlloc(_detectRay[i], _raycastHitBuffer, 1, DenryuIrairaBo.DenryuIrairaBoMask) > 0)
             {
                 samplePosition = _raycastHitBuffer[0].point;
-                if (NavMesh.SamplePosition(samplePosition, out _navHit, _detectLength, DenryuIrairaBo.MazeAreaMask))
-                {
-                    continue;
-                }
-                // 0: index of Walkable
-                if (_currentAreaMask == DenryuIrairaBo.MazeAreaMask && NavMesh.SamplePosition(samplePosition, out _navHit, _detectLength, (1 << 0)))
-                {
-                    continue;
-                }
+                //if (NavMesh.SamplePosition(samplePosition, out _navHit, _detectLength, DenryuIrairaBo.MazeAreaMask))
+                //{
+                //    continue;
+                //}
+                //// 0: index of Walkable
+                //if (_currentAreaMask == DenryuIrairaBo.MazeAreaMask && NavMesh.SamplePosition(samplePosition, out _navHit, _detectLength, (1 << 0)))
+                //{
+                //    continue;
+                //}
                 UnityEngine.Object owner = _agent.navMeshOwner;
                 found = _agent.Warp(samplePosition);
                 if (found && _agent.navMeshOwner != owner)
@@ -253,7 +265,8 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
             stage = -1;
         }
     }
-    #endregion
+
+    #endregion Surface Transition
 
     [ServerCallback]
     public void OnTriggerEnter(Collider other)
