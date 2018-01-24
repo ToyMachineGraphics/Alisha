@@ -48,28 +48,28 @@ public class Chapter2NonVR : MonoBehaviour
         _circlePuzzleManager.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
         //_networkSyncField.GetComponent<NetworkIdentity>().AssignClientAuthority(RobotBehavior.Instance.connectionToClient);
 
-        while (true)
-        {
-            if (DenryuIrairaBoAgent.AgentCount < 50 && _denryuIrairaBo.isServer)
-            {
-                _denryuIrairaBo.SpawnAgentDefault();
-                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
-            }
-            else
-            {
-                yield return null;
-            }
-        }
+        //while (true)
+        //{
+        //    if (DenryuIrairaBoAgent.AgentCount < 50 && _denryuIrairaBo.isServer)
+        //    {
+        //        _denryuIrairaBo.SpawnAgentDefault();
+        //        yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 3));
+        //    }
+        //    else
+        //    {
+        //        yield return null;
+        //    }
+        //}
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (_denryuIrairaBo.isServer)
-            {
-                _denryuIrairaBo.SpawnAgentDefault();
-            }
+            //if (_denryuIrairaBo.isServer)
+            //{
+            //    _denryuIrairaBo.SpawnAgentDefault();
+            //}
         }
     }
 }

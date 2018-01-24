@@ -1139,6 +1139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224027055571620800}
   - component: {fileID: 114099761175865192}
+  - component: {fileID: 114817620088316606}
   m_Layer: 0
   m_Name: SE
   m_TagString: Untagged
@@ -5353,7 +5354,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1374598868309124}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f94d5d3d3fc5a554997dcf8e3f2f9dfd, type: 3}
   m_Name: 
@@ -6580,7 +6581,7 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 99
+          m_FloatArgument: 9999
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
@@ -13005,6 +13006,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8be4a526c6346e4da0f81b5e45a93f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114817620088316606
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1374598868309124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c66bd7d9bdafc4bb2fc564fc14007c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayOnEnable: 1
+  PlayOnClick: 0
+  Loop: 1
+  BgmClip: {fileID: 8300000, guid: 3150449ac0664304f94ebd503a9b7276, type: 3}
+  Channel: 1
 --- !u!114 &114818045060514134
 MonoBehaviour:
   m_ObjectHideFlags: 1

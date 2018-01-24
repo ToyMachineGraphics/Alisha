@@ -20,6 +20,6 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - _Inside: 0
-    - _Rim: 0.9837513
+    - _Rim: 0.75268555
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

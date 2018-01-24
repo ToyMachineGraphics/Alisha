@@ -6,7 +6,7 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 
-public class DenryuIrairaBo : NetworkBehaviour
+public class DenryuIrairaBo : MonoBehaviour
 {
     public const string DENRYU_IRAIRA_BO_KILLER = "DenryuIrairaBoKiller";
     public const string DENRYU_IRAIRA_BO_DUPLICATE = "DenryuIrairaBoDuplicate";
@@ -56,6 +56,7 @@ public class DenryuIrairaBo : NetworkBehaviour
         //    _agentPool.Add(a);
         //}
         DenryuIrairaBoAgent.AgentCount = 0;
+        DenryuIrairaBoAgent.DenryuIrairaBo = this;
 
         foreach (NavMeshSurface s in _surfaces)
         {
@@ -156,22 +157,34 @@ public class DenryuIrairaBo : NetworkBehaviour
 
     #endregion Event Trigger
 
-    [Server]
-    public void SpawnAgentDefault()
+    public void SpawnAgent()
     {
+        Debug.Log("SpawnAgent");
         int index = UnityEngine.Random.Range(0, _agentSpawnPoints.Length);
+        Vector3 pos = _agentSpawnPoints[index].position;
         var agent = Instantiate(_agentPrefab, _agentSpawnPoints[index].position, Quaternion.identity);
-        //agent.transform.position = _agentPrefab.transform.position;
         DenryuIrairaBoAgent.DenryuIrairaBo = this;
         agent.gameObject.SetActive(true);
-        NetworkServer.Spawn(agent.gameObject);
+        agent.GetComponent<NavMeshAgent>().Warp(pos);
+        Debug.Log("SpawnAgent end");
     }
 
-    [Server]
-    public void SpawnAgent(Vector3 position)
-    {
-        _spawnPositions.Enqueue(position);
-    }
+    //[Server]
+    //public void SpawnAgentDefault()
+    //{
+    //    int index = UnityEngine.Random.Range(0, _agentSpawnPoints.Length);
+    //    var agent = Instantiate(_agentPrefab, _agentSpawnPoints[index].position, Quaternion.identity);
+    //    //agent.transform.position = _agentPrefab.transform.position;
+    //    DenryuIrairaBoAgent.DenryuIrairaBo = this;
+    //    agent.gameObject.SetActive(true);
+    //    NetworkServer.Spawn(agent.gameObject);
+    //}
+
+    //[Server]
+    //public void SpawnAgent(Vector3 position)
+    //{
+    //    _spawnPositions.Enqueue(position);
+    //}
 
     //[Command]
     //public void CmdSpawnAgent(Vector3 position)

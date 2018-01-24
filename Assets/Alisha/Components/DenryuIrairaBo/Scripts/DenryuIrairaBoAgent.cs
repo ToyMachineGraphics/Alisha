@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class DenryuIrairaBoAgent : NetworkBehaviour
+public class DenryuIrairaBoAgent : MonoBehaviour
 {
     public static int AgentCount = 0;
     private NavMeshAgent _agent;
@@ -96,13 +96,11 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         _setDestinationAction = FindNextDestination;
     }
 
-    [Command]
     public void CmdSetAttracted(bool attracted, Vector3 destination)
     {
         RpcSetAttracted(attracted, destination);
     }
 
-    [ClientRpc]
     public void RpcSetAttracted(bool attracted, Vector3 destination)
     {
         _attracted = attracted;
@@ -123,14 +121,11 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
 
     private void FindNextDestination()
     {
-        if (isServer)
+        stage = -1;
+        if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref _destination))
         {
-            stage = -1;
-            if (DenryuIrairaBo.FindRandomDestinationOnNavMesh(_agent, ref _destination))
-            {
-                stage = 1;
-                _waitForMoveRoutine = StartCoroutine(WaitForMove());
-            }
+            stage = 1;
+            _waitForMoveRoutine = StartCoroutine(WaitForMove());
         }
     }
 
@@ -145,7 +140,6 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         _waitForMoveRoutine = null;
     }
 
-    [Server]
     public void CompleteWaitForMove()
     {
         if (_waitForMoveRoutine != null)
@@ -157,7 +151,6 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
         RpcSetDestination(_destination);
     }
 
-    [ClientRpc]
     private void RpcSetDestination(Vector3 destination)
     {
         Target.position = destination;
@@ -268,7 +261,6 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
 
     #endregion Surface Transition
 
-    [ServerCallback]
     public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(DenryuIrairaBo.DENRYU_IRAIRA_BO_KILLER))
@@ -287,7 +279,7 @@ public class DenryuIrairaBoAgent : NetworkBehaviour
             //}
             if (AgentCount < 50)
             {
-                DenryuIrairaBo.SpawnAgent(transform.position);
+                //DenryuIrairaBo.SpawnAgent(transform.position);
             }
         }
     }

@@ -48,6 +48,10 @@ public class BgmManager : MonoBehaviour
             BgmSources[i] = gameObject.AddComponent<AudioSource>();
             BgmSources[i].playOnAwake = false;
             BgmSources[i].loop = true;
+            if (i == 1)
+            {
+                BgmSources[i].volume = 0.2f;
+            }
         }
         if (InitialBgms)
             PlayBgm(InitialBgms, BgmChannels.Defult);

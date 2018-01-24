@@ -57,6 +57,11 @@ public class RobotBehavior : NetworkBehaviour
 
     public Flashlight FlashlightPrefab;
     public Flashlight FlashlightInstance;
+    private Ray _ray;
+    private RaycastHit[] _raycastHitBuffer = new RaycastHit[1];
+    private int _denryuIrairaBoMask;
+    private float _flashlightUpdateInterval = 0.125f;
+    private float _flashlightUpdateTimer;
 
     public static RobotBehavior Instance = null;
 
@@ -68,8 +73,29 @@ public class RobotBehavior : NetworkBehaviour
             Destroy(gameObject);
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        StartCoroutine(SpawnBugs());
+    }
+
+    private IEnumerator SpawnBugs()
+    {
+        while (true)
+        {
+            if (!DenryuIrairaBoAgent.DenryuIrairaBo || DenryuIrairaBoAgent.AgentCount >= 50)
+            {
+                yield return null;
+            }
+            else if (DenryuIrairaBoAgent.AgentCount < 50)
+            {
+                yield return new WaitForSeconds(Random.Range(0.25f, 1.25f));
+                DenryuIrairaBoAgent.DenryuIrairaBo.SpawnAgent();
+            }
+        }
+    }
+
     // Use this for initialization
-    private void Start()
+    private IEnumerator Start()
     {
         _initPos = transform.position;
         _controller = GetComponent<CharacterController>();
@@ -82,6 +108,20 @@ public class RobotBehavior : NetworkBehaviour
             SyncCmd.OnStageClear += GameClear;
         }
         //CmdSpawnFlashlight ();
+
+        _denryuIrairaBoMask = LayerMask.GetMask("DenryuIrairaBo");
+        while (isLocalPlayer)
+        {
+            if (!DenryuIrairaBoAgent.DenryuIrairaBo || DenryuIrairaBoAgent.AgentCount >= 50)
+            {
+                yield return null;
+            }
+            else if (DenryuIrairaBoAgent.AgentCount < 50)
+            {
+                yield return new WaitForSeconds(Random.Range(0.25f, 1.25f));
+                DenryuIrairaBoAgent.DenryuIrairaBo.SpawnAgent();
+            }
+        }
     }
 
     // Update is called once per frame
@@ -151,6 +191,31 @@ public class RobotBehavior : NetworkBehaviour
             if (!_floaing)
                 _controller.Move(Physics.gravity * FallDrag * Time.deltaTime);
         }
+
+        if (FlashlightInstance && FlashlightInstance.gameObject.activeInHierarchy)
+        {
+            FlashlightInstance.transform.position = transform.position;
+            FlashlightInstance.transform.rotation = transform.rotation;
+            _flashlightUpdateTimer += Time.deltaTime;
+            if (_flashlightUpdateTimer > _flashlightUpdateInterval)
+            {
+                _flashlightUpdateTimer = 0;
+                _ray.origin = FlashlightInstance.transform.position;
+                _ray.direction = FlashlightInstance.transform.forward;
+                if (FlashlightInstance.hasAuthority && Physics.RaycastNonAlloc(_ray, _raycastHitBuffer, 64, _denryuIrairaBoMask) > 0)
+                {
+                    RaycastHit hit = _raycastHitBuffer[0];
+                    CmdSetFlashlightParam(hit.point, transform.position);
+                }
+            }
+        }
+    }
+
+    [Command]
+    private void CmdSetFlashlightParam(Vector3 point, Vector3 cameraPosition)
+    {
+        FlashlightInstance.RayPoint = point;
+        FlashlightInstance.LightLength = Vector3.Distance(point, cameraPosition);
     }
 
     public void UpdateEularRotation(Vector3 delta)

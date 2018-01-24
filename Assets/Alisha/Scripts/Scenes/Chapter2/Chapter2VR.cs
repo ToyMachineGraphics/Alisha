@@ -28,6 +28,7 @@ public class Chapter2VR : MonoBehaviour
         ALishaNetworkManager.OnClientConnectAction = () =>
         {
             NetworkMain.UIPanelGameObject.SetActive(false);
+            NetworkMain.CustomDeviceBrowser.gameObject.SetActive(false);
             _mainMenu.gameObject.SetActive(true);
         };
         do

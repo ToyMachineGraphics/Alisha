@@ -56,13 +56,11 @@ public class Flashlight : NetworkBehaviour
         }
     }
 
-    [Command]
     public void CmdSetAgentAttracted(GameObject agent, bool attracted, Vector3 destination)
     {
         RpcSetAgentAttracted(agent, attracted, destination);
     }
 
-    [ClientRpc]
     public void RpcSetAgentAttracted(GameObject agent, bool attracted, Vector3 destination)
     {
         DenryuIrairaBoAgent a = agent.GetComponent<DenryuIrairaBoAgent>();

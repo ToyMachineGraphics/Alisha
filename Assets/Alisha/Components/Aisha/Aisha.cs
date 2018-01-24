@@ -16,6 +16,8 @@ public class Aisha : NetworkBehaviour
     [SerializeField]
     private Flashlight _flashlight;
 
+    public DenryuIrairaBoAgent Agent;
+
     public Transform FlashlightParent;
     public Transform FlashlightParent2;
 
@@ -55,6 +57,7 @@ public class Aisha : NetworkBehaviour
         Controller = VRController.Instance;
         CmdSpawnFlashlight();
         _flashlightUpdateTimer = 0;
+        StartCoroutine(SpawnBugs());
         Debug.Log("Aisha OnStartLocalPlayer");
     }
 
@@ -65,6 +68,23 @@ public class Aisha : NetworkBehaviour
             //SyncFieldCommand.Instance.OnStageClear -= GameClear;
             SyncCmd.OnStageClear += GameClear;
             WorldText.Instance.text.text = "SyncFieldCommand.Instance.OnStageClear += GameClear";
+        }
+    }
+
+    private IEnumerator SpawnBugs()
+    {
+        while (true)
+        {
+            Debug.Log("DenryuIrairaBoAgent.DenryuIrairaBo != null, AgentCount " + DenryuIrairaBoAgent.AgentCount);
+            if (!DenryuIrairaBoAgent.DenryuIrairaBo || DenryuIrairaBoAgent.AgentCount >= 50)
+            {
+                yield return null;
+            }
+            else if (DenryuIrairaBoAgent.AgentCount < 50)
+            {
+                yield return new WaitForSeconds(Random.Range(0.25f, 1.25f));
+                DenryuIrairaBoAgent.DenryuIrairaBo.SpawnAgent();
+            }
         }
     }
 
