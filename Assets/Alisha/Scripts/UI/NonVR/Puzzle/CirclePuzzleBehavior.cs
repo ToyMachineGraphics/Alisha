@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class CirclePuzzleBehavior : MonoBehaviour
 {
-	public AudioClip RotateSE;
+    public AudioClip RotateSE;
 
     public int CircleSplits = 4;
 
@@ -18,7 +18,7 @@ public class CirclePuzzleBehavior : MonoBehaviour
     private bool _rotateFinished = true;
 
     // Use this for initialization
-    private void Start()
+    private void Awake()
     {
         Random.InitState(System.DateTime.Now.Millisecond);
         CurrentSplits = Random.Range(1, CircleSplits);
@@ -42,8 +42,7 @@ public class CirclePuzzleBehavior : MonoBehaviour
             return;
         }
 
-
-		SEManager.Instance.PlaySEClip (RotateSE, SEChannels.PlayerTrigger, true, false, false);
+        SEManager.Instance.PlaySEClip(RotateSE, SEChannels.PlayerTrigger, true, false, false);
         CurrentSplits++;
         CurrentSplits = CurrentSplits == CircleSplits ? 0 : CurrentSplits;
 
