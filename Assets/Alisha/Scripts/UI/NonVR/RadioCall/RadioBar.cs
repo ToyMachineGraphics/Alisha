@@ -74,8 +74,9 @@ public class RadioBar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     public void OnDrag(PointerEventData eventData)
     {
         Vector3 delta = Input.mousePosition - lastTouchPos;
+
         Bar.localPosition += Vector3.right * delta.x;
-        if (Frequence > MaxFreq || Frequence < MinFreq)
+        if (Frequence >= MaxFreq || Frequence <= MinFreq)
             Bar.localPosition -= Vector3.right * delta.x;
 
         if ((lastFreq - Frequence) != 0)
