@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f796b8dd267a84ca916608c7c6732c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialBgms: {fileID: 8300000, guid: 39edbbac74b49f04887f0c31138b42d3, type: 3}
+  InitialBgms: {fileID: 8300000, guid: ffbf2c54cbb62fb4f872bf245f8a1d3c, type: 3}
   BgmSources:
   - {fileID: 0}
   - {fileID: 0}
