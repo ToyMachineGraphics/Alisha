@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class CirclePuzzleBehavior : MonoBehaviour
 {
+	public AudioClip RotateSE;
+
     public int CircleSplits = 4;
 
     [HideInInspector]
@@ -39,6 +41,9 @@ public class CirclePuzzleBehavior : MonoBehaviour
         {
             return;
         }
+
+
+		SEManager.Instance.PlaySEClip (RotateSE, SEChannels.PlayerTrigger, true, false, false);
         CurrentSplits++;
         CurrentSplits = CurrentSplits == CircleSplits ? 0 : CurrentSplits;
 

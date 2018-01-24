@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CirclePuzzleManager : NetworkBehaviour
 {
+	public AudioClip SolvedSE;
     public int LockID;
-
     //public GameObject UnlockFx;
     public GameObject Cue;
 
@@ -24,10 +24,17 @@ public class CirclePuzzleManager : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
+
         for (int i = 0; i < Puzzles.Length; i++)
         {
-            if (Puzzles[i].CurrentSplits == 0 && i == Puzzles.Length - 1)
-                RobotBehavior.Instance.SyncCmd.Cmd_SetPuzzleUnlock(LockID);
+			if (Puzzles [i].CurrentSplits == 0 && i == Puzzles.Length - 1 ) {
+				if (_isUnlock) {
+					return;
+				}
+				SEManager.Instance.PlaySEClip (SolvedSE, SEChannels.GameEvent, false, false, false);
+				RobotBehavior.Instance.SyncCmd.Cmd_SetPuzzleUnlock (LockID);
+				_isUnlock = true;
+			}
             else if (Puzzles[i].CurrentSplits != 0)
             {
                 break;
@@ -61,7 +68,7 @@ public class CirclePuzzleManager : NetworkBehaviour
         }
         temp[LockID] = true;
         NetworkSyncField.Instance.Setvalue(SyncFields.boolArray2_Puzzel_Triggers, temp);
-        WorldText.Instance.text.text = "Unlock " + LockID;
+
         //if (isServer)
         //    _isUnlock = isUnlock;
         //else

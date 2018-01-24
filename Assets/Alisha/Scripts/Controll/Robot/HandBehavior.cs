@@ -8,6 +8,7 @@ public class HandBehavior : MonoBehaviour
     private Vector3 _initLocalPos;
     public Animator Anim;
     private Transform TakeTarget;
+	public AudioClip OnPuzzel;
 
     public static HandBehavior Instance = null;
 
@@ -72,6 +73,7 @@ public class HandBehavior : MonoBehaviour
         }
         if (other.tag == "CircleTrigger")
         {
+			SEManager.Instance.PlaySEClip (OnPuzzel, SEChannels.GameEvent, false, false, false);
             transform.DOPause();
             transform.DOKill();
             other.transform.parent.GetComponent<CirclePuzzleManager>().PuzzleTrigger(true);
