@@ -89,24 +89,35 @@ public class Aisha : NetworkBehaviour
                     }
                 }
 
-                if (UI)
-                {
-                    if (UI.OnVRMenuUIEnable)
-                    {
-                        UI.OnVRMenuUIEnable = false;
-                        Debug.Log("Aisha update, OnVRMenuUIEnable");
-                        _flashlight.CmdUnuseFlashlight();
-                    }
-                    if (UI.OnOpenFlag != VRMenuUI.OnOpen.None)
-                    {
-                        if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight)
-                        {
-                            Debug.Log("Aisha update, OnFlashlightSelected");
-                            _flashlight.CmdUseFlashlight();
-                            UI.OnOpenFlag = VRMenuUI.OnOpen.None;
-                        }
-                    }
-                }
+				if (UI) {
+					if (UI.OnVRMenuUIEnable) {
+						UI.OnVRMenuUIEnable = false;
+						Debug.Log ("Aisha update, OnVRMenuUIEnable");
+						_flashlight.CmdUnuseFlashlight ();
+					}
+					if (UI.OnOpenFlag != VRMenuUI.OnOpen.None) {
+						if (UI.OnOpenFlag == VRMenuUI.OnOpen.Hierachy1Flashlight) {
+							Debug.Log ("Aisha update, OnFlashlightSelected");
+							_flashlight.CmdUseFlashlight ();
+							UI.OnOpenFlag = VRMenuUI.OnOpen.None;
+						}
+					} else {
+						Ray ray = new Ray(Controller.ControllerModel.position, Controller.ControllerModel.forward);
+						int count = Physics.RaycastNonAlloc (ray, _raycastHitBuffer, 100);
+						if (count > 0) {
+							for (int i = 0; i < count; i++) {
+								RaycastHit hit = _raycastHitBuffer [i];
+								CirclePuzzleBehavior c = hit.transform.GetComponent<CirclePuzzleBehavior> ();
+								if (c) {
+									c.TriggerRotate ();
+									break;
+								}
+							}
+						}
+					}
+				} else {
+					
+				}
             }
 
             if (Camera == null)
