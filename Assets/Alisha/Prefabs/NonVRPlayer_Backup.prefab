@@ -3180,7 +3180,7 @@ GameObject:
   - component: {fileID: 114267884685030732}
   - component: {fileID: 114377541619256710}
   m_Layer: 0
-  m_Name: NonVRPlayer
+  m_Name: NonVRPlayer_Backup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6954,6 +6954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27da056e82aed094da2492402cd8beec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BallMat: {fileID: 2100000, guid: eeaa2bfcc1427574ab3e4615b40b4d51, type: 2}
   SyncFieldPrefab: {fileID: 1322418560952028, guid: 564ec003a6ebc464ca45b4932b740a72,
     type: 2}
 --- !u!114 &114269448399750618
@@ -9131,9 +9132,9 @@ MonoBehaviour:
   TalkClip: {fileID: 8300000, guid: 8389f33eb8509194c8ceff7fe4b6700b, type: 3}
   RadioClips:
   - {fileID: 8300000, guid: 8514567913842854e81b80a7fd6b8096, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: d871ab0db5f0dca4d927e032c07d5157, type: 3}
   - {fileID: 8300000, guid: e2caa70967082c443a1bfb90acac2384, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 8bac66aecd345e146bd5a433f6f2ccf4, type: 3}
   TalkDuration: 2
 --- !u!114 &114431603325129836
 MonoBehaviour:
@@ -9149,22 +9150,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 54
-    i1: 194
-    i2: 117
-    i3: 52
-    i4: 193
-    i5: 121
-    i6: 207
-    i7: 36
-    i8: 24
-    i9: 155
-    i10: 13
-    i11: 217
-    i12: 226
-    i13: 22
-    i14: 145
-    i15: 167
+    i0: 199
+    i1: 148
+    i2: 106
+    i3: 200
+    i4: 116
+    i5: 227
+    i6: 112
+    i7: 100
+    i8: 251
+    i9: 241
+    i10: 219
+    i11: 46
+    i12: 204
+    i13: 149
+    i14: 13
+    i15: 13
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
 --- !u!114 &114444320193458274
@@ -10326,22 +10327,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 54
-    i1: 194
-    i2: 117
-    i3: 52
-    i4: 193
-    i5: 121
-    i6: 207
-    i7: 36
-    i8: 24
-    i9: 155
-    i10: 13
-    i11: 217
-    i12: 226
-    i13: 22
-    i14: 145
-    i15: 167
+    i0: 199
+    i1: 148
+    i2: 106
+    i3: 200
+    i4: 116
+    i5: 227
+    i6: 112
+    i7: 100
+    i8: 251
+    i9: 241
+    i10: 219
+    i11: 46
+    i12: 204
+    i13: 149
+    i14: 13
+    i15: 13
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
 --- !u!114 &114583571543210392
